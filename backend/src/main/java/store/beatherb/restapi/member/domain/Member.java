@@ -17,6 +17,19 @@ import java.util.Date;
 @Getter
 @Setter
 public class Member {
+    @Builder
+    public Member(String email, String name, String nickname, Boolean advertise, Date created_at, Date updated_at, String picture, String memberId, boolean dmAgree) {
+        this.email = email;
+        this.name = name;
+        this.nickname = nickname;
+        this.advertise = advertise;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
+        this.picture = picture;
+        this.memberId = memberId;
+        this.dmAgree = dmAgree;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
