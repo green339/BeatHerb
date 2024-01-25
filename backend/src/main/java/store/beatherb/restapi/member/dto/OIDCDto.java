@@ -2,6 +2,8 @@ package store.beatherb.restapi.member.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Builder
@@ -9,11 +11,9 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class NaverUserAuthDto {
-    //access token, refresh token
-    String accessToken;
-    String refreshToken;
-    String tokenType;
-    int expiresIn;
-
+public class OIDCDto {
+    @NotNull(message="sub 반드시")
+    private String sub;
+    @NotNull(message="email 반드시")
+    private String email;
 }

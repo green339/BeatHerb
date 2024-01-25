@@ -1,13 +1,18 @@
 package store.beatherb.restapi.member.dto;
 
-import lombok.Data;
-import lombok.ToString;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.*;
 
-@Data
+@Builder
+@Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GoogleUserAuthDto {
     //access token, refresh token, id token
-    String access_token;
-    int expires_in;
-    String id_token;
+    String accessToken;
+    int expiresIn;
+    String idToken;
     String scope;
 }

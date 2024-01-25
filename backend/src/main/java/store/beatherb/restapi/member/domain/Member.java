@@ -48,5 +48,8 @@ public class Member {
 
     @Column(name="dm_agree")
     private boolean dmAgree;
+
+    @Column(name="sub")
+    private String sub;
 }
 

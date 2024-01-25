@@ -1,17 +1,22 @@
 package store.beatherb.restapi.member.dto;
 
-import lombok.Data;
-import lombok.ToString;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.*;
 
-@Data
+@Builder
+@Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class KakaoUserAuthDto {
     //access token, refresh token, id token
-    String access_token;
-    String token_type;
-    String refresh_token;
-    String id_token;
-    int expires_in;
+    String accessToken;
+    String tokenType;
+    String refreshToken;
+    String idToken;
+    int expiresIn;
     String scope;
-    int refresh_token_expires_in;
+    int refreshTokenExpiresIn;
 
 }
