@@ -1,6 +1,7 @@
 // 인증 완료 페이지
 
 export default function AuthSuccess() {
+  // 정보 수정 페이지로 이동
   const handleOnClick = () => {
     console.log("click email verify button!!!");
     // 프로필 수정 페이지로 이동

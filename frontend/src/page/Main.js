@@ -11,6 +11,7 @@ export default function Main() {
     setQuery(e.target.value);
   };
 
+  // 검색
   const handleSearchClick = () => {
     console.log('검색어는', query);
       //검색 로직 작성
