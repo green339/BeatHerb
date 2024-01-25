@@ -18,7 +18,7 @@ export default function Main() {
 
   return (
     <>
-      <Link to="/sign_in">
+      <Link to="/login">
         <button className="btn btn-outline btn-primary fixed top-2 right-2">로그인</button>
       </Link>
       
