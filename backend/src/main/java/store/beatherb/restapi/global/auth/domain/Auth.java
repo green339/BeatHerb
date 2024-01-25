@@ -1,4 +1,4 @@
-package store.beatherb.restapi.global.domain;
+package store.beatherb.restapi.global.auth.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
