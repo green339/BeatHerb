@@ -15,5 +15,7 @@ public class NaverUserAuthDto implements ProviderUserAuthDto {
     String refreshToken;
     String tokenType;
     int expiresIn;
+    String error;
+    String errorDescription;
 
 }

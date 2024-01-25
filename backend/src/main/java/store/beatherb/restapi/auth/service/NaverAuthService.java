@@ -36,16 +36,10 @@ public class NaverAuthService {
         //1. access token refresh token id token 받아옴
         //2. access token 이용해서 이메일/식별자 받아옴
         NaverUserAuthDto naverUserAuthDto=userAuth(authOAuthNaverRequest);
-        log.info(naverUserAuthDto.toString());
         AuthJoinRequest authJoinRequest =userInfo(naverUserAuthDto);
         //회원가입, 로그인 로직으로 보내기(providerAuthUserInfoDto)
-        //1. 멤버찾기 -> 있으면 로그인으로//2. 회원가입 진행
-        if(authService.findMember(authJoinRequest)){
-            authService.socialJoin(authJoinRequest);
-        }else{
-            authService.socialLogin(authJoinRequest);
-        }
-        //처리결과 보내기 (회원가입/로그인완료/에러)
+        authService.socialJoinLogin(authJoinRequest);
+        //처리결과 보내기 (회원가입/로그인완료)
         return null;
     }
 
@@ -78,14 +72,13 @@ public class NaverAuthService {
         formData.add("client_secret",clientSecret);
         formData.add("state",state);
         formData.add("code", authOAuthNaverRequest.getCode());
-
+        //에러코드일 경우 처리추가
         return webClient
                 .post()
                 .bodyValue(formData)
                 .retrieve()
                 .bodyToMono(NaverUserAuthDto.class)
                 .block();
-
     }
 
 }

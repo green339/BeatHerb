@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Date;
 
 @Slf4j
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.NONE) //PROTECTED 이거 밖에서하면 access가 안돼요...
 @Entity
 @Table(name="member", uniqueConstraints = {@UniqueConstraint(
         name = "MEMBERID_UNIQUE",

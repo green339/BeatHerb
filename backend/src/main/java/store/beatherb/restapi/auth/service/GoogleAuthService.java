@@ -7,16 +7,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
-import store.beatherb.restapi.auth.dto.oauth.GoogleUserAuthDto;
-import store.beatherb.restapi.auth.dto.oauth.OIDCDto;
-import store.beatherb.restapi.auth.dto.oauth.Provider;
+import store.beatherb.restapi.auth.dto.oauth.*;
 import store.beatherb.restapi.auth.dto.request.AuthOAuthGoogleRequest;
 import store.beatherb.restapi.auth.dto.request.AuthJoinRequest;
+import store.beatherb.restapi.auth.dto.request.AuthOAuthProviderRequest;
 import store.beatherb.restapi.auth.dto.response.AuthVerifyTokenResponse;
 
 import java.util.Base64;
 
-import static store.beatherb.restapi.global.Util.DecodeAuthUtil.payloadDecoder;
+import static store.beatherb.restapi.global.util.DecodeAuthUtil.payloadDecoder;
 
 
 @Service
@@ -33,19 +32,15 @@ public class GoogleAuthService {
     private String clientSecret;
 
     private final AuthService authService;
+
     public AuthVerifyTokenResponse auth(AuthOAuthGoogleRequest authOAuthGoogleRequest){
         //1. access token refresh token id token 받아옴
         GoogleUserAuthDto googleUserAuthDto=userAuth(authOAuthGoogleRequest);
-        log.info(googleUserAuthDto.toString());
         //2. id 토큰 이용해서 이메일/식별자 받아옴
         AuthJoinRequest authJoinRequest =userInfo(googleUserAuthDto);
         //회원가입, 로그인 로직으로 보내기
-        if(authService.findMember(authJoinRequest)){
-            authService.socialLogin(authJoinRequest);
-        }else{
-            authService.socialJoin(authJoinRequest);
-        }
-        //처리결과 보내기 (회원가입/로그인완료/에러)
+        authService.socialJoinLogin(authJoinRequest);
+        //처리결과 보내기 (회원가입/로그인완료)
         return null;
     }
 

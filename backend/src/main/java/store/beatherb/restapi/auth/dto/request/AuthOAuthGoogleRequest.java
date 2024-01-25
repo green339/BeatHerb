@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class AuthOAuthGoogleRequest implements AuthOAuthRequest {
+public class AuthOAuthGoogleRequest implements AuthOAuthProviderRequest {
     String code;
     String state;
 }

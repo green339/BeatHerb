@@ -9,6 +9,6 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class AuthOAuthNaverRequest implements AuthOAuthRequest {
+public class AuthOAuthNaverRequest implements AuthOAuthProviderRequest {
     String code;
 }

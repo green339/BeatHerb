@@ -15,7 +15,7 @@ import store.beatherb.restapi.auth.dto.request.AuthJoinRequest;
 import store.beatherb.restapi.auth.dto.response.AuthVerifyTokenResponse;
 
 import java.util.Base64;
-import static store.beatherb.restapi.global.Util.DecodeAuthUtil.payloadDecoder;
+import static store.beatherb.restapi.global.util.DecodeAuthUtil.payloadDecoder;
 
 @Service
 @Slf4j
@@ -32,15 +32,10 @@ public class KakaoAuthService {
     public AuthVerifyTokenResponse auth(AuthOAuthKakaoRequest authOAuthKakaoRequest){
         //1. access token refresh token id token 받아옴
         KakaoUserAuthDto kakaoUserAuthDto=userAuth(authOAuthKakaoRequest);
-        log.info(kakaoUserAuthDto.toString());
         //2. id 토큰 이용해서 이메일/식별자 받아옴
         AuthJoinRequest authJoinRequest =userInfo(kakaoUserAuthDto);
         //회원가입, 로그인 로직으로 보내기
-        if(authService.findMember(authJoinRequest)){
-            authService.socialLogin(authJoinRequest);
-        }else{
-            authService.socialJoin(authJoinRequest);
-        }
+        authService.socialJoinLogin(authJoinRequest);
         //처리결과 보내기 (회원가입/로그인완료/에러)
         return null;
     }

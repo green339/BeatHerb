@@ -9,6 +9,6 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class AuthOAuthKakaoRequest implements AuthOAuthRequest {
+public class AuthOAuthKakaoRequest implements AuthOAuthProviderRequest {
     String code;
 }
