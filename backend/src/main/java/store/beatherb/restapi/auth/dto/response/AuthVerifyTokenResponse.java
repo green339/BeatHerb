@@ -1,7 +1,5 @@
-package store.beatherb.restapi.member.dto.response;
+package store.beatherb.restapi.auth.dto.response;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
 @Builder
@@ -9,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 //@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class TokenResponse {
+public class AuthVerifyTokenResponse {
     public String accessToken;
     public String refreshToken;
     public String name;

@@ -1,4 +1,4 @@
-package store.beatherb.restapi.member.service;
+package store.beatherb.restapi.auth.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,12 +7,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
-import store.beatherb.restapi.member.dto.NaverUserAuthDto;
-import store.beatherb.restapi.member.dto.NaverUserInfoDto;
-import store.beatherb.restapi.member.dto.Provider;
-import store.beatherb.restapi.member.dto.request.MemberJoinRequest;
-import store.beatherb.restapi.member.dto.request.NaverAuthRequest;
-import store.beatherb.restapi.member.dto.response.TokenResponse;
+import store.beatherb.restapi.auth.dto.oauth.NaverUserAuthDto;
+import store.beatherb.restapi.auth.dto.oauth.NaverUserInfoDto;
+import store.beatherb.restapi.auth.dto.oauth.Provider;
+import store.beatherb.restapi.auth.dto.request.AuthJoinRequest;
+import store.beatherb.restapi.auth.dto.request.AuthOAuthNaverRequest;
+import store.beatherb.restapi.auth.dto.response.AuthVerifyTokenResponse;
 
 @Service
 @Slf4j
@@ -31,31 +31,25 @@ public class NaverAuthService {
     @Value("${naver.info_base_url}")
     private String infoBaseUrl;
 
-    private final MemberService memberService;
-    public TokenResponse auth(NaverAuthRequest naverAuthRequest){
+    private final AuthService authService;
+    public AuthVerifyTokenResponse auth(AuthOAuthNaverRequest authOAuthNaverRequest){
         //1. access token refresh token id token 받아옴
         //2. access token 이용해서 이메일/식별자 받아옴
-        NaverUserAuthDto naverUserAuthDto=userAuth(naverAuthRequest);
+        NaverUserAuthDto naverUserAuthDto=userAuth(authOAuthNaverRequest);
         log.info(naverUserAuthDto.toString());
-        MemberJoinRequest memberJoinRequest=userInfo(naverUserAuthDto);
+        AuthJoinRequest authJoinRequest =userInfo(naverUserAuthDto);
         //회원가입, 로그인 로직으로 보내기(providerAuthUserInfoDto)
-        //1. 멤버찾기 -> 있으면 로그인으로
-        if(memberService.findMember(memberJoinRequest)){
-            memberService.socialJoin(memberJoinRequest);
+        //1. 멤버찾기 -> 있으면 로그인으로//2. 회원가입 진행
+        if(authService.findMember(authJoinRequest)){
+            authService.socialJoin(authJoinRequest);
         }else{
-            memberService.socialLogin(memberJoinRequest);
-        }
-        //2. 회원가입 진행
-        if(memberService.findMember(memberJoinRequest)){
-            memberService.socialLogin(memberJoinRequest);
-        }else{
-            memberService.socialJoin(memberJoinRequest);
+            authService.socialLogin(authJoinRequest);
         }
         //처리결과 보내기 (회원가입/로그인완료/에러)
         return null;
     }
 
-    private MemberJoinRequest userInfo(NaverUserAuthDto naverUserAuthDto) {
+    private AuthJoinRequest userInfo(NaverUserAuthDto naverUserAuthDto) {
         // 서버에서 EMAIL 값 가져오기
         WebClient webClient=WebClient.builder()
                 .baseUrl(infoBaseUrl)
@@ -63,7 +57,7 @@ public class NaverAuthService {
                 .build();
         NaverUserInfoDto naverUserInfoDto =webClient.get().retrieve().bodyToMono(NaverUserInfoDto.class).block();
         //에러코드일 경우 처리추가
-        return MemberJoinRequest
+        return AuthJoinRequest
                 .builder()
                 .provider(Provider.NAVER)
                 .email(naverUserInfoDto.getResponse().getEmail())
@@ -71,7 +65,7 @@ public class NaverAuthService {
                 .build();
     }
 
-    private NaverUserAuthDto userAuth(NaverAuthRequest naverAuthRequest) {
+    private NaverUserAuthDto userAuth(AuthOAuthNaverRequest authOAuthNaverRequest) {
         // webclient로 통신해서 access token, refresh token받아오기
         WebClient webClient=WebClient.builder()
                 .baseUrl(authBaseUrl)
@@ -83,7 +77,7 @@ public class NaverAuthService {
         formData.add("redirect_uri",redirectUri);
         formData.add("client_secret",clientSecret);
         formData.add("state",state);
-        formData.add("code",naverAuthRequest.getCode());
+        formData.add("code", authOAuthNaverRequest.getCode());
 
         return webClient
                 .post()

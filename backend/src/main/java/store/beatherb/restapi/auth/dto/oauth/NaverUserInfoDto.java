@@ -1,4 +1,4 @@
-package store.beatherb.restapi.member.dto;
+package store.beatherb.restapi.auth.dto.oauth;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class NaverUserInfoDto {
+public class NaverUserInfoDto implements ProviderUserInfoDto {
     // 이메일 식별자
     private String resultcode;
     private String message;

@@ -1,4 +1,4 @@
-package store.beatherb.restapi.member.dto;
+package store.beatherb.restapi.auth.dto.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -9,11 +9,6 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class NaverUserAuthDto {
-    //access token, refresh token
-    String accessToken;
-    String refreshToken;
-    String tokenType;
-    int expiresIn;
-
+public class AuthOAuthKakaoRequest implements AuthOAuthRequest {
+    String code;
 }

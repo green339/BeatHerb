@@ -3,7 +3,7 @@ package store.beatherb.restapi.member.domain;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import store.beatherb.restapi.member.dto.request.MemberJoinRequest;
+import store.beatherb.restapi.auth.dto.request.AuthJoinRequest;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,11 +21,11 @@ public class MemberRepository {
         return em.find(Member.class,sub);
     }
 
-    public void insertMember(MemberJoinRequest memberJoinRequest){
+    public void insertMember(AuthJoinRequest authJoinRequest){
         Member member=new Member();
-        member.setEmail(memberJoinRequest.getEmail());
-        if(memberJoinRequest.getIdentifier()!=null){
-            member.setSub(memberJoinRequest.getIdentifier());
+        member.setEmail(authJoinRequest.getEmail());
+        if(authJoinRequest.getIdentifier()!=null){
+            member.setSub(authJoinRequest.getIdentifier());
         }
         em.persist(member);
     }

@@ -1,4 +1,4 @@
-package store.beatherb.restapi.member.service;
+package store.beatherb.restapi.auth.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,16 +7,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
-import store.beatherb.restapi.member.dto.GoogleUserAuthDto;
-import store.beatherb.restapi.member.dto.OIDCDto;
-import store.beatherb.restapi.member.dto.Provider;
-import store.beatherb.restapi.member.dto.request.GoogleAuthRequest;
-import store.beatherb.restapi.member.dto.request.MemberJoinRequest;
-import store.beatherb.restapi.member.dto.response.TokenResponse;
+import store.beatherb.restapi.auth.dto.oauth.GoogleUserAuthDto;
+import store.beatherb.restapi.auth.dto.oauth.OIDCDto;
+import store.beatherb.restapi.auth.dto.oauth.Provider;
+import store.beatherb.restapi.auth.dto.request.AuthOAuthGoogleRequest;
+import store.beatherb.restapi.auth.dto.request.AuthJoinRequest;
+import store.beatherb.restapi.auth.dto.response.AuthVerifyTokenResponse;
 
 import java.util.Base64;
 
-import static store.beatherb.restapi.member.Util.AuthUtil.payloadDecoder;
+import static store.beatherb.restapi.global.Util.DecodeAuthUtil.payloadDecoder;
 
 
 @Service
@@ -32,28 +32,28 @@ public class GoogleAuthService {
     @Value("${google.client_secret}")
     private String clientSecret;
 
-    private final MemberService memberService;
-    public TokenResponse auth(GoogleAuthRequest googleAuthRequest){
+    private final AuthService authService;
+    public AuthVerifyTokenResponse auth(AuthOAuthGoogleRequest authOAuthGoogleRequest){
         //1. access token refresh token id token 받아옴
-        GoogleUserAuthDto googleUserAuthDto=userAuth(googleAuthRequest);
+        GoogleUserAuthDto googleUserAuthDto=userAuth(authOAuthGoogleRequest);
         log.info(googleUserAuthDto.toString());
         //2. id 토큰 이용해서 이메일/식별자 받아옴
-        MemberJoinRequest memberJoinRequest=userInfo(googleUserAuthDto);
+        AuthJoinRequest authJoinRequest =userInfo(googleUserAuthDto);
         //회원가입, 로그인 로직으로 보내기
-        if(memberService.findMember(memberJoinRequest)){
-            memberService.socialLogin(memberJoinRequest);
+        if(authService.findMember(authJoinRequest)){
+            authService.socialLogin(authJoinRequest);
         }else{
-            memberService.socialJoin(memberJoinRequest);
+            authService.socialJoin(authJoinRequest);
         }
         //처리결과 보내기 (회원가입/로그인완료/에러)
         return null;
     }
 
-    private MemberJoinRequest userInfo(GoogleUserAuthDto googleUserAuthDto) {
+    private AuthJoinRequest userInfo(GoogleUserAuthDto googleUserAuthDto) {
         // JWT 토큰을 디코딩해서 ID, SUB값 가져오기
         String jwtPayload= new String(Base64.getUrlDecoder().decode(googleUserAuthDto.getIdToken().split("\\.")[1]));
         OIDCDto oidcDto= payloadDecoder(jwtPayload);
-        return MemberJoinRequest
+        return AuthJoinRequest
                 .builder()
                 .provider(Provider.GOOGLE)
                 .email(oidcDto.getEmail())
@@ -61,7 +61,7 @@ public class GoogleAuthService {
                 .build();
     }
 
-    private GoogleUserAuthDto userAuth(GoogleAuthRequest googleAuthRequest) {
+    private GoogleUserAuthDto userAuth(AuthOAuthGoogleRequest authOAuthGoogleRequest) {
         // webclient로 통신해서 access token, refresh token받아오기
         WebClient webClient=WebClient.builder()
                 .baseUrl(authBaseUrl)
@@ -72,7 +72,7 @@ public class GoogleAuthService {
         formData.add("client_id",clientId);
         formData.add("redirect_uri",redirectUri);
         formData.add("client_secret",clientSecret);
-        formData.add("code",googleAuthRequest.getCode());
+        formData.add("code", authOAuthGoogleRequest.getCode());
 
         return webClient
                 .post()
