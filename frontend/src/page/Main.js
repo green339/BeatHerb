@@ -1,22 +1,9 @@
 // 메인 페이지
-
-import { useState } from 'react';
 import MainButton from '../components/MainButton';
 import { Link } from 'react-router-dom';
+import SearchBar from '../components/SearchBar';
 
 export default function Main() {
-  const [query, setQuery] = useState('');
-
-  const handleSearchChange = (e) => {
-    setQuery(e.target.value);
-  };
-
-  // 검색
-  const handleSearchClick = () => {
-    console.log('검색어는', query);
-      //검색 로직 작성
-  };
-
   return (
     <>
       <Link to="/login">
@@ -29,19 +16,7 @@ export default function Main() {
         </div>
 
         <div className="my-16">
-          <div className="join w-1/2 justify-center">
-            <div className="w-full">
-              <input 
-                className="input input-bordered join-item w-full text-base-content"
-                placeholder="Search"
-                value={query}
-                onChange={handleSearchChange}
-              />
-            </div>
-            <div className="">
-              <button className="btn btn-primary join-item" onClick={handleSearchClick}>Search</button>
-            </div>
-          </div>
+          <SearchBar />
         </div>
         
         <div className="flex flex-row justify-center my-16">
