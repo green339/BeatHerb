@@ -7,6 +7,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import store.beatherb.restapi.global.auth.dto.response.VerifyTokenResponse;
 import store.beatherb.restapi.global.exception.UnAuthorizedException;
 
 import java.io.UnsupportedEncodingException;
@@ -96,5 +97,16 @@ public class JWT {
         log.info("value : {}", value);
 
         return (String)value.get("id");
+    }
+
+    public VerifyTokenResponse generateVerifyTokenResponse(String id){
+        String accessToken = createAccessToken(id);
+        String refreshToken = createRefreshToken(id);
+
+        return VerifyTokenResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .accessTokenExpiresIn(new Date(new Date().getTime() + accessTokenExpireTime).getTime())
+                .build();
     }
 }
