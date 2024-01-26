@@ -38,17 +38,17 @@ public class AuthService {
     }
 
     public AuthVerifyTokenResponse socialJoinLogin(AuthJoinRequest authJoinRequest){
-        Member member=memberRepository.findBySub(authJoinRequest.getIdentifier(),authJoinRequest.getEmail());
+        Member member=memberRepository.findBySub(authJoinRequest.getIdentifier());
         //정보 디비에 저장
         if(member==null){
             member=new Member();
             member.setEmail(authJoinRequest.getEmail());
             member.setSub(authJoinRequest.getIdentifier());
+            log.info(member.getEmail());
             memberRepository.save(member);
         }
         //이메일 인증없이 바로 access token, refresh token 보내주기
 
         return null;
     }
-
 }

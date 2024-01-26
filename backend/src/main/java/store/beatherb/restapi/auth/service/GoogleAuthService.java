@@ -36,8 +36,10 @@ public class GoogleAuthService {
     public AuthVerifyTokenResponse auth(AuthOAuthGoogleRequest authOAuthGoogleRequest){
         //1. access token refresh token id token 받아옴
         GoogleUserAuthDto googleUserAuthDto=userAuth(authOAuthGoogleRequest);
+        log.info("id token 받아옴 "+googleUserAuthDto.getIdToken());
         //2. id 토큰 이용해서 이메일/식별자 받아옴
         AuthJoinRequest authJoinRequest =userInfo(googleUserAuthDto);
+        log.info("이메일 받아옴 "+authJoinRequest.getEmail());
         //회원가입, 로그인 로직으로 보내기
         authService.socialJoinLogin(authJoinRequest);
         //처리결과 보내기 (회원가입/로그인완료)
@@ -46,7 +48,7 @@ public class GoogleAuthService {
 
     private AuthJoinRequest userInfo(GoogleUserAuthDto googleUserAuthDto) {
         // JWT 토큰을 디코딩해서 ID, SUB값 가져오기
-        String jwtPayload= new String(Base64.getUrlDecoder().decode(googleUserAuthDto.getIdToken().split("\\.")[1]));
+        String jwtPayload= googleUserAuthDto.getIdToken().split("\\.")[1];
         OIDCDto oidcDto= payloadDecoder(jwtPayload);
         return AuthJoinRequest
                 .builder()

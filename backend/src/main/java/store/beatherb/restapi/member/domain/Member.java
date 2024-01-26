@@ -22,16 +22,16 @@ public class Member {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "email", nullable = false, length = 255)
+    @Column(name = "email")
     private String email;
 
-    @Column(name = "name", nullable = false, length = 255)
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "nickname", nullable = false, length = 255)
+    @Column(name = "nickname")
     private String nickname;
 
-    @Column(name = "advertise", nullable = false)
+    @Column(name = "advertise")
     private Boolean advertise;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -40,10 +40,10 @@ public class Member {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updated_at;
 
-    @Column(name = "picture", nullable = false)
+    @Column(name = "picture")
     private String picture;
 
-    @Column(name = "member_id", nullable = false)
+    @Column(name = "member_id")
     private String memberId;
 
     @Column(name="dm_agree")

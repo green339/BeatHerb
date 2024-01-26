@@ -1,5 +1,6 @@
 package store.beatherb.restapi.auth.dto.oauth;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
@@ -11,6 +12,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+@JsonIgnoreProperties(ignoreUnknown =true)
 public class OIDCDto implements ProviderUserInfoDto {
     @NotNull(message="sub 반드시")
     private String sub;

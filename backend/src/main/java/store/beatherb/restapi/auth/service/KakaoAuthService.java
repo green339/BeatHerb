@@ -32,8 +32,10 @@ public class KakaoAuthService {
     public AuthVerifyTokenResponse auth(AuthOAuthKakaoRequest authOAuthKakaoRequest){
         //1. access token refresh token id token 받아옴
         KakaoUserAuthDto kakaoUserAuthDto=userAuth(authOAuthKakaoRequest);
+        log.info("id token 받아옴: "+kakaoUserAuthDto.getIdToken());
         //2. id 토큰 이용해서 이메일/식별자 받아옴
         AuthJoinRequest authJoinRequest =userInfo(kakaoUserAuthDto);
+        log.info("이메일 받아옴 "+authJoinRequest.getEmail());
         //회원가입, 로그인 로직으로 보내기
         authService.socialJoinLogin(authJoinRequest);
         //처리결과 보내기 (회원가입/로그인완료/에러)
@@ -42,7 +44,8 @@ public class KakaoAuthService {
 
     private AuthJoinRequest userInfo(KakaoUserAuthDto kakaoUserAuthDto){
         // JWT 토큰을 디코딩해서 ID, SUB값 가져오기
-        String jwtPayload= new String(Base64.getUrlDecoder().decode(kakaoUserAuthDto.getIdToken().split("\\.")[1]));
+        String jwtPayload= kakaoUserAuthDto.getIdToken().split("\\.")[1];
+        log.info("payload: "+jwtPayload);
         OIDCDto oidcDto= payloadDecoder(jwtPayload);
         return AuthJoinRequest
                 .builder()

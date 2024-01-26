@@ -36,7 +36,9 @@ public class NaverAuthService {
         //1. access token refresh token id token 받아옴
         //2. access token 이용해서 이메일/식별자 받아옴
         NaverUserAuthDto naverUserAuthDto=userAuth(authOAuthNaverRequest);
+        log.info("access token 받아옴"+naverUserAuthDto.getAccessToken());
         AuthJoinRequest authJoinRequest =userInfo(naverUserAuthDto);
+        log.info("email 받아옴"+authJoinRequest.getEmail());
         //회원가입, 로그인 로직으로 보내기(providerAuthUserInfoDto)
         authService.socialJoinLogin(authJoinRequest);
         //처리결과 보내기 (회원가입/로그인완료)
