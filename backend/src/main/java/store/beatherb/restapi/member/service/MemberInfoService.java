@@ -24,7 +24,7 @@ public class MemberInfoService {
         Long id;//헤더에서 access token을 받아와서 id값 가져오기. 토큰값 확인
         Member member=memberRepository.findById(1L)
                 .orElseThrow(()->new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
-        String sub=oauthService.linkage(oauthRequest,provider);
+        String sub=oauthService.sub(oauthRequest,provider);
         switch(provider){
             case KAKAO -> {
                 if(memberRepository.findByKakao(sub).isPresent()){

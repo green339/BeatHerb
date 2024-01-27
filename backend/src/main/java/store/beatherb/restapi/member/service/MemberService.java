@@ -36,7 +36,13 @@ public class MemberService {
         //이메일 인증 보내기
     }
     public void socialSignIn(OAuthRequest oauthRequest,Provider provider){
-        Member member=oauthService.signIn(oauthRequest, provider);
+        String sub=oauthService.sub(oauthRequest, provider);
+        Member member=null;
+        switch(provider) {
+            case KAKAO -> member = memberRepository.findByKakao(sub).orElseThrow(() -> new MemberException(MemberErrorCode.SOCIAL_IS_NOT_EXIST));
+            case NAVER -> member = memberRepository.findByNaver(sub).orElseThrow(() -> new MemberException(MemberErrorCode.SOCIAL_IS_NOT_EXIST));
+            case GOOGLE -> member = memberRepository.findByGoogle(sub).orElseThrow(() -> new MemberException(MemberErrorCode.SOCIAL_IS_NOT_EXIST));
+        }
         //토큰 생성 결과값 보내기
     }
 
