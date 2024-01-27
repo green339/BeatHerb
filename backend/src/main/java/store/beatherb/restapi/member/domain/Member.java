@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Date;
 
 @Slf4j
-@NoArgsConstructor(access = AccessLevel.NONE) //PROTECTED 이거 밖에서하면 access가 안돼요...
+
 @Entity
 @Table(name="member", uniqueConstraints = {@UniqueConstraint(
         name = "MEMBERID_UNIQUE",
@@ -16,6 +16,10 @@ import java.util.Date;
 )})
 @Getter
 @Setter
+// conflict나면 이부분은 그냥 내가 builder패턴으로 만들려고 한거니까 원래 만든거로 써도됨 -> 근데 필드에 naver, kakao, google은 추가해주세요
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED) //PROTECTED 이거 밖에서하면 access가 안돼요...
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,7 +53,13 @@ public class Member {
     @Column(name="dm_agree")
     private boolean dmAgree;
 
-    @Column(name="sub")
-    private String sub;
+    @Column(name="naver")
+    private String naver;
+
+    @Column(name="kakao")
+    private String kakao;
+
+    @Column(name="google")
+    private String google;
 }
 
