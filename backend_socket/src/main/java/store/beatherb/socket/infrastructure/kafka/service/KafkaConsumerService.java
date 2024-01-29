@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import org.springframework.web.socket.TextMessage;
 import store.beatherb.socket.infrastructure.kafka.KafkaTopic;
 import store.beatherb.socket.websocket.util.WebSocketHandler;
 
@@ -26,7 +27,7 @@ public class KafkaConsumerService {
         log.info("message : [{}]", message);
 
         //TODO : JSON 으로 컨버팅 후 receiver 보기
-//        this.webSocketHandler.getSession("1").sendMessage(new TextMessage(message));
+        this.webSocketHandler.getSession(1).sendMessage(new TextMessage(message));
 
 
     }
