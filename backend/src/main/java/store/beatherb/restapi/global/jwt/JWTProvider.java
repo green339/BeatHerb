@@ -56,10 +56,10 @@ public class JWTProvider {
         //토큰 제목 (subject), 데이터 (claim) 정보 셋팅
         Date expTime = new Date(System.currentTimeMillis() + expireTime);
         if(subject.equals("access-token")){
-            this.accessTokenExpiresIn = expTime.getTime();
+            this.accessTokenExpiresIn = expTime.getTime()/1000;
         }
         else{
-            this.refreshTokenExpiresIn = expTime.getTime();
+            this.refreshTokenExpiresIn = expTime.getTime()/1000;
         }
         Claims claims = Jwts.claims()
                 .setSubject(subject) // 토큰 제목 설정 ex) access-token, refresh-token
@@ -108,7 +108,7 @@ public class JWTProvider {
         }
     }
 
-    public long getMemberPrimaryKeyId(String token){
+    public Long getMemberPrimaryKeyId(String token){
         Jws<Claims> claims = null;
         try{
             claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(token);
@@ -120,7 +120,8 @@ public class JWTProvider {
         Map<String, Object> value = claims.getBody();
         log.info("value : {}", value);
 
-        return (long)value.get("id");
+
+        return ((Number)value.get("id")).longValue();
     }
 
 //    public VerifyTokenResponse generateVerifyTokenResponse(long id){
