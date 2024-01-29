@@ -52,12 +52,12 @@ export default function ContentsBoard() {
 
       <div className="grid grid-cols-4 gap-4 items-center">
         {
-          Array(contentsNum).fill().map((v,i)=>i+1).map((_, index) => {
+          Array(contentsNum).fill().map((v,i)=>i+1).map((value, index) => {
             return (
-              <div className="flex justify-center">
-                <ContentsItem key={index} size={150} title={active}/>
+              <div key={index} className="flex justify-center">
+                <ContentsItem size={150} title={active}/>
               </div>
-            );
+            )
           })
         }
       </div>
