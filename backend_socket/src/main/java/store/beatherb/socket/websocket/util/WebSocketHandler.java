@@ -16,17 +16,18 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
 
 
-    private static final ConcurrentHashMap<String, WebSocketSession> CLIENTS = new ConcurrentHashMap<String, WebSocketSession>();
+    private static final ConcurrentHashMap<Long, WebSocketSession> CLIENTS = new ConcurrentHashMap<Long, WebSocketSession>();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        CLIENTS.put(session.getId(),session);
+
+        CLIENTS.put((long)session.getAttributes().get("id"),session);
 //        CLIENTS.put("1", session);
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        CLIENTS.remove(session.getId());
+        CLIENTS.remove((long)session.getAttributes().get("id"));
     }
 
     @Override
@@ -35,7 +36,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 //        System.out.println(message);
     }
 
-    public WebSocketSession getSession(String sessionId) {
+    public WebSocketSession getSession(long sessionId) {
         return CLIENTS.get(sessionId);
     }
 }
