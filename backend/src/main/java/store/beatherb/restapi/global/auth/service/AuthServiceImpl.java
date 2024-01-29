@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import store.beatherb.restapi.global.auth.domain.*;
 import store.beatherb.restapi.global.auth.dto.response.VerifyTokenResponse;
 import store.beatherb.restapi.global.jwt.JWTProvider;
+import store.beatherb.restapi.global.jwt.dto.TokenDTO;
 import store.beatherb.restapi.member.domain.Member;
 import store.beatherb.restapi.member.domain.MemberRepository;
 
@@ -32,18 +33,21 @@ public class AuthServiceImpl implements AuthService {
         //generateVerifyTokenResponse 메서드는
         //AccessToken, RefreshToken을 생성한 후
         //AccessToken, RefreshToken, AccessTokenExpireTime에 대한 정보를 담아서 넘겨준다.
-        VerifyTokenResponse verifyTokenResponse = jwtProvider.generateVerifyTokenResponse(id);
-        verifyTokenResponse.setName(name);
+        TokenDTO accessToken = jwtProvider.createAccessToken(id);
+        TokenDTO refreshToken = jwtProvider.createRefreshToken(id);
 
-        //Redis에 RefreshToken을 저장
-        RefreshToken refreshToken =
-                RefreshToken.builder()
-                        .id(auth.getMember().getId())
-                        .value(verifyTokenResponse.getRefreshToken())
-                        .build();
+        //redis 에 저장
+        refreshTokenRepository.save(RefreshToken.builder()
+                .id(auth.getMember().getId())
+                .value(refreshToken.getToken())
+                .build());
 
-        refreshTokenRepository.save(refreshToken);
-
-        return verifyTokenResponse;
+        return VerifyTokenResponse.builder()
+                .accessToken(accessToken.getToken())
+                .accessTokenExpiresIn(accessToken.getExpired())
+                .refreshToken(refreshToken.getToken())
+                .refreshTokenExpiresIn(refreshToken.getExpired())
+                .name(name)
+                .build();
     }
 }

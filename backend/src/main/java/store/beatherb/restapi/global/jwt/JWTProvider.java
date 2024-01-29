@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import store.beatherb.restapi.global.auth.dto.response.VerifyTokenResponse;
 import store.beatherb.restapi.global.exception.UnAuthorizedException;
+import store.beatherb.restapi.global.jwt.dto.TokenDTO;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
@@ -29,12 +30,22 @@ public class JWTProvider {
     private long accessTokenExpiresIn;
     private long refreshTokenExpiresIn;
 
-    public String createAccessToken(long id){
-        return create(id, "access-token", accessTokenExpireTime);
+    public TokenDTO createAccessToken(long id){
+
+
+        String token = create(id, "access-token", accessTokenExpireTime);
+        return TokenDTO.builder()
+                .token(token)
+                .expired(this.accessTokenExpiresIn)
+                .build();
     }
 
-    public String createRefreshToken(long id){
-        return create(id, "refresh-token", refreshTokenExpireTime);
+    public TokenDTO createRefreshToken(long id){
+        String token = create(id, "refresh-token", refreshTokenExpireTime);
+        return TokenDTO.builder()
+                .token(token)
+                .expired(this.refreshTokenExpiresIn)
+                .build();
     }
 
     //Token 발급
@@ -112,15 +123,15 @@ public class JWTProvider {
         return (long)value.get("id");
     }
 
-    public VerifyTokenResponse generateVerifyTokenResponse(long id){
-        String accessToken = createAccessToken(id);
-        String refreshToken = createRefreshToken(id);
-
-        return VerifyTokenResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .accessTokenExpiresIn(this.accessTokenExpiresIn)
-                .refreshTokenExpiresIn(this.refreshTokenExpiresIn)
-                .build();
-    }
+//    public VerifyTokenResponse generateVerifyTokenResponse(long id){
+//        String accessToken = createAccessToken(id);
+//        String refreshToken = createRefreshToken(id);
+//
+//        return VerifyTokenResponse.builder()
+//                .accessToken(accessToken)
+//                .refreshToken(refreshToken)
+//                .accessTokenExpiresIn(this.accessTokenExpiresIn)
+//                .refreshTokenExpiresIn(this.refreshTokenExpiresIn)
+//                .build();
+//    }
 }
