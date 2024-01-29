@@ -32,14 +32,16 @@ export default function Board() {
   }
 
   return (
-    <>
-      <NavBar />
-      <div className="drawer drawer-open">
+    <div className="relative">
+      <div className="fixed top-0 w-full z-10">
+        <NavBar />
+      </div>
+      <div className="drawer drawer-open mt-16">
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content flex flex-col items-center justify-center">
           { children }
         </div> 
-        <div className="drawer-side">
+        <div className="drawer-side sticky top-16">
           <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label> 
           <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
             <li>
@@ -60,6 +62,6 @@ export default function Board() {
           </ul>
         </div>
       </div>
-    </>
+    </div>
   );
 }
