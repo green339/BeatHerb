@@ -27,21 +27,18 @@ public class MemberInfoService {
         String sub=oauthService.sub(oauthRequest,provider);
         switch(provider){
             case KAKAO -> {
-                if(memberRepository.findByKakao(sub).isPresent()){
-                    throw new MemberException(MemberErrorCode.SOCIAL_EXIST);
-                }
+                memberRepository.findByKakao(sub)
+                        .ifPresent(i->{throw new MemberException(MemberErrorCode.SOCIAL_EXIST);});
                 member.setKakao(sub);
             }
             case NAVER -> {
-                if(memberRepository.findByNaver(sub).isPresent()){
-                    throw new MemberException(MemberErrorCode.SOCIAL_EXIST);
-                }
+                memberRepository.findByNaver(sub)
+                        .ifPresent(i->{throw new MemberException(MemberErrorCode.SOCIAL_EXIST);});
                 member.setNaver(sub);
             }
             case GOOGLE -> {
-                if (memberRepository.findByGoogle(sub).isPresent()) {
-                    throw new MemberException(MemberErrorCode.SOCIAL_EXIST);
-                }
+                memberRepository.findByGoogle(sub)
+                        .ifPresent(i->{throw new MemberException(MemberErrorCode.SOCIAL_EXIST);});
                 member.setGoogle(sub);
             }
         }

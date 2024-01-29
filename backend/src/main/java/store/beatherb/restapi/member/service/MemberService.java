@@ -25,10 +25,8 @@ public class MemberService {
 
     public void signUp(SignUpRequest signUpRequest){
         Email.validate(signUpRequest.getEmail());
-        Optional<Member> member=memberRepository.findByEmail(signUpRequest.getEmail());
-        if(member.isPresent()) {
-            throw new MemberException(MemberErrorCode.EMAIL_EXIST);
-        }
+        memberRepository.findByEmail(signUpRequest.getEmail())
+                .ifPresent(i->{throw new MemberException(MemberErrorCode.EMAIL_EXIST);});
         memberRepository.save(Member.builder().email(signUpRequest.getEmail()).build());
         //이메일 인증 보내기
     }
