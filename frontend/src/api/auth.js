@@ -1,6 +1,6 @@
 // 구글 로그인
 export const loginWithGoogle = () => {
-  const apiKey = process.env.REACT_APP_GOOGLE_REST_API_KEY;
+  const apiKey = process.env.REACT_APP_REST_API_KEY_GOOGLE;
   const redirectUri = process.env.REACT_APP_REDIRECT_URI_GOOGLE;
   const googleUrl = `https://accounts.google.com/o/oauth2/auth?client_id=${apiKey}&redirect_uri=${redirectUri}&response_type=code&scope=openid email profile`
   window.location.href = googleUrl
@@ -8,7 +8,7 @@ export const loginWithGoogle = () => {
 
 // 네이버 로그인
 export const loginWithNaver = () => {
-  const apiKey = process.env.REACT_APP_NAVER_REST_API_KEY;
+  const apiKey = process.env.REACT_APP_REST_API_KEY_NAVER;
   const redirectUri = process.env.REACT_APP_REDIRECT_URI_NAVER;
   const naverUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${apiKey}&redirect_uri=${redirectUri}&state=1234`
   window.location.href = naverUrl;
@@ -16,7 +16,7 @@ export const loginWithNaver = () => {
 
 // 카카오 로그인
 export const loginWithKakao = () => {
-  const apiKey = process.env.REACT_APP_KAKAO_REST_API_KEY;
+  const apiKey = process.env.REACT_APP_REST_API_KEY_KAKAO;
   const redirectUri = process.env.REACT_APP_REDIRECT_URI_KAKAO;
   const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${apiKey}&redirect_uri=${redirectUri}&scope=openid`;
   window.location.href = kakaoUrl;
