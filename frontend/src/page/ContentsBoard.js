@@ -5,27 +5,34 @@ import ContentsItem from "../components/ContentsItem";
 
 export default function ContentsBoard() {
   const [active, setActive] = useState("melody");
+  const [sortOption, setSortOption] = useState("recent");
+
+  const handleSortOptionChange = (e) => {
+    setSortOption(e.target.value);
+  }
+
+  const contentsNum = (sortOption === "recent" ? 100 : 5);
 
   return (
     <div className="w-full h-full">
-      <div role="tablist" className="tabs tabs-bordered my-8">
+      <div role="tablist" className="tabs tabs-bordered my-8 tabs-lg">
         <button
           role="tab"
-          className={"tab" + (active === "melody" ? " tab-active" : "")}
+          className={"tab w-1/2 translate-x-1/2" + (active === "melody" ? " tab-active" : "")}
           onClick={() => setActive("melody")}
         >
           멜로디
         </button>
         <button
           role="tab"
-          className={"tab" + (active === "vocal" ? " tab-active" : "")}
+          className={"tab w-1/2 translate-x-1/2" + (active === "vocal" ? " tab-active" : "")}
           onClick={() => setActive("vocal")}
         >
           보컬
         </button>
         <button
           role="tab"
-          className={"tab" + (active === "music" ? " tab-active" : "")}
+          className={"tab w-1/2 translate-x-1/2" + (active === "music" ? " tab-active" : "")}
           onClick={() => setActive("music")}
         >
           음원
@@ -33,18 +40,22 @@ export default function ContentsBoard() {
       </div>
 
       <div className="w-full flex justify-end mb-8">
-        <select className="select select-ghost w-full max-w-xs text-base-content justify-self-end">
-          <option selected>최신 순</option>
-          <option>인기 순</option>
+        <select 
+          value={sortOption} 
+          className="select select-ghost w-full max-w-xs text-base-content justify-self-end"
+          onChange={handleSortOptionChange}
+        >
+          <option key="recent" value="recent">최신 순</option>
+          <option key="popularity" value="popularity">인기 순</option>
         </select>
       </div>
 
-      <div class="grid grid-cols-4 gap-4 items-center">
+      <div className="grid grid-cols-4 gap-4 items-center">
         {
-          [...Array(100)].map((_,i) => {
+          Array(contentsNum).fill().map((v,i)=>i+1).map((_, index) => {
             return (
               <div className="flex justify-center">
-                <ContentsItem id={i} size={150} title={active}/>
+                <ContentsItem key={index} size={150} title={active}/>
               </div>
             );
           })
