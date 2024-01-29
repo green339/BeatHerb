@@ -5,17 +5,11 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-
 @Entity
 @Table(name="inorder")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Inorder {
-    @Builder
-    public Inorder(Content content) {
-        this.content = content;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
@@ -25,5 +19,8 @@ public class Inorder {
     @JoinColumn(name = "content_id")
     private Content content;
 
-
+    @Builder
+    public Inorder(Content content) {
+        this.content = content;
+    }
 }

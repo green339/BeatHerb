@@ -6,18 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import store.beatherb.restapi.member.domain.Member;
 
 @Slf4j
-
 @Entity
 @Table(name="star")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Star {
-    @Builder
-    public Star(Content content, Member member) {
-        this.content = content;
-        this.member = member;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id", unique = true)
@@ -30,4 +23,10 @@ public class Star {
     @ManyToOne
     @JoinColumn(name="member_id")
     private Member member;
+
+    @Builder
+    public Star(Content content, Member member) {
+        this.content = content;
+        this.member = member;
+    }
 }

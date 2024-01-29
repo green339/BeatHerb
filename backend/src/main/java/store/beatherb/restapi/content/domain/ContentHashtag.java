@@ -5,19 +5,11 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-
 @Entity
 @Table(name="content_hashtag")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ContentHashtag {
-
-    @Builder
-    public ContentHashtag(long hashtagId, Content content) {
-        this.hashtagId = hashtagId;
-        this.content = content;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
@@ -32,4 +24,10 @@ public class ContentHashtag {
     @ManyToOne
     @JoinColumn(name="content_id")
     private Content content;
+
+    @Builder
+    public ContentHashtag(long hashtagId, Content content) {
+        this.hashtagId = hashtagId;
+        this.content = content;
+    }
 }

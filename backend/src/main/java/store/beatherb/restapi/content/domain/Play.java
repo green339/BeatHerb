@@ -7,19 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.LocalDateTime;
 
 @Slf4j
-
 @Entity
 @Table(name="play")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Play {
-    @Builder
-    public Play(Content content, int hit, LocalDateTime createdAt) {
-        this.content = content;
-        this.hit = hit;
-        this.createdAt = createdAt;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id", unique = true)
@@ -34,4 +26,11 @@ public class Play {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @Builder
+    public Play(Content content, int hit, LocalDateTime createdAt) {
+        this.content = content;
+        this.hit = hit;
+        this.createdAt = createdAt;
+    }
 }

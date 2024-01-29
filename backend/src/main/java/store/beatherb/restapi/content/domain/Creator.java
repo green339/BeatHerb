@@ -5,19 +5,11 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-
 @Entity
 @Table(name="creator")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Creator {
-    @Builder
-    public Creator(long creatorId, Content content, boolean agree) {
-        this.creatorId = creatorId;
-        this.content = content;
-        this.agree = agree;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
@@ -32,4 +24,11 @@ public class Creator {
 
     @Column(name="agree")
     private boolean agree;
+
+    @Builder
+    public Creator(long creatorId, Content content, boolean agree) {
+        this.creatorId = creatorId;
+        this.content = content;
+        this.agree = agree;
+    }
 }
