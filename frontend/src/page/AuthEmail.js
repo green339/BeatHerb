@@ -1,6 +1,7 @@
-// 회원가입 페이지
+// 메일 인증 페이지
 
 export default function AuthEmail() {
+  // 메일 인증
   const handleOnClick = () => {
     console.log("click email verify button!!!");
     // 메일 인증 과정

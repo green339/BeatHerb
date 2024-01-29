@@ -9,6 +9,7 @@ module.exports = {
           "base-100": "#070707",
           "base-200": "#202020",
           "base-content": "#f5f5f5",
+          "error": "#ff0000",
         },
       },
     ],
