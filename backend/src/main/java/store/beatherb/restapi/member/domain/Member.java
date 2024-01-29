@@ -10,10 +10,7 @@ import java.util.Date;
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name="member", uniqueConstraints = {@UniqueConstraint(
-        name = "MEMBERID_UNIQUE",
-        columnNames = {"memberId"}
-)})
+@Table(name="member")
 @Getter
 @Setter
 public class Member {
@@ -34,7 +31,7 @@ public class Member {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "email", nullable = false, length = 255)
+    @Column(name = "email", nullable = false, length = 255, unique = true)
     private String email;
 
     @Column(name = "name", nullable = false, length = 255)
