@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Slf4j
 @Component
-public class JWT {
+public class JWTProvider {
     @Value("${jwt.salt}")
     private String salt;
 
@@ -26,20 +26,34 @@ public class JWT {
     @Value("${jwt.refresh-token.expiretime}")
     private long refreshTokenExpireTime;
 
-    public String createAccessToken(String id){ return create(id, "access-token", accessTokenExpireTime);}
+    private long accessTokenExpiresIn;
+    private long refreshTokenExpiresIn;
 
-    public String createRefreshToken(String id){ return create(id, "refresh-token", refreshTokenExpireTime);}
+    public String createAccessToken(long id){
+        return create(id, "access-token", accessTokenExpireTime);
+    }
+
+    public String createRefreshToken(long id){
+        return create(id, "refresh-token", refreshTokenExpireTime);
+    }
 
     //Token 발급
     //payload db에서 increment해주는 pk 값을 넣어줄것임
     //"id" : 1
-    private String create(String id, String subject, long expireTime){
+    private String create(long id, String subject, long expireTime){
         //payload 설정 : 생성일(IssuedAt), 유효기간(Expiration)
         //토큰 제목 (subject), 데이터 (claim) 정보 셋팅
+        Date expTime = new Date(System.currentTimeMillis() + expireTime);
+        if(subject.equals("access-token")){
+            this.accessTokenExpiresIn = expTime.getTime();
+        }
+        else{
+            this.refreshTokenExpiresIn = expTime.getTime();
+        }
         Claims claims = Jwts.claims()
                 .setSubject(subject) // 토큰 제목 설정 ex) access-token, refresh-token
                 .setIssuedAt(new Date()) // 생성일 설정
-                .setExpiration(new Date(System.currentTimeMillis() + expireTime)); // 만료일 설정 (유효기간)
+                .setExpiration(expTime); // 만료일 설정 (유효기간)
 
         //저장할 data의 key, value
         claims.put("id", id);
@@ -79,15 +93,14 @@ public class JWT {
             return true;
         } catch(Exception e){
             log.error(e.getMessage());
-
             return false;
         }
     }
 
-    public String getMemberPrimaryKeyId(String authorization){
+    public long getMemberPrimaryKeyId(String token){
         Jws<Claims> claims = null;
         try{
-            claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(authorization);
+            claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(token);
         } catch(Exception e){
             log.error(e.getMessage());
             throw new UnAuthorizedException();
@@ -96,17 +109,18 @@ public class JWT {
         Map<String, Object> value = claims.getBody();
         log.info("value : {}", value);
 
-        return (String)value.get("id");
+        return (long)value.get("id");
     }
 
-    public VerifyTokenResponse generateVerifyTokenResponse(String id){
+    public VerifyTokenResponse generateVerifyTokenResponse(long id){
         String accessToken = createAccessToken(id);
         String refreshToken = createRefreshToken(id);
 
         return VerifyTokenResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .accessTokenExpiresIn(new Date(new Date().getTime() + accessTokenExpireTime).getTime())
+                .accessTokenExpiresIn(this.accessTokenExpiresIn)
+                .refreshTokenExpiresIn(this.refreshTokenExpiresIn)
                 .build();
     }
 }
