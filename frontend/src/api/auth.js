@@ -1,5 +1,3 @@
-import axios from "axios";
-
 // 구글 로그인
 export const loginWithGoogle = () => {
   const apiKey = process.env.REACT_APP_GOOGLE_REST_API_KEY;

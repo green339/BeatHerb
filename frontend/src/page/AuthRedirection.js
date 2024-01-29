@@ -68,7 +68,7 @@ export default function AuthRedirection() {
       const email = atob(encoded_email);
 
       axios({
-
+        
       })
       .then((response) => {
         console.log(response.data);

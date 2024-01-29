@@ -9,6 +9,10 @@ import { loginWithGoogle, loginWithNaver, loginWithKakao, loginWithEmail } from 
 export default function LogIn() {
   const [email, setEmail] = useState('');
 
+  // 이메일 정규표현식
+  const emailExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+  const isValid = emailExp.test(email);
+
   return (
     <div className="absolute w-full right-1/2 bottom-1/2 translate-x-1/2 translate-y-1/2">
       <div className="flex flex-col w-full items-center justify-center">
@@ -23,12 +27,13 @@ export default function LogIn() {
           <div className="divider divider-primary w-10/12 text-3xl my-10">또는 이메일로 로그인하기</div>
         </div>
         <input
-          className="input input-bordered join-item w-4/12 text-base-content"
+          className={"input input-bordered w-1/3 join-item text-base-content"+(isValid || !email ? "" : " input-error")}
           placeholder="이메일을 입력해주세요"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <button onClick={() => loginWithEmail(email)} className="btn btn-primary w-4/12 items-center my-2">이메일로 로그인</button>
+        <p className={"text-error mt-2 mb-1 text-sm" + (isValid || !email ? " invisible" : "")}>이메일 형식이 올바르지 않습니다.</p>
+        <button disabled={!isValid} onClick={() => loginWithEmail(email)} className="btn btn-primary w-4/12 items-center my-2">이메일로 로그인</button>
       </div>
     </div>
   );
