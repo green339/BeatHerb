@@ -20,11 +20,7 @@ public class KafkaProducerService {
         kafkaTemplate.send(topic.getTopic(),message);
     }
 
-    public void sendChat(String message){
-        /*
-        TODO : MESSAGE 포매터 적용 후 전송
-        TODO : Sender, Receiver Message 레벨에서 추가
-         */
+    public void sendDirectMessage(String message){
         this.sendMessage(KafkaTopic.DIRECT_MESSAGE,message);
     }
 
