@@ -1,9 +1,9 @@
-// 쇼츠 게시판 페이지 항목
+// 라이브 게시판 페이지 항목
 
-import ShortsItem from "../components/ShortsItem";
+import LiveItem from "../components/LiveItem";
 import { useState } from "react";
 
-export default function ShortsBoard() {
+export default function LiveBoard() {
   const [sortOption, setSortOption] = useState("recent");
 
   const handleSortOptionChange = (e) => {
@@ -15,7 +15,7 @@ export default function ShortsBoard() {
   return (
     <div className="w-full h-full">
       <div className="w-full flex justify-start my-8 ms-12">
-        <h1 className="text-primary">Shorts</h1>
+        <h1 className="text-primary">라이브</h1>
       </div>
 
       <div className="w-full flex justify-end mb-8">
@@ -29,12 +29,12 @@ export default function ShortsBoard() {
         </select>
       </div>
 
-      <div className="grid grid-cols-4 gap-4 items-center">
+      <div className="grid grid-cols-3 gap-4 items-center">
         {
-          Array(contentsNum).fill().map((v,i)=>i+1).map((_, index) => {
+          Array(contentsNum).fill().map((v,i)=>i+1).map((value, index) => {
             return (
               <div key={index} className="flex justify-center">
-                <ShortsItem title={sortOption}/>
+                <LiveItem title={sortOption}/>
               </div>
             )
           })
