@@ -5,6 +5,7 @@ import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import ContentsBoard from "./ContentsBoard";
 import ShortsBoard from "./ShortsBoard";
+import LiveBoard from "./LiveBoard";
 
 export default function Board() {
   const { category } = useParams();
@@ -24,7 +25,7 @@ export default function Board() {
       children = <ShortsBoard />;
       break;
     case "live":
-      children = <></>;
+      children = <LiveBoard />;
       break;
     default:
       //메인 페이지로 리다이렉트
@@ -43,7 +44,7 @@ export default function Board() {
         </div>
         <div className="drawer-side">
           <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay" />
-          <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content mt-[64px]">
+          <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content pt-[78px]">
             <li>
               <Link to="/board/all" className="text-3xl p-4 text-base-content hover:text-base-content">전체</Link>
             </li>
