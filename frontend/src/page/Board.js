@@ -4,6 +4,7 @@ import NavBar from "../components/NavBar";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import ContentsBoard from "./ContentsBoard";
+import ShortsBoard from "./ShortsBoard";
 
 export default function Board() {
   const { category } = useParams();
@@ -13,14 +14,14 @@ export default function Board() {
     case "all":
       children = <></>;
       break;
-    case "favorite":
+    case "popularity":
       children = <></>;
       break;
     case "contents":
       children = <ContentsBoard />;
       break;
     case "shorts":
-      children = <></>;
+      children = <ShortsBoard />;
       break;
     case "live":
       children = <></>;
@@ -45,7 +46,7 @@ export default function Board() {
               <Link to="/board/all" className="text-3xl p-4 text-base-content hover:text-base-content">전체</Link>
             </li>
             <li>
-              <Link to="/board/favorite" className="text-3xl p-4 text-base-content hover:text-base-content">인기</Link>
+              <Link to="/board/popularity" className="text-3xl p-4 text-base-content hover:text-base-content">인기</Link>
             </li>
             <li>
               <Link to="/board/contents" className="text-3xl p-4 text-base-content hover:text-base-content">컨텐츠</Link>

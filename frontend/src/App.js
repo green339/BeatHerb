@@ -1,7 +1,7 @@
 // App Component
 
 import './App.css';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import Main from './page/Main.js';
 import LogIn from './page/LogIn.js';
 import AuthEmail from './page/AuthEmail.js';
@@ -21,6 +21,7 @@ export default function App() {
           <Route path="/auth_success" element={<AuthSuccess />} />
           <Route path="/auth/redirect/:provider" element={<AuthRedirection />} />
           <Route path="/board/:category" element={<Board />} />
+          <Route path="/workplace" element={<Outlet />} />
           <Route path="/test" element={<Test />} />
           <Route path="/*" element={<Navigate to="/" />} />
         </Routes>
