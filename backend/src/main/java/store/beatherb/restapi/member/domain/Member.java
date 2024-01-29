@@ -18,7 +18,7 @@ import java.util.Date;
 @Setter
 public class Member {
     @Builder
-    public Member(String email, String name, String nickname, Boolean advertise, Date created_at, Date updated_at, String picture, String memberId, boolean dmAgree) {
+    public Member(String email, String name, String nickname, Boolean advertise, Date created_at, Date updated_at, String picture, boolean dmAgree) {
         this.email = email;
         this.name = name;
         this.nickname = nickname;
@@ -26,7 +26,6 @@ public class Member {
         this.created_at = created_at;
         this.updated_at = updated_at;
         this.picture = picture;
-        this.memberId = memberId;
         this.dmAgree = dmAgree;
     }
 
@@ -53,11 +52,9 @@ public class Member {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updated_at;
 
-    @Column(name = "picture", nullable = false)
+    @Column(name = "picture", nullable = true)
     private String picture;
 
-    @Column(name = "member_id", nullable = false)
-    private String memberId;
 
     @Column(name="dm_agree")
     private boolean dmAgree;
