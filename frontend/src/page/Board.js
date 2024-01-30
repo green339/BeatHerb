@@ -2,22 +2,23 @@
 
 import NavBar from "../components/NavBar";
 import { useParams } from "react-router";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import ContentsBoard from "./ContentsBoard";
 import ShortsBoard from "./ShortsBoard";
 import LiveBoard from "./LiveBoard";
 import AllBoard from "./AllBoard";
+import PopularityBoard from "./PopularityBoard";
 
 export default function Board() {
   const { category } = useParams();
-  let children = <></>; // 하위 항목
+  let children = null; // 하위 항목
 
   switch (category) {
     case "all":
       children = <AllBoard />;
       break;
     case "popularity":
-      children = <></>;
+      children = <PopularityBoard />;
       break;
     case "contents":
       children = <ContentsBoard />;
@@ -29,8 +30,8 @@ export default function Board() {
       children = <LiveBoard />;
       break;
     default:
-      //메인 페이지로 리다이렉트
-      break;
+      alert("잘못된 접근입니다.");
+      return <Navigate to="/" />;
   }
 
   return (

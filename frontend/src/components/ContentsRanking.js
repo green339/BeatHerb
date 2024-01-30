@@ -1,8 +1,9 @@
 // 주제에 대해서 Top 5 항목을 보여주는 컴포넌트
 
 import { Fragment } from "react";
+import { Link } from "react-router-dom";
 
-export default function ContentsRanking({ title }) {
+export default function ContentsRanking({ title, link }) {
   const itemList = [1, 2, 3, 4, 5].map((value) => {
     return (
       <Fragment key={value}>
@@ -23,7 +24,9 @@ export default function ContentsRanking({ title }) {
     <div className="w-full p-8 flex flex-col bg-base-200 rounded-lg">
       <div className="flex place-content-between">
         <h3 className="text-base-content m-0">{title}</h3>
-        <button className="text-base-content">더보기</button>
+        <Link to={link}>
+          <button className="text-base-content">더보기</button>
+        </Link>
       </div>
       { itemList }
     </div>
