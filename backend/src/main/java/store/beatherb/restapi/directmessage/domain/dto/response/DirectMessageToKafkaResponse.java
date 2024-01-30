@@ -5,15 +5,15 @@ import lombok.Builder;
 import lombok.Getter;
 import store.beatherb.restapi.directmessage.domain.DirectMessage;
 import store.beatherb.restapi.member.domain.Member;
-import store.beatherb.restapi.member.dto.MemberDTO;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
-public class DirectMessageResponse {
+public class DirectMessageToKafkaResponse {
 
     @Builder
-    public DirectMessageResponse(Long id, Member sender, Member receiver, Timestamp createdAt, String message) {
+    public DirectMessageToKafkaResponse(Long id, Member sender, Member receiver, Timestamp createdAt, String message) {
         this.id = id;
         this.sender =
                 DMMember.builder().id(sender.getId())
@@ -29,8 +29,8 @@ public class DirectMessageResponse {
         this.message = message;
     }
 
-    public static DirectMessageResponse toDTO(DirectMessage directMessage){
-        return DirectMessageResponse.builder()
+    public static DirectMessageToKafkaResponse toDTO(DirectMessage directMessage){
+        return DirectMessageToKafkaResponse.builder()
                 .id(directMessage.getId())
                 .sender(directMessage.getSender())
                 .receiver(directMessage.getReceiver())

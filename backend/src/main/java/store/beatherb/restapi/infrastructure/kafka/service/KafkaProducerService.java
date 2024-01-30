@@ -10,9 +10,6 @@ import store.beatherb.restapi.infrastructure.kafka.KafkaTopic;
 @RequiredArgsConstructor
 public class KafkaProducerService {
 
-
-
-
     private final KafkaTemplate<String, String> kafkaTemplate;
 
 
@@ -23,6 +20,4 @@ public class KafkaProducerService {
     public void sendDirectMessage(String message){
         this.sendMessage(KafkaTopic.DIRECT_MESSAGE,message);
     }
-
-
 }
