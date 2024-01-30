@@ -11,6 +11,8 @@ import store.beatherb.restapi.content.service.CommentService;
 import store.beatherb.restapi.global.auth.domain.LoginUser;
 import store.beatherb.restapi.member.dto.MemberDTO;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -18,12 +20,12 @@ import store.beatherb.restapi.member.dto.MemberDTO;
 public class CommentController {
     private final CommentService commentService;
     @PostMapping
-    public ResponseEntity registComment(@LoginUser MemberDTO memberDto, @RequestBody RegistCommentRequest registCommentRequest){
+    public ResponseEntity<Comment> registComment(@LoginUser MemberDTO memberDto, @RequestBody RegistCommentRequest registCommentRequest){
         return ResponseEntity.ok(commentService.registerComment(memberDto, registCommentRequest));
     }
 
     @GetMapping("{contentId}")
-    public ResponseEntity getCommentList(@PathVariable Long contentId){
+    public ResponseEntity<List<Comment>> getCommentList(@PathVariable Long contentId){
         return ResponseEntity.ok(commentService.getComments(contentId));
     }
 }
