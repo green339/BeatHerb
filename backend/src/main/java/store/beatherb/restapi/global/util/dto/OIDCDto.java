@@ -1,4 +1,4 @@
-package store.beatherb.restapi.global.dto;
+package store.beatherb.restapi.global.util.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;

@@ -27,7 +27,32 @@ public class AuthServiceImpl implements AuthService {
         );
 
         long id = auth.getMember().getId();
-        Member member = memberRepository.findById(auth.getMember().getId()).orElseThrow();
+        return generateVerifyTokenResponse(id);
+//        Member member = memberRepository.findById(auth.getMember().getId()).orElseThrow();
+//        String name = member.getName();
+//
+//        //generateVerifyTokenResponse 메서드는
+//        //AccessToken, RefreshToken을 생성한 후
+//        //AccessToken, RefreshToken, AccessTokenExpireTime에 대한 정보를 담아서 넘겨준다.
+//        TokenDTO accessToken = jwtProvider.createAccessToken(id);
+//        TokenDTO refreshToken = jwtProvider.createRefreshToken(id);
+//
+//        //redis 에 저장
+//        refreshTokenRepository.save(RefreshToken.builder()
+//                .id(auth.getMember().getId())
+//                .value(refreshToken.getToken())
+//                .build());
+//
+//        return VerifyTokenResponse.builder()
+//                .accessToken(accessToken.getToken())
+//                .accessTokenExpiresIn(accessToken.getExpired())
+//                .refreshToken(refreshToken.getToken())
+//                .refreshTokenExpiresIn(refreshToken.getExpired())
+//                .name(name)
+//                .build();
+    }
+    public VerifyTokenResponse generateVerifyTokenResponse(long id){
+        Member member = memberRepository.findById(id).orElseThrow();
         String name = member.getName();
 
         //generateVerifyTokenResponse 메서드는
@@ -38,10 +63,9 @@ public class AuthServiceImpl implements AuthService {
 
         //redis 에 저장
         refreshTokenRepository.save(RefreshToken.builder()
-                .id(auth.getMember().getId())
+                .id(id)
                 .value(refreshToken.getToken())
                 .build());
-
         return VerifyTokenResponse.builder()
                 .accessToken(accessToken.getToken())
                 .accessTokenExpiresIn(accessToken.getExpired())

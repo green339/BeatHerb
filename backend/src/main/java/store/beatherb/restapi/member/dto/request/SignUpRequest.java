@@ -13,6 +13,6 @@ import lombok.*;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class SignUpRequest {
     @NotNull(message="email은 반드시 포함")
-    String email;
-    String identifier;
+    public String email;
+//    String identifier;
 }
