@@ -21,6 +21,11 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 
+        long sessionId = (long)session.getAttributes().get("id");
+        WebSocketSession prevSession = CLIENTS.get(sessionId);
+        if(prevSession != null){
+            prevSession.close();
+        }
         CLIENTS.put((long)session.getAttributes().get("id"),session);
 //        CLIENTS.put("1", session);
     }
