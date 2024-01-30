@@ -16,7 +16,7 @@ export default function AllBoard() {
         </div>
       </ItemContainerWithTitle>
       <ItemContainerWithTitle title="Shorts" link="/board/shorts">
-        <div className="flex overflow-x-scroll gap-4">
+        <div className="flex scrollbar scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-base-200 hover:scrollbar-thumb-primary overflow-x-scroll gap-4">
           {Array(10).fill().map((v,i)=>i+1).map((value, index) => {
               return (
                 <div key={index} className="flex justify-center">
@@ -29,7 +29,7 @@ export default function AllBoard() {
         </div>
       </ItemContainerWithTitle>
       <ItemContainerWithTitle title="라이브" link="/board/live">
-        <div className="flex overflow-x-scroll gap-4">
+        <div className="flex scrollbar scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-base-200 hover:scrollbar-thumb-primary overflow-x-scroll gap-4">
           {Array(10).fill().map((v,i)=>i+1).map((value, index) => {
               return (
                 <div key={index} className="flex justify-center">
