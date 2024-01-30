@@ -33,10 +33,17 @@ public class KafkaConsumerService {
         ObjectMapper objectMapper = new ObjectMapper();
         DirectMessageResponse jsonToDirectMessage = objectMapper.readValue(message, DirectMessageResponse.class);
 
+
+
         WebSocketSession session = this.webSocketHandler.getSession(jsonToDirectMessage.getReceiver().getId());
         if(session != null){
 
-            session.sendMessage(new TextMessage(message));
+            objectMapper.addMixIn(DirectMessageResponse.class, DirectMessageResponse.ReceiverExclusionMixin.class);
+            String jsonString = objectMapper.writeValueAsString(jsonToDirectMessage);
+
+
+
+            session.sendMessage(new TextMessage(jsonString));
         }
 
 
