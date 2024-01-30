@@ -43,7 +43,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
         if (httpServletRequest != null) {
             String token = httpServletRequest.getHeader("Authorization");
 
-            token = token.split(" ")[1];
+            token =  token.split(" ")[1];
 
 
             if (token != null && !token.trim().equals("")) {
