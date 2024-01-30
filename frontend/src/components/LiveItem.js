@@ -1,3 +1,5 @@
+// 라이브 항목
+
 import ContentsTitleAndArtist from "./ContentsTitleAndArtist";
 
 export default function LiveItem({ title = "Title", artist = "artist" }) {

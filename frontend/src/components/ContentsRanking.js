@@ -1,9 +1,11 @@
 // 주제에 대해서 Top 5 항목을 보여주는 컴포넌트
 
+import { Fragment } from "react";
+
 export default function ContentsRanking({ title }) {
   const itemList = [1, 2, 3, 4, 5].map((value) => {
     return (
-      <>
+      <Fragment key={value}>
         <div className="divider my-1" />
         <div key={value} className="flex place-content-between items-center">
           <div className="flex gap-2 items-center">
@@ -13,7 +15,7 @@ export default function ContentsRanking({ title }) {
           </div>
           <p className="text-base-content m-0">Artist</p>
         </div>
-      </>
+      </Fragment>
     )
   })
   
