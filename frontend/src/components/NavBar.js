@@ -1,5 +1,7 @@
 // 상단 네비게이션 바
 
+import UserButton from "./UserButton";
+
 export default function NavBar() {
   return (
     <div className="navbar bg-base-100 text-base-content">
@@ -23,20 +25,7 @@ export default function NavBar() {
         </ul>
       </div>
       <div className="navbar-end">
-        <details className="dropdown dropdown-bottom dropdown-end">
-          <summary className="m-1 btn btn-circle btn-ghost">
-            <div className="avatar">
-              <div className="w-10 rounded-full">
-                <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" alt="" />
-              </div>
-            </div>
-          </summary>
-          <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-200 rounded-box w-52">
-            <li><a className="text-base-content hover:text-base-content" href="{()=>false}">메세지</a></li>
-            <li><a className="text-base-content hover:text-base-content" href="{()=>false}">마이페이지</a></li>
-            <li><a className="text-base-content hover:text-base-content" href="{()=>false}">로그아웃</a></li>
-          </ul>
-        </details>
+        <UserButton />
       </div>
     </div>
   );
