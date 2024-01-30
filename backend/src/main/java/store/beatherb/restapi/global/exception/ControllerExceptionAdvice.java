@@ -2,6 +2,7 @@ package store.beatherb.restapi.global.exception;
 
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import store.beatherb.restapi.global.exception.dto.response.ExceptionResponse;
@@ -15,5 +16,14 @@ public class ControllerExceptionAdvice {
         ExceptionResponse response = ExceptionResponse.from(e.getMessage());
 
         return ResponseEntity.status(statusCode).body(response);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ExceptionResponse> handleException(MethodArgumentNotValidException e){
+
+        //TODO : 리팩토링 필요
+        ExceptionResponse response = ExceptionResponse.from("입력을 확인해주세요.");
+
+        return ResponseEntity.status(400).body(response);
     }
 }
