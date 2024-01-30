@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import store.beatherb.restapi.global.auth.domain.LoginUser;
+import store.beatherb.restapi.global.response.ApiResponse;
+import store.beatherb.restapi.member.dto.MemberDTO;
 import store.beatherb.restapi.member.service.MemberInfoService;
 import store.beatherb.restapi.oauth.dto.NaverUserInfoDto;
 import store.beatherb.restapi.oauth.dto.Provider;
@@ -21,23 +24,22 @@ public class MemberInfoController {
     private final MemberInfoService memberInfoService;
     //회원가입하고 회원정보 저장
 
-    //소셜로그인 연동
     @PostMapping("/linkage/kakao")
-    public ResponseEntity<HttpStatus> KakaoLinkage(@RequestBody OAuthRequest oauthRequest){
-        memberInfoService.linkage(oauthRequest, Provider.KAKAO);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ApiResponse<?> KakaoLinkage(@LoginUser MemberDTO memberDTO, @RequestBody OAuthRequest oauthRequest){
+        memberInfoService.linkage(oauthRequest, Provider.KAKAO,memberDTO);
+        return ApiResponse.successWithoutData();
     }
 
     @PostMapping("/linkage/naver")
-    public ResponseEntity<HttpStatus> NaverLinkage(@RequestBody OAuthRequest oauthRequest){
-        memberInfoService.linkage(oauthRequest, Provider.NAVER);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ApiResponse<?> NaverLinkage(@LoginUser MemberDTO memberDTO, @RequestBody OAuthRequest oauthRequest){
+        memberInfoService.linkage(oauthRequest, Provider.NAVER,memberDTO);
+        return ApiResponse.successWithoutData();
     }
 
     @PostMapping("/linkage/google")
-    public ResponseEntity<HttpStatus> GoogleLinkage(@RequestBody OAuthRequest oauthRequest){
-        memberInfoService.linkage(oauthRequest, Provider.GOOGLE);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ApiResponse<?> GoogleLinkage(@LoginUser MemberDTO memberDTO, @RequestBody OAuthRequest oauthRequest){
+        memberInfoService.linkage(oauthRequest, Provider.GOOGLE,memberDTO);
+        return ApiResponse.successWithoutData();
     }
 
 }

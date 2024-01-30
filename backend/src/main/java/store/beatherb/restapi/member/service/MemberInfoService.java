@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import store.beatherb.restapi.member.domain.Member;
 import store.beatherb.restapi.member.domain.MemberRepository;
+import store.beatherb.restapi.member.dto.MemberDTO;
 import store.beatherb.restapi.member.exception.MemberErrorCode;
 import store.beatherb.restapi.member.exception.MemberException;
 import store.beatherb.restapi.oauth.dto.Provider;
@@ -20,9 +21,10 @@ public class MemberInfoService {
     //회원가입하고 정보수정
 
     //정보수정에서 소셜연동하기
-    public void linkage(OAuthRequest oauthRequest, Provider provider) {
+    public void linkage(OAuthRequest oauthRequest, Provider provider, MemberDTO memberDTO) {
         Long id;//헤더에서 access token을 받아와서 id값 가져오기. 토큰값 확인
-        Member member=memberRepository.findById(1L)
+        log.info("사용자 정보"+memberDTO.getId());
+        Member member=memberRepository.findById(memberDTO.getId())
                 .orElseThrow(()->new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
         String sub=oauthService.sub(oauthRequest,provider);
         switch(provider){

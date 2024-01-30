@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import store.beatherb.restapi.global.auth.dto.response.VerifyTokenResponse;
 import store.beatherb.restapi.global.auth.service.AuthService;
-import store.beatherb.restapi.global.dto.FormatResponse;
 import store.beatherb.restapi.global.mail.service.MailService;
 import store.beatherb.restapi.global.mail.vo.MailVo;
 import store.beatherb.restapi.global.validate.Email;
@@ -19,7 +18,6 @@ import store.beatherb.restapi.oauth.dto.Provider;
 import store.beatherb.restapi.oauth.dto.request.OAuthRequest;
 import store.beatherb.restapi.oauth.service.OAuthService;
 
-import java.util.Optional;
 
 @Service
 @Slf4j

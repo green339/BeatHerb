@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import store.beatherb.restapi.global.auth.dto.response.VerifyTokenResponse;
+import store.beatherb.restapi.global.response.ApiResponse;
 import store.beatherb.restapi.member.dto.request.SignInRequest;
 import store.beatherb.restapi.member.dto.request.SignUpRequest;
 import store.beatherb.restapi.member.service.MemberService;
@@ -20,29 +21,30 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/signup")
-    public ResponseEntity<HttpStatus> signUp(@RequestBody SignUpRequest signUpRequest){
+    public ApiResponse<?> signUp(@RequestBody SignUpRequest signUpRequest){
         memberService.signUp(signUpRequest);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ApiResponse.successWithoutData();
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<HttpStatus> signIn(@RequestBody SignInRequest signInRequest){
+    public ApiResponse<?> signIn(@RequestBody SignInRequest signInRequest){
         memberService.signIn(signInRequest);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ApiResponse.successWithoutData();
     }
 
     @PostMapping("/signin/kakao")
-    public VerifyTokenResponse KakaoSignIn(@RequestBody OAuthRequest oauthRequest){
-        return memberService.socialSignIn(oauthRequest, Provider.KAKAO);
+    public ApiResponse<VerifyTokenResponse> KakaoSignIn(@RequestBody OAuthRequest oauthRequest){
+        return ApiResponse.successWithData(memberService.socialSignIn(oauthRequest, Provider.KAKAO));
+
     }
 
     @PostMapping("/signin/naver")
-    public VerifyTokenResponse NaverSignIn(@RequestBody OAuthRequest oauthRequest){
-        return memberService.socialSignIn(oauthRequest, Provider.NAVER);
+    public ApiResponse<VerifyTokenResponse> NaverSignIn(@RequestBody OAuthRequest oauthRequest){
+        return ApiResponse.successWithData(memberService.socialSignIn(oauthRequest, Provider.NAVER));
     }
 
     @PostMapping("/signin/google")
-    public VerifyTokenResponse GoogleSignIn(@RequestBody OAuthRequest oauthRequest){
-        return memberService.socialSignIn(oauthRequest, Provider.GOOGLE);
+    public ApiResponse<VerifyTokenResponse> GoogleSignIn(@RequestBody OAuthRequest oauthRequest){
+        return ApiResponse.successWithData(memberService.socialSignIn(oauthRequest, Provider.GOOGLE));
     }
 }

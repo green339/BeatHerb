@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import store.beatherb.restapi.global.dto.OIDCDto;
+import store.beatherb.restapi.global.util.dto.OIDCDto;
 import store.beatherb.restapi.global.exception.UtilErrorCode;
 import store.beatherb.restapi.global.exception.UtilException;
 
