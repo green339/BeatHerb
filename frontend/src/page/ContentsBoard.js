@@ -2,10 +2,14 @@
 
 import { useState } from "react"
 import ContentsItem from "../components/ContentsItem";
+import { useLocation } from "react-router-dom";
 
 export default function ContentsBoard() {
-  const [active, setActive] = useState("melody");
-  const [sortOption, setSortOption] = useState("recent");
+  const location = useLocation();
+  console.log(location);
+
+  const [category, setCategory] = useState(location.state?.category || "melody");
+  const [sortOption, setSortOption] = useState(location.state?.sortOption || "recent");
 
   const handleSortOptionChange = (e) => {
     setSortOption(e.target.value);
@@ -18,22 +22,22 @@ export default function ContentsBoard() {
       <div role="tablist" className="tabs tabs-bordered my-8 tabs-lg">
         <button
           role="tab"
-          className={"tab w-1/2 translate-x-1/2" + (active === "melody" ? " tab-active" : "")}
-          onClick={() => setActive("melody")}
+          className={"tab w-1/2 translate-x-1/2" + (category === "melody" ? " tab-active" : "")}
+          onClick={() => setCategory("melody")}
         >
           멜로디
         </button>
         <button
           role="tab"
-          className={"tab w-1/2 translate-x-1/2" + (active === "vocal" ? " tab-active" : "")}
-          onClick={() => setActive("vocal")}
+          className={"tab w-1/2 translate-x-1/2" + (category === "vocal" ? " tab-active" : "")}
+          onClick={() => setCategory("vocal")}
         >
           보컬
         </button>
         <button
           role="tab"
-          className={"tab w-1/2 translate-x-1/2" + (active === "music" ? " tab-active" : "")}
-          onClick={() => setActive("music")}
+          className={"tab w-1/2 translate-x-1/2" + (category === "music" ? " tab-active" : "")}
+          onClick={() => setCategory("music")}
         >
           음원
         </button>
@@ -55,7 +59,7 @@ export default function ContentsBoard() {
           Array(contentsNum).fill().map((v,i)=>i+1).map((value, index) => {
             return (
               <div key={index} className="flex justify-center">
-                <ContentsItem size={150} title={active}/>
+                <ContentsItem size={150} title={category}/>
               </div>
             )
           })
