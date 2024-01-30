@@ -6,7 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import store.beatherb.restapi.content.domain.Content;
 import store.beatherb.restapi.content.service.ContentService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/content")
@@ -16,7 +19,7 @@ public class ContentController {
     private final ContentService contentService;
 
     @GetMapping
-    public ResponseEntity contentsOrderByHit(){
+    public ResponseEntity<List<Content>> contentsOrderByHit(){
         return ResponseEntity.ok(contentService.getContentsOrderByHit());
     }
 }
