@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import ContentsBoard from "./ContentsBoard";
 import ShortsBoard from "./ShortsBoard";
 import LiveBoard from "./LiveBoard";
+import AllBoard from "./AllBoard";
 
 export default function Board() {
   const { category } = useParams();
@@ -13,7 +14,7 @@ export default function Board() {
 
   switch (category) {
     case "all":
-      children = <></>;
+      children = <AllBoard />;
       break;
     case "popularity":
       children = <></>;

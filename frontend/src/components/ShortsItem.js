@@ -1,3 +1,5 @@
+// 쇼츠 항목
+
 import ContentsTitleAndArtist from "./ContentsTitleAndArtist";
 
 export default function ShortsItem({ title = "Title", artist = "artist" }) {

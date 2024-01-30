@@ -1,4 +1,4 @@
-// 컨텐츠(멜로디/보컬.음반) 그리드 항목
+// 컨텐츠(멜로디/보컬.음반) 항목
 
 import { useState } from "react";
 import ContentsArt from "./ContentsArt.js";
