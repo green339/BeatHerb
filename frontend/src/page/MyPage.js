@@ -6,6 +6,15 @@ import { useState } from "react";
 import ShortsItem from "../components/ShortsItem";
 import LiveItem from "../components/LiveItem";
 
+// 탭 리스트
+const tabs = [
+  { value: "melody", title: "멜로디" },
+  { value: "vocal", title: "보컬" },
+  { value: "music", title: "음원" },
+  { value: "shorts", title: "Shorts" },
+  { value: "live", title: "라이브" },
+]
+
 export default function MyPage() {
   const [category, setCategory] = useState("melody");
   const tempArray = Array(20).fill().map((v,i)=>i+1);
@@ -13,29 +22,23 @@ export default function MyPage() {
   let itemList = null;
 
   if (category === "melody" || category === "vocal" || category === "music") {
-    itemList = tempArray.map((value, index) => {
-      return (
-        <div key={index} className="flex justify-center">
-          <ContentsItem contentsId={value} size={150} title={category} showFavorite={false} />
-        </div>
-      )
-    })
+    itemList = tempArray.map((value, index) => (
+      <div key={index} className="flex justify-center">
+        <ContentsItem contentsId={value} size={150} title={category} showFavorite={false} />
+      </div>
+    ))
   } else if (category === "shorts") {
-    itemList = tempArray.map((value, index) => {
-      return (
-        <div key={index} className="flex justify-center">
-          <ShortsItem title={category}/>
-        </div>
-      )
-    })
+    itemList = tempArray.map((value, index) => (
+      <div key={index} className="flex justify-center">
+        <ShortsItem title={category}/>
+      </div>
+    ))
   } else if (category === "live") {
-    itemList = tempArray.map((value, index) => {
-      return (
-        <div key={index} className="flex justify-center">
-          <LiveItem title={category}/>
-        </div>
-      )
-    })
+    itemList = tempArray.map((value, index) => (
+      <div key={index} className="flex justify-center">
+        <LiveItem title={category}/>
+      </div>
+    ))
   }
 
   return (
@@ -66,7 +69,7 @@ export default function MyPage() {
             <div className="stats shadow">
               <div className="stat place-items-center">
                 <div className="stat-title">팔로잉</div>
-                <div className="stat-value">12,345</div>
+                <div className="stat-value">998'244'353</div>
               </div>
               <div className="stat place-items-center">
                 <div className="stat-title">팔로워</div>
@@ -83,41 +86,18 @@ export default function MyPage() {
           </div>
         </div>
         <div role="tablist" className="tabs tabs-bordered my-8 tabs-lg">
-          <button
-            role="tab"
-            className={"tab w-1/2 translate-x-1/2" + (category === "melody" ? " tab-active" : "")}
-            onClick={() => setCategory("melody")}
-          >
-            멜로디
-          </button>
-          <button
-            role="tab"
-            className={"tab w-1/2 translate-x-1/2" + (category === "vocal" ? " tab-active" : "")}
-            onClick={() => setCategory("vocal")}
-          >
-            보컬
-          </button>
-          <button
-            role="tab"
-            className={"tab w-1/2 translate-x-1/2" + (category === "music" ? " tab-active" : "")}
-            onClick={() => setCategory("music")}
-          >
-            음원
-          </button>
-          <button
-            role="tab"
-            className={"tab w-1/2 translate-x-1/2" + (category === "shorts" ? " tab-active" : "")}
-            onClick={() => setCategory("shorts")}
-          >
-            Shorts
-          </button>
-          <button
-            role="tab"
-            className={"tab w-1/2 translate-x-1/2" + (category === "live" ? " tab-active" : "")}
-            onClick={() => setCategory("live")}
-          >
-            라이브
-          </button>
+          {
+            tabs.map((tab) => (
+              <button
+                key={tab.value}
+                role="tab"
+                className={"tab w-1/2 translate-x-1/2" + (category === tab.value ? " tab-active" : "")}
+                onClick={() => setCategory(tab.value)}
+              >
+                { tab.title }
+              </button>
+            ))
+          }
         </div>
         <div className="grid grid-cols-4 gap-4 items-center scrollbar scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-base-200 hover:scrollbar-thumb-primary overflow-y-scroll">
           { itemList }

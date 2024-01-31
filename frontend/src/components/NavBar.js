@@ -2,6 +2,15 @@
 
 import UserButton from "./UserButton";
 
+// 게시판 탭 드롭다운에 들어갈 메뉴들
+const boardMenus = [
+  { key: "all", title: "전체", href: "/board/all"},
+  { key: "popularity", title: "인기", href: "/board/popularity"},
+  { key: "contents", title: "컨텐츠", href: "/board/contents"},
+  { key: "shorts", title: "Shorts", href: "/board/shorts"},
+  { key: "live", title: "라이브", href: "/board/live"},
+]
+
 export default function NavBar() {
   return (
     <div className="navbar bg-base-100 text-base-content">
@@ -13,11 +22,13 @@ export default function NavBar() {
             <details>
               <summary>게시판</summary>
               <ul className="bg-base-200 w-32 p-2 z-10">
-                <li><a className="text-base-content hover:text-base-content" href="/board/all">전체</a></li>
-                <li><a className="text-base-content hover:text-base-content" href="/board/popularity">인기</a></li>
-                <li><a className="text-base-content hover:text-base-content" href="/board/contents">컨텐츠</a></li>
-                <li><a className="text-base-content hover:text-base-content" href="/board/live">Live</a></li>
-                <li><a className="text-base-content hover:text-base-content" href="/board/shorts">Shorts</a></li>
+                {
+                  boardMenus.map((menu) => (
+                    <li key={menu.title}>
+                      <a className="text-base-content hover:text-base-content" href={menu.href}>{menu.title}</a>
+                    </li>
+                  ))
+                }
               </ul>
             </details>
           </li>

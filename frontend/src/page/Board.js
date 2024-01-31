@@ -9,6 +9,15 @@ import LiveBoard from "./LiveBoard";
 import AllBoard from "./AllBoard";
 import PopularityBoard from "./PopularityBoard";
 
+// 사이드바에 들어갈 메뉴들
+const sideBarMenus = [
+  { key: "all", title: "전체", href: "/board/all"},
+  { key: "popularity", title: "인기", href: "/board/popularity"},
+  { key: "contents", title: "컨텐츠", href: "/board/contents"},
+  { key: "shorts", title: "Shorts", href: "/board/shorts"},
+  { key: "live", title: "라이브", href: "/board/live"},
+]
+
 export default function Board() {
   const { category } = useParams();
   let children = null; // 하위 항목
@@ -47,21 +56,13 @@ export default function Board() {
         <div className="drawer-side">
           <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay" />
           <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content pt-[78px]">
-            <li>
-              <Link to="/board/all" className="text-3xl p-4 text-base-content hover:text-base-content">전체</Link>
-            </li>
-            <li>
-              <Link to="/board/popularity" className="text-3xl p-4 text-base-content hover:text-base-content">인기</Link>
-            </li>
-            <li>
-              <Link to="/board/contents" className="text-3xl p-4 text-base-content hover:text-base-content">컨텐츠</Link>
-            </li>
-            <li>
-              <Link to="/board/shorts" className="text-3xl p-4 text-base-content hover:text-base-content">Shorts</Link>
-            </li>
-            <li>
-              <Link to="/board/live" className="text-3xl p-4 text-base-content hover:text-base-content">라이브</Link>
-            </li>
+            {
+              sideBarMenus.map((menu) => (
+                <li key={menu.key}>
+                  <Link to={menu.href} className="text-3xl p-4 text-base-content hover:text-base-content">{menu.title}</Link>
+                </li>
+              ))
+            }
           </ul>
         </div>
       </div>
