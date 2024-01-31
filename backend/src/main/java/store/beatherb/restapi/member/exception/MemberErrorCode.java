@@ -14,7 +14,7 @@ public enum MemberErrorCode implements ErrorCode {
     SOCIAL_IS_NOT_EXIST(400,"MEM_04","이메일과 연동안된 소셜 정보입니다."),
     SOCIAL_EXIST(409, "MEM_05", "해당 소셜 계정으로 연동된 이메일이 존재합니다."),
 
-    MEMBER_FIND_ERROR(400, "MEM_06", "회원을 찾을 때 오류 발생.");
+    MEMBER_FIND_ERROR(400, "MEM_06", "해당 회원을 찾을수 없습니다.");
     private final int statusCode;
     private final String errorCode;
     private final String message;
