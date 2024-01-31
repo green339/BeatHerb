@@ -8,7 +8,7 @@ import store.beatherb.restapi.global.exception.ErrorCode;
 @Getter
 @AllArgsConstructor
 public enum JWTErrorCode implements ErrorCode {
-    INVALID_TOKEN(409,"JWT_01","유효하지 않은 토큰입니다.");
+    INVALID_TOKEN(401,"JWT_01","토큰이 유효하지 않습니다.");
 
     private final int statusCode;
     private final String errorCode;
