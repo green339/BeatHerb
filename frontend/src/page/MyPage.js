@@ -57,7 +57,8 @@ export default function MyPage() {
             <div>
               <h1 className="text-base-content text-left">BeatHerb</h1>
               <p className="text-base-content text-left">총 좋아요 수: 123456789</p>
-              <div className="flex gap-1">
+              <div className="flex gap-1 flex-wrap">
+                <div className="badge badge-lg badge-primary text-primary-content">primary</div>
                 <div className="badge badge-lg badge-primary text-primary-content">primary</div>
                 <div className="badge badge-lg badge-primary text-primary-content">primary</div>
                 <div className="badge badge-lg badge-primary text-primary-content">primary</div>
