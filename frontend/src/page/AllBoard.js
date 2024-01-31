@@ -9,9 +9,9 @@ export default function AllBoard() {
   return (
     <>
       <ItemContainerWithTitle title="컨텐츠" link="/board/contents">
-        <ContentsRanking title="신규 멜로디" />
-        <ContentsRanking title="신규 보컬" />
-        <ContentsRanking title="신규 음원" />
+        <ContentsRanking title="신규 멜로디" link="/board/contents" data={{ category: "melody" }} />
+        <ContentsRanking title="신규 보컬" link="/board/contents" data={{ category: "vocal" }} />
+        <ContentsRanking title="신규 음원" link="/board/contents" data={{ category: "music" }} />
       </ItemContainerWithTitle>
       <ItemContainerWithTitle title="Shorts" link="/board/shorts" scrolled>
         {Array(10).fill().map((v,i)=>i+1).map((value, index) => {
