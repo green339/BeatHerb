@@ -25,20 +25,15 @@ public class MemberInfoService {
     //회원 정보 수정
     public void edit(MemberDTO memberDTO, EditRequest editRequest) {
 
-
-        String nickname = editRequest.getNickname();
-        boolean isDmAgree = editRequest.isDmAgree();
-        String picture = editRequest.getPicture();
-
+        String nickname = editRequest.getNickname() != null ? editRequest.getNickname() : memberDTO.getNickname();
+        Boolean isDmAgree = editRequest.getDmAgree() != null ? editRequest.getDmAgree() : memberDTO.getDmAgree();
+        String picture = editRequest.getPicture() != null ? editRequest.getPicture() : memberDTO.getPicture();
 
         Member member = memberRepository.findById(memberDTO.getId())
                         .orElseThrow(()->new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
-
         member.setNickname(nickname);
         member.setDmAgree(isDmAgree);
-        if(picture!=null){
-            member.setPicture(picture);
-        }
+        member.setPicture(picture);
 
         memberRepository.save(member);
 
