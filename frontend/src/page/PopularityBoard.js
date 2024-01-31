@@ -11,7 +11,8 @@ export default function PopularityBoard() {
       <ItemContainerWithTitle title="멜로디" link="/board/contents" data={{ category: "melody", sortOption: "popularity" }} >
         {
           periodList.map((period) => (
-            <ContentsRanking 
+            <ContentsRanking
+              key={"melody " + period}
               title={period} 
               link="/board/contents" 
               data={{ category: "melody", sortOption: "popularity" }} 
@@ -23,6 +24,7 @@ export default function PopularityBoard() {
         {
           periodList.map((period) => (
             <ContentsRanking 
+              key={"vocal " + period}
               title={period} 
               link="/board/contents" 
               data={{ category: "vocal", sortOption: "popularity" }} 
@@ -34,6 +36,7 @@ export default function PopularityBoard() {
         {
           periodList.map((period) => (
             <ContentsRanking 
+              key={"music " + period}
               title={period} 
               link="/board/contents" 
               data={{ category: "music", sortOption: "popularity" }} 

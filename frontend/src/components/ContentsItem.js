@@ -5,12 +5,12 @@ import ContentsArt from "./ContentsArt.js";
 import ContentsTitleAndArtist from "./ContentsTitleAndArtist.js";
 
 
-export default function ContentsItem({ size, title = "Title", artist = "artist" }) {
+export default function ContentsItem({ contentsId, size, title = "Title", artist = "artist", showFavorite = true }) {
   const [isFavorite, setIsFavorite] = useState(false);
   
   return (
     <div style={{width: `${size}px`}} className="items-center`">
-      <ContentsArt size={size} isFavorite={isFavorite} onClickFavorite={() => setIsFavorite(!isFavorite)}/>
+      <ContentsArt size={size} contentsId={contentsId} isFavorite={isFavorite} onClickFavorite={() => setIsFavorite(!isFavorite)} showFavorite={showFavorite} />
       <ContentsTitleAndArtist title={title} artist={artist} />
     </div>
   );
