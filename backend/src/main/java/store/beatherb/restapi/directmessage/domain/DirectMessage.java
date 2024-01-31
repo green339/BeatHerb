@@ -5,9 +5,11 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 import store.beatherb.restapi.member.domain.Member;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Slf4j
@@ -15,6 +17,7 @@ import java.util.Date;
 @Entity
 @Table(name = "direct_message")
 @Getter
+@Setter
 public class DirectMessage {
     @Id
     @GeneratedValue
@@ -30,6 +33,7 @@ public class DirectMessage {
 
     @CreationTimestamp
     private Timestamp createdAt;
+
     @Column(nullable = false)
     private String message;
 
