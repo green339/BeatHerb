@@ -21,7 +21,7 @@ public class MemberDTO {
     private String nickname;
     private Boolean advertise;
     private String picture;
-    private boolean dmAgree;
+    private Boolean dmAgree;
     private String naver;
     private String kakao;
     private String google;

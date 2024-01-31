@@ -4,17 +4,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import store.beatherb.restapi.global.auth.domain.LoginUser;
 import store.beatherb.restapi.global.response.ApiResponse;
 import store.beatherb.restapi.member.dto.MemberDTO;
+import store.beatherb.restapi.member.dto.request.EditRequest;
+import store.beatherb.restapi.member.dto.request.SignUpRequest;
 import store.beatherb.restapi.member.service.MemberInfoService;
 import store.beatherb.restapi.oauth.dto.NaverUserInfoDto;
 import store.beatherb.restapi.oauth.dto.Provider;
 import store.beatherb.restapi.oauth.dto.request.OAuthRequest;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/member/info")
@@ -22,8 +23,15 @@ import store.beatherb.restapi.oauth.dto.request.OAuthRequest;
 @RequiredArgsConstructor
 public class MemberInfoController {
     private final MemberInfoService memberInfoService;
-    //회원가입하고 회원정보 저장
 
+    //회원 정보 수정
+    @PutMapping("/")
+    public ApiResponse<?> edit(@LoginUser MemberDTO memberDTO, @RequestBody EditRequest editRequest){
+        memberInfoService.edit(memberDTO, editRequest);
+        return ApiResponse.successWithoutData();
+    }
+
+    // 회원 정보 수정 - 소셜 로그인 연동
     @PostMapping("/linkage/kakao")
     public ApiResponse<?> KakaoLinkage(@LoginUser MemberDTO memberDTO, @RequestBody OAuthRequest oauthRequest){
         memberInfoService.linkage(oauthRequest, Provider.KAKAO,memberDTO);
