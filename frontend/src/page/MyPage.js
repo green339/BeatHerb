@@ -16,7 +16,7 @@ export default function MyPage() {
     itemList = tempArray.map((value, index) => {
       return (
         <div key={index} className="flex justify-center">
-          <ContentsItem size={150} title={category}/>
+          <ContentsItem contentsId={value} size={150} title={category} showFavorite={false} />
         </div>
       )
     })
@@ -47,7 +47,7 @@ export default function MyPage() {
         <div className="mx-4 flex place-content-between">
           <div className="flex gap-4">
             <div className="flex place-items-center">
-              <div className="w-24 h-24 rounded-md">
+              <div className="w-32 h-32 rounded-md">
                 <img className="w-full rounded-md" src="https://img.freepik.com/free-vector/background-colorful-musical-notes_23-2147633120.jpg?w=740&t=st=1705448093~exp=1705448693~hmac=00f2208917eeabe7c5309cb7efc90defc713277bede12138776ae696c5456d04" alt=""/>
               </div>
             </div>

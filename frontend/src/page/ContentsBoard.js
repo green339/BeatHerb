@@ -58,8 +58,8 @@ export default function ContentsBoard() {
         {
           Array(contentsNum).fill().map((v,i)=>i+1).map((value, index) => {
             return (
-              <div key={index} className="flex justify-center">
-                <ContentsItem size={150} title={category}/>
+              <div key={value} className="flex justify-center">
+                <ContentsItem contentsId={value} size={150} title={category}/>
               </div>
             )
           })
