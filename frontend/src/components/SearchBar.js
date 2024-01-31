@@ -38,10 +38,10 @@ export default function SearchBar() {
         </div>
         <div className="flex justify-between mt-4">
           <div className="flex gap-x-2 gap-y-2 flex-wrap">
-            <div className="badge badge-lg badge-primary">primary</div>
-            <div className="badge badge-lg badge-primary">primary</div>
-            <div className="badge badge-lg badge-primary">primary</div>
-            <div className="badge badge-lg badge-primary">primary</div>
+            <div className="badge badge-lg badge-primary text-primary-content">primary</div>
+            <div className="badge badge-lg badge-primary text-primary-content">primary</div>
+            <div className="badge badge-lg badge-primary text-primary-content">primary</div>
+            <div className="badge badge-lg badge-primary text-primary-content">primary</div>
           </div>
           <div className="text-base-content w-20 text-nowrap">
             상세 검색

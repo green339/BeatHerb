@@ -17,8 +17,8 @@ export default function UserButton() {
           </summary>
           
           <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-200 rounded-box w-52">
-            <li><a className="text-base-content hover:text-base-content" href="/">메세지</a></li>
-            <li><a className="text-base-content hover:text-base-content" href="/">마이페이지</a></li>
+            <li><a className="text-base-content hover:text-base-content" href="/">메시지</a></li>
+            <li><Link to="/mypage" className="text-base-content hover:text-base-content">마이페이지</Link></li>
             <li><a className="text-base-content hover:text-base-content" href="/">로그아웃</a></li>
           </ul>
         </details>
@@ -27,7 +27,7 @@ export default function UserButton() {
   }
 
   return (
-    <Link to="/login" className="text-primary-content hover:text-primary-content">
+    <Link to="/login" className="text-base-content hover:text-base-content">
       <button className="btn btn-ghost text-base-content">로그인</button>
     </Link>
   );
