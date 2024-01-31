@@ -7,7 +7,7 @@ import UserButton from '../components/UserButton';
 export default function Main() {
   return (
     <div>
-      <div class="fixed top-2 right-2 z-10">
+      <div className="fixed top-2 right-2 z-10">
         <UserButton />  
       </div>
       
