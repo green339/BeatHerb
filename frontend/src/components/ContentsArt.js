@@ -1,9 +1,13 @@
 // 컨텐츠 아트
 
-export default function ContentsArt({ size, isFavorite, onClickFavorite, showFavorite }) {
+import { Link } from "react-router-dom"
+
+export default function ContentsArt({ size, contentsId, isFavorite, onClickFavorite, showFavorite }) {
   return (
     <div style={{width: `${size}px`}} className="relative">
-      <img className="w-full rounded-md" src="https://img.freepik.com/free-vector/background-colorful-musical-notes_23-2147633120.jpg?w=740&t=st=1705448093~exp=1705448693~hmac=00f2208917eeabe7c5309cb7efc90defc713277bede12138776ae696c5456d04" alt=""/>
+      <Link to={`/content/${contentsId}`} className="text-base-content hover:text-base-content">
+        <img className="w-full rounded-md" src="https://img.freepik.com/free-vector/background-colorful-musical-notes_23-2147633120.jpg?w=740&t=st=1705448093~exp=1705448693~hmac=00f2208917eeabe7c5309cb7efc90defc713277bede12138776ae696c5456d04" alt=""/>
+      </Link>
       {
         showFavorite && 
         <label className="swap absolute bottom-2 right-2">
