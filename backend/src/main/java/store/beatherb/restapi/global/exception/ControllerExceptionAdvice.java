@@ -12,23 +12,16 @@ import store.beatherb.restapi.global.response.ApiResponse;
 public class ControllerExceptionAdvice {
 
     @ExceptionHandler(BeatHerbException.class)
-    public ResponseEntity<ExceptionResponse> handleException(BeatHerbException e) {
+    public ResponseEntity<ApiResponse<?>> handleException(BeatHerbException e) {
         int statusCode = e.getStatusCode();
-        ExceptionResponse response = ExceptionResponse.from(e.getMessage());
-
-        return ResponseEntity.status(statusCode).body(response);
+        ApiResponse<?> ErrorResponse = ApiResponse.fail(e.getStatusCode(),e.getMessage());
+        return ResponseEntity.status(statusCode).body(ErrorResponse);
     }
-//    @ExceptionHandler(BeatHerbException.class)
-//    public ApiResponse<?> handleException(BeatHerbException e) {
-//        return ApiResponse.fail(e.getErrorCode(),e.getMessage());
-//    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ExceptionResponse> handleException(MethodArgumentNotValidException e){
+    public ResponseEntity<ApiResponse<?>> handleException(MethodArgumentNotValidException e){
 
-        //TODO : 리팩토링 필요
-        ExceptionResponse response = ExceptionResponse.from("입력을 확인해주세요.");
+        ApiResponse<?> ErrorResponse = ApiResponse.fail(400,"입력을 확인해주세요.");
 
-        return ResponseEntity.status(400).body(response);
+        return ResponseEntity.status(400).body(ErrorResponse);
     }
 }
