@@ -1,5 +1,6 @@
 // 인가코드를 받으면 여기로 리다이렉트 됨
 // 현재는 인가코드를 받아서 보내는 부분만 구현됨, 향후 소켓도 보낼 수 있도록 작성하기
+
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -9,7 +10,7 @@ export default function AuthRedirection() {
   const navigate = useNavigate();
   const { provider } = useParams();
   const serverURL = process.env.REACT_APP_SERVER_URL;
-  // async await 적용 생각해보기
+  // 비동기 작업을 동기로 바꿔주기 위해, async await 적용 생각해 볼 수 있음
   useEffect(() => {
     // 인가 코드
     const code = new URL(window.location.href).searchParams.get("code");
@@ -25,6 +26,7 @@ export default function AuthRedirection() {
       })
       .then((response) => {
         console.log(response.data);
+        
       })
       .catch((error) => {
         console.log(error.data);
