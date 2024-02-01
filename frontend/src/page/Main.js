@@ -13,7 +13,7 @@ export default function Main() {
       
       <div className="absolute w-full right-1/2 bottom-1/2 translate-x-1/2 translate-y-1/2 flex flex-col items-center">
         <div>
-          <p className="text-9xl text-primary">BeatHerb</p>
+          <p className="text-8xl text-primary">BeatHerb</p>
         </div>
 
         <div className="my-16 w-1/2 min-w-96">

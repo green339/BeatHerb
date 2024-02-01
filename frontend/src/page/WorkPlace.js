@@ -1,5 +1,5 @@
 export default function WorkPlace() {
   return (
-    <h1 className="text-primary">작업실 화면이에요~~~~~~~~</h1>
+    <p className="text-primary text-3xl font-semibold">작업실 화면이에요~~~~~~~~</p>
   );
 }

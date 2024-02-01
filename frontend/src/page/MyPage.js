@@ -45,11 +45,11 @@ export default function MyPage() {
 
   return (
     <>
-      <div className="h-full">
-        <div className="fixed top-0 w-full z-10">
+      <div>
+        <div className="fixed w-full top-0 z-10">
           <NavBar />
         </div>
-        <div className="pt-[64px] mx-8">
+        <div className="pt-20 mx-8">
           <div className="mx-4 flex place-content-between">
             <div className="flex gap-4">
               <div className="flex place-items-center">
@@ -57,8 +57,8 @@ export default function MyPage() {
                   <img className="w-full rounded-md" src="https://img.freepik.com/free-vector/background-colorful-musical-notes_23-2147633120.jpg?w=740&t=st=1705448093~exp=1705448693~hmac=00f2208917eeabe7c5309cb7efc90defc713277bede12138776ae696c5456d04" alt=""/>
                 </div>
               </div>
-              <div>
-                <h1 className="text-base-content text-left">BeatHerb</h1>
+              <div className="flex flex-col justify-center space-y-2">
+                <p className="text-base-content text-left text-3xl font-semibold">BeatHerb</p>
                 <p className="text-base-content text-left">총 좋아요 수: 123456789</p>
                 <div className="flex gap-1 flex-wrap">
                   <div className="badge badge-lg badge-primary text-primary-content">primary</div>
@@ -73,11 +73,11 @@ export default function MyPage() {
               <div className="stats shadow">
                 <div className="stat place-items-center">
                   <div className="stat-title">팔로잉</div>
-                  <div className="stat-value">998'244'353</div>
+                  <div className="stat-value font-semibold text-3xl">998,244,353</div>
                 </div>
                 <div className="stat place-items-center">
                   <div className="stat-title">팔로워</div>
-                  <div className="stat-value text-secondary">1,000,000,007</div>
+                  <div className="stat-value text-secondary font-semibold text-3xl">1,000,000,007</div>
                 </div>
               </div>
               <div className="flex place-items-center">
