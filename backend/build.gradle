@@ -44,6 +44,8 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok' // 테스트 의존성 추가
 	testAnnotationProcessor 'org.projectlombok:lombok' // 테스트 의존성 추가
 
+	implementation 'net.bramp.ffmpeg:ffmpeg:0.8.0'
+
 
 }
 

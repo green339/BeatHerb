@@ -48,4 +48,11 @@ public class ContentController {
                 .body(resource);
     }
 
+//    @GetMapping("/test")
+//    public ResponseEntity<?> test(){
+//        contentService.makeSequence();
+//
+//        return ResponseEntity.ok("good");
+//    }
+
 }
