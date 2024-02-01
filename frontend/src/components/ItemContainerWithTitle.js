@@ -15,7 +15,7 @@ export default function ItemContainerWithTitle({ children, title, link, data, sc
   return (
     <div className="w-full p-8">
       <div className="flex text-base-content gap-16 mb-4">
-        <h1>{title}</h1>
+        <p className="text-3xl font-semibold">{title}</p>
         <button onClick={handleOnClick}>바로가기</button>
       </div>
       <div className="w-full">

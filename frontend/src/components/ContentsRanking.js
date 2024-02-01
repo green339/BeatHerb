@@ -29,7 +29,7 @@ export default function ContentsRanking({ title, link, data }) {
   return (
     <div className="w-full p-8 flex flex-col bg-base-200 rounded-lg">
       <div className="flex place-content-between">
-        <h3 className="text-base-content m-0">{title}</h3>
+        <p className="text-base-content text-xl font-semibold m-0">{title}</p>
         <button className="text-base-content" onClick={handleOnClick}>더보기</button>
       </div>
       { itemList }
