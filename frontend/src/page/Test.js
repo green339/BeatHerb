@@ -2,6 +2,7 @@
 
 import ContentsItem from '../components/ContentsItem.js';
 import LiveItem from '../components/LiveItem.js';
+import MusicPlayer from "../components/MusicPlayer.js";
 import NavBar from '../components/NavBar.js';
 import ShortsItem from '../components/ShortsItem.js';
 import Board from './Board.js';
@@ -9,16 +10,17 @@ import Board from './Board.js';
 export default function Test() {
   return (
     <>
-      <NavBar />
+      {/* <NavBar />
       <Board>
         <p className="text-base-content">Page Content</p>
       </Board>
       <ContentsItem size={150} />
       <ContentsItem size={200} />
-      <ContentsItem size={230} />
-      <ShortsItem />
-      <LiveItem />
-        <Live />
+      <ContentsItem size={230} /> */}
+      {/* <ShortsItem /> */}
+      {/* <LiveItem /> */}
+      {/* <Live /> */}
+      <MusicPlayer/>
     </>
   );
 }
