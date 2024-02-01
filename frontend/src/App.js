@@ -12,6 +12,8 @@ import Test from './page/Test.js';
 import MyPage from './page/MyPage.js';
 import WorkPlace from './page/WorkPlace.js';
 import ContentDetail from './page/ContentDetail.js';
+import UserEdit from './page/UserEdit.js';
+
 
 export default function App() {
   return (
@@ -25,6 +27,7 @@ export default function App() {
           <Route path="/auth/redirect/:provider" element={<AuthRedirection />} />
           <Route path="/board/:category" element={<Board />} />
           <Route path="/mypage" element={<MyPage />} />
+          <Route path="/useredit" element={<UserEdit />} />
           <Route path="/content/:id" element={<ContentDetail />} />
           <Route path="/workplace" element={<WorkPlace />} />
           <Route path="/test" element={<Test />} />
