@@ -1,4 +1,6 @@
-// 인증 완료 페이지
+// 인증 중입니다 페이지
+// 사용자가 인증 메일을 받고 버튼을 누르면 이 페이지로 리다이렉트됨
+// 사용자가 쿼리스트링으로 보내준 토큰을 파싱해서 accessToken과 refreshToken을 저장
 
 export default function AuthSuccess() {
   // 정보 수정 페이지로 이동
