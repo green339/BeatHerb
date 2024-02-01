@@ -5,19 +5,12 @@ import LiveItem from '../components/LiveItem.js';
 import NavBar from '../components/NavBar.js';
 import ShortsItem from '../components/ShortsItem.js';
 import Board from './Board.js';
+import Live from './Live.js';
 
 export default function Test() {
   return (
     <>
-      <NavBar />
-      <Board>
-        <p className="text-base-content">Page Content</p>
-      </Board>
-      <ContentsItem size={150} />
-      <ContentsItem size={200} />
-      <ContentsItem size={230} />
-      <ShortsItem />
-      <LiveItem />
+      <Live />
     </>
   );
 }
