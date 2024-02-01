@@ -3,13 +3,19 @@ import MainButton from '../components/MainButton';
 import { Link } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
 import UserButton from '../components/UserButton';
+import { useAuthStore } from '../store/AuthStore';
 
 export default function Main() {
+  const { setAccessToken, removeAccessToken } = useAuthStore();
+
   return (
     <div>
       <div className="fixed top-2 right-2 z-10">
         <UserButton />  
       </div>
+
+      <button className='btn btn-primary' onClick={() => setAccessToken("test")}>login!!!!!</button>
+      <button className='btn btn-primary' onClick={() => removeAccessToken()}>logout!!!!!</button>
       
       <div className="absolute w-full right-1/2 bottom-1/2 translate-x-1/2 translate-y-1/2 flex flex-col items-center">
         <div>

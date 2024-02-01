@@ -19,7 +19,7 @@ export default function AuthRedirection() {
       // 서버로 요청을 보냄
       axios({
         method: 'post',
-        url: `${serverURL}`,
+        url: "/member/signin",
         data: {
           code : code
         }
@@ -87,24 +87,23 @@ export default function AuthRedirection() {
       // 서버로 요청을 보냄
       axios({
         method: 'post',
-        url: `${serverURL}`,
+        url: "https://node5.wookoo.shop/api/api/member/signin",
         data: {
           email : email
-        }
+        },
       })
       .then((response) => {
         console.log(response.data);
       })
       .catch((error) => {
-      })
-      .finally(() => {
+        alert("오류가 발생했습니다.");
+        console.log(error);
         navigate("/");
       })
     } else {
       alert("유효하지 않은 접근입니다.");
-    }
-
-    
+      navigate("/");
+    }    
   }, []);
 
   return (
