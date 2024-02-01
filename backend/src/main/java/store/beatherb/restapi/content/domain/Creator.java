@@ -23,7 +23,7 @@ public class Creator {
     private Content content;
 
     @Column(name="agree")
-    private boolean agree;
+    private Boolean agree;
 
     @Builder
     public Creator(long creatorId, Content content, boolean agree) {

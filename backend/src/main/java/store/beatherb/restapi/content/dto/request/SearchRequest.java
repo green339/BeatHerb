@@ -13,10 +13,18 @@ public class SearchRequest {
 
     @Builder
     public SearchRequest(String genre, String bpm, String keyNote, String instrument, String keyword) {
-        this.genre = genre.split(" ");
-        this.bpm = bpm.split(" ");
-        this.keyNote = keyNote.split(" ");
-        this.instrument = instrument.split(" ");
+        if(!genre.isEmpty()){
+            this.genre = genre.split(" ");
+        }
+        if(!bpm.isEmpty()){
+            this.bpm = bpm.split(" ");
+        }
+        if(!keyNote.isEmpty()){
+            this.keyNote = keyNote.split(" ");
+        }
+        if(!instrument.isEmpty()){
+            this.instrument = instrument.split(" ");
+        }
         this.keyword = keyword;
     }
 }

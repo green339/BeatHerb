@@ -27,22 +27,26 @@ public class Content {
     @Column(name="lyrics")
     private String lyrics;
 
+    @Column(name="name")
+    private String name;
+
     @Column(name="describe")
     private String describe;
 
     @Column(name="hit")
-    private int hit;
+    private Integer hit;
 
     @Column(name="created_at")
     private LocalDateTime createdAt;
 
     @Builder
-    public Content(ContentType contentType, String mediaPath, String lyrics, String describe, int hit, LocalDateTime createdAt) {
+    public Content(ContentType contentType, String mediaPath, String lyrics, String describe, int hit, LocalDateTime createdAt, String name) {
         this.contentType = contentType;
         this.mediaPath = mediaPath;
         this.lyrics = lyrics;
         this.describe = describe;
         this.hit = hit;
         this.createdAt = createdAt;
+        this.name=name;
     }
 }

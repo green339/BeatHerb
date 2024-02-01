@@ -22,7 +22,7 @@ public class Play {
     private Content content;
 
     @Column(name="hit")
-    private int hit;
+    private Integer hit;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

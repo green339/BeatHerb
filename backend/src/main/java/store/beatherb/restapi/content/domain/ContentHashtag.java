@@ -18,16 +18,17 @@ public class ContentHashtag {
     /*
     TODO: 해시태그 테이블이랑 연관관계 설정
      */
-    @Column(name="hashtag_id")
-    private long hashtagId;
+    @ManyToOne
+    @JoinColumn(name="hashtag_id")
+    private Hashtag hashtag;
 
     @ManyToOne
     @JoinColumn(name="content_id")
     private Content content;
 
     @Builder
-    public ContentHashtag(long hashtagId, Content content) {
-        this.hashtagId = hashtagId;
+    public ContentHashtag(Hashtag hashtag, Content content) {
+        this.hashtag = hashtag;
         this.content = content;
     }
 }
