@@ -17,7 +17,6 @@ public class ContentUploadRequest {
     String describe = "설명이 없습니다.";
     @NotEmpty(message = "최소 한개 이상의 해시태그가 있어야 합니다.")
     List<Integer> hashTags;
-    @NotNull(message = "피쳐링한 사람의 id 가 필요합니다.")
     List<Integer> featuring;
 
 
