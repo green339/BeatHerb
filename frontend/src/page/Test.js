@@ -2,6 +2,7 @@
 
 import ContentsItem from '../components/ContentsItem.js';
 import LiveItem from '../components/LiveItem.js';
+import Live from '../components/Live.js';
 import NavBar from '../components/NavBar.js';
 import ShortsItem from '../components/ShortsItem.js';
 import Board from './Board.js';
@@ -18,7 +19,7 @@ export default function Test() {
       <ContentsItem size={230} />
       <ShortsItem />
       <LiveItem />
-        <Live />
+      <Live />
     </>
   );
 }
