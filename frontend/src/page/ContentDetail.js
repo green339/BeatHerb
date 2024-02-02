@@ -55,17 +55,17 @@ export default function ContentDetail() {
   if (comment === "comment") {
     commentList = tempArray.map((value, index) => (
       <div key={index} className="flex justify-center m-10">
-        <div class="flex w-full mt-2 space-x-3">
+        <div className="flex w-full mt-2 space-x-3">
           <div>
-            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
+            <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
             <div className="text-xs text-gray-500 leading-none">Alex</div>
           </div>
           <div>
-            <div class="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
-              <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <div className="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
+              <p className="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
             </div>
             <div className="text-right">
-              <div class="text-xs text-gray-500 leading-none">2 min ago</div>
+              <div className="text-xs text-gray-500 leading-none">2 min ago</div>
             </div>
           </div>
         </div>
@@ -92,8 +92,8 @@ export default function ContentDetail() {
                 />
               </div>
               <div className="flex items-center justify-center w-52 h-20 rounded-md">
-                <button class="flex px-3 md:px-4 py-1 md:py-2 bg-base-100 text-white rounded-lg hover:bg-base-200">
-                  <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                <button className="flex px-3 md:px-4 py-1 md:py-2 bg-base-100 text-white rounded-lg hover:bg-base-200">
+                  <i className="fa-solid fa-arrow-right-to-bracket"></i>
                   Play
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -101,7 +101,7 @@ export default function ContentDetail() {
                     viewBox="0 0 24 24"
                     stroke-width="1.5"
                     stroke="currentColor"
-                    class="w-6 h-6"
+                    className="w-6 h-6"
                   >
                     <path
                       stroke-linecap="round"
