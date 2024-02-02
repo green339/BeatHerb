@@ -1,37 +1,108 @@
-import { useRef } from "react";
-import { useState } from 'react';
+import { useRef, useState, useEffect } from "react";
+import Hls from 'hls.js';
 export default function MusicPlayer() {
+  const videoRef = useRef(null);
   const [music,setMusic] = useState({
     "title": "Title",
     "creator": "Artist",
-    "src_link": "https://p.scdn.co/mp3-preview/0ba9d38f5d1ad30f0e31fc8ee80c1bebf0345a0c",
-    "current": 0
+    "src_link": "https://node5.wookoo.shop/api/content/play/0",
   })
-  const audio =useRef()
+
+  const [duration, setDuration] = useState(0);
+  const [percentage,setPercentage] = useState(0);
   const [play, setPlay] = useState(false);
-  const nextMusic= {
-    "title": "음악 제목입니다",
-    "creator": "창작가입니다",
-    "src_link": "https://p.scdn.co/mp3-preview/0ba9d38f5d1ad30f0e31fc8ee80c1bebf0345a0c",
-    "current": 0
-  }
+  
   const backward = () => {
     console.log("이전 곡으로 이동")
-  }
-  const forward = () => {
-    console.log("다음 곡으로 이동")
-  }
-  const updateProgress = () => {
-    
+    console.log(videoRef.current.duration)
   }
 
-  const buttonClick = () => {
-    setPlay((prev)=>!prev)
+  const forward = () => {
+    console.log("다음 곡으로 이동")
+    console.log(videoRef.current.duration)
   }
+
+  const updateProgress = (e) => {
+    console.log("프로그래스바 선택",videoRef.current)
+    const newPercentage = ((e.clientX - e.currentTarget.getBoundingClientRect().x) / e.currentTarget.getBoundingClientRect().width) * 100
+    videoRef.current.currentTime=duration*newPercentage/100
+    setPercentage(newPercentage)
+  }
+
+  const current = duration * (percentage / 100)
+
+  const buttonClick = () => {
+    console.log(music.src_link)
+    play ? videoRef.current.pause():videoRef.current.play()
+    setPlay((prev) => !prev)
+  }
+
+  const formatTime = (seconds) => {
+    seconds = Math.floor(seconds / 1);
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return minutes+(minutes==0?'0':'') + ":" + (remainingSeconds < 10 ? '0' : '') + remainingSeconds;
+  }
+
+  useEffect(() => {
+    if (Hls.isSupported()) {
+      const hls = new Hls();
+      hls.loadSource(music.src_link);
+      hls.attachMedia(videoRef.current);
+    }
+
+    var intervalID;
+    const handleLoadedMetadata = () => {
+      setDuration(videoRef.current.duration)
+      console.log('Video duration:', videoRef.current.duration);
+    };
+
+    const playTime = () => {
+    intervalID = setInterval(function() {
+      setPercentage((videoRef.current.currentTime/videoRef.current.duration)*100)
+      }, 1000);
+    }
+    
+    const pauseMusic = () => {
+      clearInterval(intervalID);
+    }
+
+    const endMusic = () => {      
+      clearInterval(intervalID);
+      setPercentage(100)
+      setPlay((prev) => !prev)
+    }
+
+    const updateTime = () => {
+      console.log("시간변경")
+    }
+
+    if (videoRef.current) {
+      
+      videoRef.current.addEventListener('loadedmetadata', handleLoadedMetadata);
+      videoRef.current.addEventListener('play', playTime)
+      videoRef.current.addEventListener('pause', pauseMusic)
+      videoRef.current.addEventListener('ended', endMusic)
+      videoRef.current.addEventListener('timeUpdate',updateTime)
+    }
+
+    return () => {
+      if (videoRef.current) {
+        videoRef.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
+        videoRef.current.removeEventListener('play', playTime)
+        videoRef.current.removeEventListener('pause', pauseMusic)
+        videoRef.current.removeEventListener('ended', endMusic)
+      }
+    };
+  }, [videoRef]);
+
+
   return (
     <div className="bg-base-content bg-opacity-50 rounded-t-xl text-base-100 pt-1 pb-1 fixed bottom-0 w-full">
       <div className="grid grid-cols-9">
         <div className="col-span-1 flex justify-end">
+          <video ref={videoRef} visibility="hidden" src={music.src_link} className="w-1">
+          </video>
           <div className="pe-3">
             <img className="h-20 w-15"src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" alt="" />
           </div>
@@ -42,12 +113,12 @@ export default function MusicPlayer() {
             <span className="pe-2">{ music.creator}</span>
           </div>
           <div>
-            <progress className="flex justify-start progress progress-primary w-full" value="20" max="100"></progress>
+            <progress onClick={updateProgress} className="flex justify-start progress progress-primary w-full" value={ percentage} max="100"></progress>
           </div>
           <div className="flex justify-between text-sm leading-6 ps-1 pt-3">
-            <div className="text-base-100">1:75</div>
+            <div className="text-base-100">{formatTime(current)}</div>
             <div>
-              <span className="text-neutral-400">3:20</span>
+              <span className="text-neutral-400">{formatTime(duration)}</span>
               <span className="ps-3">
                 <button>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-4 h-4">
@@ -56,7 +127,6 @@ export default function MusicPlayer() {
                 </button>
               </span>
             </div>
-            
           </div>
         </div>
         <div className="flex">
@@ -65,7 +135,6 @@ export default function MusicPlayer() {
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-6 h-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
               </svg>
-
               </button>
             </div>
             <div>
@@ -86,14 +155,11 @@ export default function MusicPlayer() {
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-6 h-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
               </svg>
-
               </button>
             </div>
         </div>
       </div>
     </div>
-    
-
   )
 }
 
