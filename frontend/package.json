@@ -3,10 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ffmpeg/ffmpeg": "^0.12.10",
+    "@ffmpeg/util": "^0.12.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@wavesurfer/react": "^1.0.4",
     "axios": "^1.6.6",
+    "ffmpeg.js": "^4.2.9003",
     "http-proxy-middleware": "^2.0.6",
     "moment": "^2.30.1",
     "react": "^18.2.0",
@@ -14,7 +18,8 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.3",
     "react-scripts": "5.0.1",
-    "wavesurfer.js": "^7.6.5",
+    "wavesurfer-multitrack": "^0.4.11",
+    "wavesurfer.js": "^7.7.1",
     "web-vitals": "^2.1.4",
     "zustand": "^4.5.0"
   },
@@ -44,6 +49,7 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.10",
+    "@types/wavesurfer.js": "^6.0.12",
     "daisyui": "^4.6.1",
     "tailwind-scrollbar": "^3.0.5",
     "tailwindcss": "^3.4.1"

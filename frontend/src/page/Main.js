@@ -13,9 +13,6 @@ export default function Main() {
       <div className="fixed top-2 right-2 z-10">
         <UserButton />  
       </div>
-
-      <button className='btn btn-primary' onClick={() => setAccessToken("test")}>login!!!!!</button>
-      <button className='btn btn-primary' onClick={() => removeAccessToken()}>logout!!!!!</button>
       
       <div className="absolute w-full right-1/2 bottom-1/2 translate-x-1/2 translate-y-1/2 flex flex-col items-center">
         <div>
