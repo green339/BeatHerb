@@ -20,7 +20,7 @@ import store.beatherb.restapi.member.exception.MemberException;
 import java.util.List;
 import java.util.Optional;
 
-import static store.beatherb.restapi.content.exception.ContentErrorCode.CONTENT_ERROR_CODE;
+import static store.beatherb.restapi.content.exception.ContentErrorCode.CONTENT_NOT_FOUND;
 import static store.beatherb.restapi.content.exception.ContentErrorCode.LIST_HAS_NOT_COMMENT;
 
 @Service
@@ -34,7 +34,7 @@ public class CommentService {
     public Comment registerComment(@LoginUser MemberDTO memberDto, RegistCommentRequest registCommentRequest){
         //contentId에 해당하는 Content를 찾는다
         Content content = contentRepository.findById(registCommentRequest.getContentId())
-                .orElseThrow(() -> new ContentException(CONTENT_ERROR_CODE));
+                .orElseThrow(() -> new ContentException(CONTENT_NOT_FOUND));
         //memberId에 해당하는 Member를 찾는다.
         Member member = memberRepository.findById(memberDto.getId())
                 .orElseThrow(()->new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
@@ -52,7 +52,7 @@ public class CommentService {
 
     public List<Comment> getComments(Long contentId){
         Content content = contentRepository.findById(contentId)
-                .orElseThrow(() -> new ContentException(CONTENT_ERROR_CODE));
+                .orElseThrow(() -> new ContentException(CONTENT_NOT_FOUND));
 
         List<Comment> commentList = commentRepository.findByContent(content)
                 .orElseThrow(() -> new ContentException(LIST_HAS_NOT_COMMENT));

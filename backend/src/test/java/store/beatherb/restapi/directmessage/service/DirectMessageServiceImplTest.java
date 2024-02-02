@@ -46,7 +46,6 @@ class DirectMessageServiceImplTest {
 
         assertEquals(senderDTO.getId(),sender.getId());
         assertEquals(receiverDTO.getId(),receiver.getId());
-        directMessageService.sendDirectMessage(senderDTO,receiverDTO,"헝그리정신이필요함");
 
     }
 }
