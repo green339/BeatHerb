@@ -15,7 +15,7 @@ export default function LiveBoard() {
   return (
     <div className="w-full h-full">
       <div className="w-full flex justify-start my-8 ms-12">
-        <h1 className="text-primary">라이브</h1>
+        <h1 className="text-primary text-3xl font-semibold">라이브</h1>
       </div>
 
       <div className="w-full flex justify-end mb-8">

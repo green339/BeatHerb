@@ -18,6 +18,7 @@ export default function Test() {
       <ContentsItem size={230} />
       <ShortsItem />
       <LiveItem />
+        <Live />
     </>
   );
 }

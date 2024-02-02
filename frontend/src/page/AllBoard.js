@@ -17,7 +17,7 @@ export default function AllBoard() {
         <SearchBar initQuery={query} />
       </div>
 
-      {query && <h1 className="text-primary">검색어는 {query}에요~~~~~~~~~~~~~~~</h1>}
+      {query && <p className="text-primary text-3xl font-semibold">검색어는 {query}에요~~~~~~~~~~~~~~~</p>}
 
       <ItemContainerWithTitle title="컨텐츠" link="/board/contents">
         <ContentsRanking title="신규 멜로디" link="/board/contents" data={{ category: "melody" }} />
