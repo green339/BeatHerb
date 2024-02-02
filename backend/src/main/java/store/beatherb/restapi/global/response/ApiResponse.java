@@ -3,12 +3,14 @@ package store.beatherb.restapi.global.response;
 import lombok.*;
 import org.springframework.http.HttpStatus;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ApiResponse<T> {
     private int code;
-    private String message;
+    private List<String> message;
     private T data;
     public static<T> ApiResponse<T> successWithData(T data){
         return new ApiResponse<>(200,null,data);
@@ -23,7 +25,11 @@ public class ApiResponse<T> {
         return new ApiResponse<>(code.value(),null,data);
     }
 
-    public static ApiResponse<?> fail(int code, String message){
+    public static<T> ApiResponse<T> of(HttpStatus code,List<String> message, T data){
+        return new ApiResponse<>(code.value(),message,data);
+    }
+
+    public static<T> ApiResponse<T> fail(int code, List<String> message){
         return new ApiResponse<>(code,message,null);
     }
 }

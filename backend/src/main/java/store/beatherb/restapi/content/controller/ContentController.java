@@ -1,5 +1,6 @@
 package store.beatherb.restapi.content.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
@@ -7,6 +8,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import store.beatherb.restapi.content.domain.Content;
+import store.beatherb.restapi.content.dto.request.ContentUploadRequest;
 import store.beatherb.restapi.content.service.ContentService;
 import store.beatherb.restapi.global.auth.domain.LoginUser;
 import store.beatherb.restapi.global.response.ApiResponse;
@@ -48,8 +50,9 @@ public class ContentController {
 
     @PostMapping("/upload")
 
-    public ResponseEntity<ApiResponse<?>> upload(@LoginUser(required = false) MemberDTO memberDTO){
-        ApiResponse<String> response = ApiResponse.of(HttpStatus.CREATED,"good");
+    public ResponseEntity<ApiResponse<?>> upload(@LoginUser(required = false) MemberDTO memberDTO, @Valid  @RequestBody  ContentUploadRequest contentUploadRequest){
+        System.out.println(contentUploadRequest);
+        ApiResponse<ContentUploadRequest> response = ApiResponse.of(HttpStatus.CREATED,contentUploadRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 //    @GetMapping("/test")
