@@ -12,6 +12,8 @@ import Test from './page/Test.js';
 import MyPage from './page/MyPage.js';
 import WorkPlace from './page/WorkPlace.js';
 import ContentDetail from './page/ContentDetail.js';
+import UploadMusic from './page/UploadMusic.js';
+import TestModal from './page/TestModal.js';
 
 export default function App() {
   return (
@@ -25,9 +27,11 @@ export default function App() {
           <Route path="/auth/redirect/:provider" element={<AuthRedirection />} />
           <Route path="/board/:category" element={<Board />} />
           <Route path="/mypage" element={<MyPage />} />
+          <Route path="/upload_music" element={<UploadMusic />} />
           <Route path="/content/:id" element={<ContentDetail />} />
           <Route path="/workplace" element={<WorkPlace />} />
           <Route path="/test" element={<Test />} />
+          <Route path="/test_modal" element={<TestModal />} />
           <Route path="/*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
