@@ -1,6 +1,7 @@
 package store.beatherb.restapi.global.response;
 
 import lombok.*;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -17,6 +18,9 @@ public class ApiResponse<T> {
     }
     public static<T> ApiResponse<T> of(int code,T data){
         return new ApiResponse<>(code,null,data);
+    }
+    public static<T> ApiResponse<T> of(HttpStatus code, T data){
+        return new ApiResponse<>(code.value(),null,data);
     }
 
     public static ApiResponse<?> fail(int code, String message){

@@ -3,8 +3,10 @@ package store.beatherb.restapi.content.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import store.beatherb.restapi.member.domain.Member;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Slf4j
 @Entity
@@ -15,14 +17,25 @@ public class Content {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
-    private long id;
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name="content_writer_id")
+    private Member writer;
 
     @ManyToOne
     @JoinColumn(name="content_type_id")
     private ContentType contentType;
 
-    @Column(name="media_path")
-    private String mediaPath;
+
+    @ManyToMany
+    @JoinTable(
+            name = "content_hashtags",
+            joinColumns = @JoinColumn(name = "content_id"),
+            inverseJoinColumns = @JoinColumn(name = "hashtag_id")
+    )
+    private Set<HashTag> hashTags;
+
 
     @Column(name="lyrics")
     private String lyrics;
@@ -37,9 +50,8 @@ public class Content {
     private LocalDateTime createdAt;
 
     @Builder
-    public Content(ContentType contentType, String mediaPath, String lyrics, String describe, int hit, LocalDateTime createdAt) {
+    public Content(ContentType contentType, String lyrics, String describe, int hit, LocalDateTime createdAt) {
         this.contentType = contentType;
-        this.mediaPath = mediaPath;
         this.lyrics = lyrics;
         this.describe = describe;
         this.hit = hit;
