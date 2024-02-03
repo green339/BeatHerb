@@ -1,5 +1,7 @@
 package store.beatherb.restapi.content.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import net.bramp.ffmpeg.FFmpeg;
@@ -16,9 +18,14 @@ import store.beatherb.restapi.content.domain.*;
 import store.beatherb.restapi.content.dto.request.ContentUploadRequest;
 import store.beatherb.restapi.content.exception.ContentErrorCode;
 import store.beatherb.restapi.content.exception.ContentException;
+import store.beatherb.restapi.directmessage.domain.dto.response.DirectMessageResponse;
+import store.beatherb.restapi.directmessage.exception.DirectMessageErrorCode;
+import store.beatherb.restapi.directmessage.exception.DirectMessageException;
 import store.beatherb.restapi.global.exception.BeatHerbErrorCode;
 import store.beatherb.restapi.global.exception.BeatHerbException;
 import store.beatherb.restapi.global.validate.MusicValid;
+import store.beatherb.restapi.infrastructure.kafka.domain.dto.response.ContentUploadToKafkaResponse;
+import store.beatherb.restapi.infrastructure.kafka.service.KafkaProducerService;
 import store.beatherb.restapi.member.domain.Member;
 import store.beatherb.restapi.member.domain.MemberRepository;
 import store.beatherb.restapi.member.dto.MemberDTO;
@@ -39,13 +46,16 @@ public class ContentService {
 
 
     private final ContentRepository contentRepository;
-    private final String CROPPED_DIRECTORY;
-
     private final MemberRepository memberRepository;
 
     private final HashTagRepository hashTagRepository;
 
+    private final KafkaProducerService kafkaProducerService;
+
+    private final String CROPPED_DIRECTORY;
     private final String REFERENCE_DIRECTORY;
+
+
 //
 //    private final String FFMPEG_LOCATION;
 //    private final String FFPROBE_LOCATION;
@@ -54,6 +64,7 @@ public class ContentService {
     public ContentService(ContentRepository contentRepository,
                           MemberRepository memberRepository,
                           HashTagRepository hashTagRepository,
+                          KafkaProducerService kafkaProducerService,
                           @Value("${resource.directory.music.cropped}")String CROPPED_DIRECTORY,
                           @Value("${resource.directory.music.reference}") String REFERENCE_DIRECTORY
 //                          @Value("${ffmpeg.directory.ffmpeg}") String FFMPEG_LOCATION,
@@ -62,6 +73,7 @@ public class ContentService {
         this.contentRepository = contentRepository;
         this.memberRepository = memberRepository;
         this.hashTagRepository = hashTagRepository;
+        this.kafkaProducerService = kafkaProducerService;
         this.CROPPED_DIRECTORY = CROPPED_DIRECTORY;
         this.REFERENCE_DIRECTORY = REFERENCE_DIRECTORY;
 //        this.FFMPEG_LOCATION = FFMPEG_LOCATION;
@@ -164,12 +176,29 @@ public class ContentService {
 
         contentRepository.save(content);
 
-        File file = new File(REFERENCE_DIRECTORY + File.separator + content.getId() + format);
+        String saveFileName = content.getId() + format;
+        File file = new File(REFERENCE_DIRECTORY + File.separator + saveFileName);
         try {
             FileCopyUtils.copy(music.getBytes(), file);
         } catch (IOException e) {
             throw new BeatHerbException(BeatHerbErrorCode.INTERNAL_SERVER_ERROR);
         }
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            ContentUploadToKafkaResponse contentUploadToKafkaResponse = ContentUploadToKafkaResponse.builder()
+                    .writerId(writer.getId())
+                    .fileName(saveFileName)
+                    .build();
+
+            String contentUploadToKafkaResponseJson = objectMapper.writeValueAsString(contentUploadToKafkaResponse);
+            kafkaProducerService.sendProcessingHls(contentUploadToKafkaResponseJson);
+
+        } catch (JsonProcessingException e) {
+            throw new BeatHerbException(BeatHerbErrorCode.INTERNAL_SERVER_ERROR);
+        }
+
+
 
 
     }

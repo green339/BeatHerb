@@ -1,4 +1,4 @@
-package store.beatherb.restapi.directmessage.domain.dto.response;
+package store.beatherb.restapi.infrastructure.kafka.domain.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
