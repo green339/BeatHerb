@@ -21,7 +21,6 @@ class DirectMessageServiceImplTest {
     void Kafka로메시지가_전송이_되야한다() throws Exception{
 
         Member sender = Member.builder()
-                .picture("apple")
                 .nickname("감자자자")
                 .email("햄버ㅁㄴㅇ")
                 .name("고기반찬")
@@ -29,7 +28,6 @@ class DirectMessageServiceImplTest {
                 .build();
 
         Member receiver = Member.builder()
-                .picture("apple")
                 .nickname("감자")
                 .email("햄버거")
                 .name("밥줘")

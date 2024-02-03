@@ -33,7 +33,6 @@ public class MemberDTO {
                 .email(entity.getEmail())
                 .nickname(entity.getNickname())
                 .advertise(entity.getAdvertise())
-                .picture(entity.getPicture())
                 .dmAgree(entity.isDmAgree())
                 .naver(entity.getNaver())
                 .kakao(entity.getKakao())

@@ -16,10 +16,18 @@ public class HashTag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "hashTags")
-    private Set<Content> contents;
+//    @ManyToMany(mappedBy = "hashTags")
+//    private Set<Content> contents;
+
+
+    @Builder
+    public HashTag(String name) {
+        this.name = name;
+    }
+
 
     // 생성자, 게터, 세터 등 필요한 코드들...
 }
