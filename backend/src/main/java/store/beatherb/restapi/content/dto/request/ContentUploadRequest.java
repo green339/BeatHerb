@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NonNull;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -21,12 +22,25 @@ public class ContentUploadRequest {
     String lyrics = "가사가 없습니다.";
     @Builder.Default
     String describe = "설명이 없습니다.";
-    @NotEmpty(message = "최소 한개 이상의 해시태그가 있어야 합니다.")
+    @NotEmpty(message = "최소 한개 이상의 해시태그 아이디가 있어야 합니다.")
     Set<Long> hashTagIds;
     Set<Long> creatorIds;
     MultipartFile image;
     @NotNull(message = "음악은 필수 업로드 하셔야합니다.")
     MultipartFile music;
+
+    public ContentUploadRequest(String title, String lyrics, String describe, Set<Long> hashTagIds, Set<Long> creatorIds, MultipartFile image, MultipartFile music) {
+        this.title = title;
+        this.lyrics = lyrics;
+        this.describe = describe;
+        this.hashTagIds = hashTagIds;
+        if(creatorIds ==null){
+            creatorIds = new HashSet<>();
+        }
+        this.creatorIds = creatorIds;
+        this.image = image;
+        this.music = music;
+    }
 
     @Override
     public String toString() {

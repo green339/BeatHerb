@@ -1,5 +1,6 @@
 package store.beatherb.restapi.content.service;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.FFmpegExecutor;
@@ -9,10 +10,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.multipart.MultipartFile;
 import store.beatherb.restapi.content.domain.*;
 import store.beatherb.restapi.content.dto.request.ContentUploadRequest;
 import store.beatherb.restapi.content.exception.ContentErrorCode;
 import store.beatherb.restapi.content.exception.ContentException;
+import store.beatherb.restapi.global.exception.BeatHerbErrorCode;
+import store.beatherb.restapi.global.exception.BeatHerbException;
+import store.beatherb.restapi.global.validate.MusicValid;
 import store.beatherb.restapi.member.domain.Member;
 import store.beatherb.restapi.member.domain.MemberRepository;
 import store.beatherb.restapi.member.dto.MemberDTO;
@@ -20,6 +26,7 @@ import store.beatherb.restapi.member.exception.MemberErrorCode;
 import store.beatherb.restapi.member.exception.MemberException;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +45,7 @@ public class ContentService {
 
     private final HashTagRepository hashTagRepository;
 
-//    private final String REFERENCE_DIRECTORY;
+    private final String REFERENCE_DIRECTORY;
 //
 //    private final String FFMPEG_LOCATION;
 //    private final String FFPROBE_LOCATION;
@@ -56,7 +63,7 @@ public class ContentService {
         this.memberRepository = memberRepository;
         this.hashTagRepository = hashTagRepository;
         this.CROPPED_DIRECTORY = CROPPED_DIRECTORY;
-//        this.REFERENCE_DIRECTORY = REFERENCE_DIRECTORY;
+        this.REFERENCE_DIRECTORY = REFERENCE_DIRECTORY;
 //        this.FFMPEG_LOCATION = FFMPEG_LOCATION;
 //        this.FFPROBE_LOCATION = FFPROBE_LOCATION;
     }
@@ -89,7 +96,12 @@ public class ContentService {
         throw new ContentException(ContentErrorCode.CONTENT_NOT_FOUND);
     }
 
+
+    @Transactional
     public void uploadContent(MemberDTO memberDTO,ContentUploadRequest request){
+        if(!MusicValid.isMusicFile(request.getMusic())){
+            throw new ContentException(ContentErrorCode.MUSIC_NOT_VALID);
+        }
         Member writer = memberRepository.findById(memberDTO.getId()).
                 orElseThrow(
                     () -> {
@@ -143,8 +155,21 @@ public class ContentService {
                 .hashTags(hashTags)
                 .build();
 
+        MultipartFile music = request.getMusic();
+
+        String fileName = music.getOriginalFilename();
+
+        String format = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
+        log.info("Music File 확장자 : [{}]",format);
+
         contentRepository.save(content);
 
+        File file = new File(REFERENCE_DIRECTORY + File.separator + content.getId() + format);
+        try {
+            FileCopyUtils.copy(music.getBytes(), file);
+        } catch (IOException e) {
+            throw new BeatHerbException(BeatHerbErrorCode.INTERNAL_SERVER_ERROR);
+        }
 
 
     }

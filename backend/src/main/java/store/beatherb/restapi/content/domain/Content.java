@@ -69,6 +69,10 @@ public class Content {
     @Column(name="created_at")
     private LocalDateTime createdAt;
 
+    @Setter
+    boolean processed;
+
+
     @Builder
     public Content(String title, Member writer, ContentType contentType, List<Content> inorder, List<HashTag> hashTags, List<Creator> creators, String lyrics, String describe, int hit, LocalDateTime createdAt) {
         this.title = title;
@@ -81,6 +85,7 @@ public class Content {
         this.describe = describe;
         this.hit = hit;
         this.createdAt = createdAt;
+        processed = false;
 
         if(this.creators !=null){
             for (Creator c: this.creators){
