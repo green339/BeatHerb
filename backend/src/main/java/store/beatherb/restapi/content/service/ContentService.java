@@ -9,15 +9,21 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import store.beatherb.restapi.content.domain.Content;
-import store.beatherb.restapi.content.domain.ContentRepository;
+import store.beatherb.restapi.content.domain.*;
 import store.beatherb.restapi.content.dto.request.ContentUploadRequest;
 import store.beatherb.restapi.content.exception.ContentErrorCode;
 import store.beatherb.restapi.content.exception.ContentException;
+import store.beatherb.restapi.member.domain.Member;
+import store.beatherb.restapi.member.domain.MemberRepository;
+import store.beatherb.restapi.member.dto.MemberDTO;
+import store.beatherb.restapi.member.exception.MemberErrorCode;
+import store.beatherb.restapi.member.exception.MemberException;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -28,17 +34,27 @@ public class ContentService {
     private final ContentRepository contentRepository;
     private final String CROPPED_DIRECTORY;
 
+    private final MemberRepository memberRepository;
+
+    private final HashTagRepository hashTagRepository;
+
 //    private final String REFERENCE_DIRECTORY;
 //
 //    private final String FFMPEG_LOCATION;
 //    private final String FFPROBE_LOCATION;
 
-    public ContentService(ContentRepository contentRepository, @Value("${resource.directory.music.cropped}")String CROPPED_DIRECTORY,
+
+    public ContentService(ContentRepository contentRepository,
+                          MemberRepository memberRepository,
+                          HashTagRepository hashTagRepository,
+                          @Value("${resource.directory.music.cropped}")String CROPPED_DIRECTORY,
                           @Value("${resource.directory.music.reference}") String REFERENCE_DIRECTORY
 //                          @Value("${ffmpeg.directory.ffmpeg}") String FFMPEG_LOCATION,
 //                          @Value("${ffmpeg.directory.ffprobe}") String FFPROBE_LOCATION
                           ) {
         this.contentRepository = contentRepository;
+        this.memberRepository = memberRepository;
+        this.hashTagRepository = hashTagRepository;
         this.CROPPED_DIRECTORY = CROPPED_DIRECTORY;
 //        this.REFERENCE_DIRECTORY = REFERENCE_DIRECTORY;
 //        this.FFMPEG_LOCATION = FFMPEG_LOCATION;
@@ -73,7 +89,61 @@ public class ContentService {
         throw new ContentException(ContentErrorCode.CONTENT_NOT_FOUND);
     }
 
-    public void uploadContent(ContentUploadRequest request){
+    public void uploadContent(MemberDTO memberDTO,ContentUploadRequest request){
+        Member writer = memberRepository.findById(memberDTO.getId()).
+                orElseThrow(
+                    () -> {
+                        return new MemberException(MemberErrorCode.MEMBER_FIND_ERROR);
+                    }
+                );
+        Set<Long> creatorIds = request.getCreatorIds();
+        Creator baseCreator = Creator.builder()
+                .creator(writer)
+                .agree(true)
+                .build();
+        List<Creator> creators = new ArrayList<>();
+        creators.add(baseCreator);
+        for (Long creatorId : creatorIds){ //창작가들을 찾을수 없으면 Throw
+            Member member = memberRepository.findById(creatorId)
+                    .orElseThrow(
+                            () -> {
+                                return new MemberException(MemberErrorCode.MEMBER_FIND_ERROR);
+                            }
+                    );
+            creators.add(
+                    Creator.builder()
+                            .creator(member)
+                            .agree(false)
+                            .build()
+            );
+        }
+
+        Set<Long> hashTagsIds = request.getHashTagIds();
+        List<HashTag> hashTags = new ArrayList<>();
+
+
+        for(Long hashTagId : hashTagsIds){
+            HashTag hashTag = hashTagRepository.findById(hashTagId)
+                    .orElseThrow(
+                            ()-> {
+                                return new ContentException(ContentErrorCode.HASHTAG_NOT_FOUND);
+                            }
+            );
+            hashTags.add(hashTag);
+        }
+
+
+        Content content = Content.builder()
+                .hit(0)
+                .describe(request.getDescribe())
+                .title(request.getTitle())
+                .lyrics(request.getLyrics())
+                .creators(creators)
+                .writer(writer)
+                .hashTags(hashTags)
+                .build();
+
+        contentRepository.save(content);
 
 
 

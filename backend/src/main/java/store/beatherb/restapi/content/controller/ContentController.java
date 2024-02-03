@@ -52,7 +52,9 @@ public class ContentController {
     public ResponseEntity<ApiResponse<?>> upload(@LoginUser(required = false) MemberDTO memberDTO, @Valid  @ModelAttribute  ContentUploadRequest contentUploadRequest){
         //TODO : 수정 필요!!!!!!!
         System.out.println(contentUploadRequest);
+        contentService.uploadContent(memberDTO,contentUploadRequest);
         ApiResponse<ContentUploadRequest> response = ApiResponse.of(HttpStatus.CREATED,contentUploadRequest);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 //    @GetMapping("/test")
