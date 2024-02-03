@@ -9,6 +9,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import store.beatherb.restapi.content.domain.Content;
 import store.beatherb.restapi.content.dto.request.ContentUploadRequest;
+import store.beatherb.restapi.content.dto.respone.ContentUploadRespone;
 import store.beatherb.restapi.content.service.ContentService;
 import store.beatherb.restapi.global.auth.domain.LoginUser;
 import store.beatherb.restapi.global.response.ApiResponse;
@@ -51,8 +52,8 @@ public class ContentController {
     @PostMapping("/upload")
     public ResponseEntity<ApiResponse<?>> upload(@LoginUser MemberDTO memberDTO, @Valid  @ModelAttribute  ContentUploadRequest contentUploadRequest){
         //TODO : 수정 필요!!!!!!!
-        contentService.uploadContent(memberDTO,contentUploadRequest);
-        ApiResponse<String> response = ApiResponse.of(HttpStatus.CREATED,null);
+        ContentUploadRespone contentUploadRespone = contentService.uploadContent(memberDTO,contentUploadRequest);
+        ApiResponse<ContentUploadRespone> response = ApiResponse.of(HttpStatus.CREATED,contentUploadRespone);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 //    @GetMapping("/test")
