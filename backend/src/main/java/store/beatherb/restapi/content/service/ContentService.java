@@ -16,6 +16,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import store.beatherb.restapi.content.domain.*;
 import store.beatherb.restapi.content.dto.request.ContentUploadRequest;
+import store.beatherb.restapi.content.dto.respone.ContentUploadRespone;
 import store.beatherb.restapi.content.exception.ContentErrorCode;
 import store.beatherb.restapi.content.exception.ContentException;
 import store.beatherb.restapi.directmessage.domain.dto.response.DirectMessageResponse;
@@ -110,7 +111,7 @@ public class ContentService {
 
 
     @Transactional
-    public void uploadContent(MemberDTO memberDTO,ContentUploadRequest request){
+    public ContentUploadRespone uploadContent(MemberDTO memberDTO,ContentUploadRequest request){
         if(!MusicValid.isMusicFile(request.getMusic())){
             throw new ContentException(ContentErrorCode.MUSIC_NOT_VALID);
         }
@@ -197,6 +198,8 @@ public class ContentService {
         } catch (JsonProcessingException e) {
             throw new BeatHerbException(BeatHerbErrorCode.INTERNAL_SERVER_ERROR);
         }
+
+        return ContentUploadRespone.builder().id(content.getId()).build();
 
 
 
