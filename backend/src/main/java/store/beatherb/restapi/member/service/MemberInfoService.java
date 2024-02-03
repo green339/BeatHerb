@@ -27,13 +27,11 @@ public class MemberInfoService {
 
         String nickname = editRequest.getNickname() != null ? editRequest.getNickname() : memberDTO.getNickname();
         Boolean isDmAgree = editRequest.getDmAgree() != null ? editRequest.getDmAgree() : memberDTO.getDmAgree();
-        String picture = editRequest.getPicture() != null ? editRequest.getPicture() : memberDTO.getPicture();
 
         Member member = memberRepository.findById(memberDTO.getId())
                         .orElseThrow(()->new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
         member.setNickname(nickname);
         member.setDmAgree(isDmAgree);
-        member.setPicture(picture);
 
         memberRepository.save(member);
 

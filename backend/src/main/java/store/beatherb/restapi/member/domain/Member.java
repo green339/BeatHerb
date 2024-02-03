@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 import jdk.jfr.Timestamp;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Slf4j
@@ -34,14 +37,12 @@ public class Member {
     @Column(name = "advertise")
     private Boolean advertise;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date created_at;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updated_at;
+    @CreationTimestamp
+    private LocalDateTime created_at;
 
-    @Column(name = "picture", nullable = true)
-    private String picture;
+    @UpdateTimestamp
+    private LocalDateTime updated_at;
 
     @Column(name="dm_agree")
     private boolean dmAgree;
@@ -57,14 +58,11 @@ public class Member {
 
 
     @Builder
-    public Member(String email, String name, String nickname, Boolean advertise, Date created_at, Date updated_at, String picture, boolean dmAgree, String naver, String kakao, String google) {
+    public Member(String email, String name, String nickname, Boolean advertise, boolean dmAgree, String naver, String kakao, String google) {
         this.email = email;
         this.name = name;
         this.nickname = nickname;
         this.advertise = advertise;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
-        this.picture = picture;
         this.dmAgree = dmAgree;
         this.naver = naver;
         this.kakao = kakao;

@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum KafkaTopic {
 
-    DIRECT_MESSAGE ("DM");
+    DIRECT_MESSAGE ("DM"),
+    PROCESSING_HLS ("hls");
     private final String topic;
 
 }

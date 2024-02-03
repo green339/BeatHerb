@@ -1,4 +1,4 @@
-package store.beatherb.restapi.directmessage.domain.dto.response;
+package store.beatherb.restapi.infrastructure.kafka.domain.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,12 +17,10 @@ public class DirectMessageToKafkaResponse {
         this.id = id;
         this.sender =
                 DMMember.builder().id(sender.getId())
-                        .picture(sender.getPicture())
                         .nickname(sender.getNickname())
                         .build();
 
         this.receiver = DMMember.builder().id(receiver.getId())
-                .picture(receiver.getPicture())
                 .nickname(receiver.getNickname())
                 .build();;
         this.createdAt = createdAt;

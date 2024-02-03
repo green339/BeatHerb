@@ -20,4 +20,8 @@ public class KafkaProducerService {
     public void sendDirectMessage(String message){
         this.sendMessage(KafkaTopic.DIRECT_MESSAGE,message);
     }
+
+    public void sendProcessingHls(String message){
+        this.sendMessage(KafkaTopic.PROCESSING_HLS,message);
+    }
 }

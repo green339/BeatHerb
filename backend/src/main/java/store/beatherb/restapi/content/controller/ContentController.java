@@ -1,19 +1,18 @@
 package store.beatherb.restapi.content.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
 import store.beatherb.restapi.content.domain.Content;
+import store.beatherb.restapi.content.dto.request.ContentUploadRequest;
 import store.beatherb.restapi.content.service.ContentService;
+import store.beatherb.restapi.global.auth.domain.LoginUser;
+import store.beatherb.restapi.global.response.ApiResponse;
+import store.beatherb.restapi.member.dto.MemberDTO;
 
 import java.io.File;
 import java.util.List;
@@ -26,8 +25,9 @@ public class ContentController {
     private final ContentService contentService;
 
     @GetMapping
-    public ResponseEntity<List<Content>> contentsOrderByHit(){
-        return ResponseEntity.ok(contentService.getContentsOrderByHit());
+    public ResponseEntity<ApiResponse<List<Content>>> contentsOrderByHit(){
+        List<Content> response= contentService.getContentsOrderByHit();
+        return ResponseEntity.ok(ApiResponse.successWithData(response));
     }
 
     @GetMapping("/play/{contentNumber}")
@@ -48,6 +48,13 @@ public class ContentController {
                 .body(resource);
     }
 
+    @PostMapping("/upload")
+    public ResponseEntity<ApiResponse<?>> upload(@LoginUser MemberDTO memberDTO, @Valid  @ModelAttribute  ContentUploadRequest contentUploadRequest){
+        //TODO : 수정 필요!!!!!!!
+        contentService.uploadContent(memberDTO,contentUploadRequest);
+        ApiResponse<String> response = ApiResponse.of(HttpStatus.CREATED,null);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 //    @GetMapping("/test")
 //    public ResponseEntity<?> test(){
 //        contentService.makeSequence();

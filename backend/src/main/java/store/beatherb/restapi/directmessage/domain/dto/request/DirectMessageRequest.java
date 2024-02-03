@@ -7,9 +7,9 @@ import lombok.Data;
 @Data
 public class DirectMessageRequest {
 
-    @NotNull
+    @NotNull(message = "수신자 id가 필요합니다.")
     Long receiverId;
-    @NotNull
+    @NotNull(message = "DM 내용이 필요합니다.")
     String message;
 
 //    public DirectMessageRequest(Long receiverId, String message) {
