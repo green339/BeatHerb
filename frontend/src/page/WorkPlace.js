@@ -1,7 +1,6 @@
 import Multitrack from 'wavesurfer-multitrack'
 import { useRef, useEffect, useState } from 'react';
 import Record from'../components/Record.js'
-import { Link } from 'react-router-dom';
 
 export default function WorkPlace() {
   const containerRef = useRef();
