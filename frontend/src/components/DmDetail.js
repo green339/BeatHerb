@@ -10,7 +10,7 @@ export default function DmDetail({ user }) {
   });
 
   return (
-    <div class="flex-1 p:2 sm:p-6 justify-between flex flex-col h-screen">
+    <div class="flex-1 p:2 sm:p-6 flex flex-col">
       <div class="flex sm:items-center justify-between py-3 border-b-2 border-gray-200">
         <div class="relative flex items-center space-x-4">
           <div class="relative">

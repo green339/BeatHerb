@@ -3,7 +3,7 @@ import { useState } from "react";
 import DmDetail from "./DmDetail";
 
 export default function Dm() {
-  const [personNum, setPersonNum] = useState(5);
+  const [personNum] = useState(5);
   const [selectedUser, setSelectedUser] = useState(null);
 
   const handleUserSelect = (user) => {
