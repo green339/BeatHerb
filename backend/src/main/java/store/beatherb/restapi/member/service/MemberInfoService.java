@@ -1,5 +1,6 @@
 package store.beatherb.restapi.member.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,13 +25,20 @@ public class MemberInfoService {
 
     //회원 정보 수정
     //프로필 이미지 파일 받아왔을 때 체크해 줄 필요있음
+
+    @Transactional
     public void edit(MemberDTO memberDTO, EditRequest editRequest) {
 
-        String nickname = editRequest.getNickname();
-        Boolean isDmAgree = editRequest.getDmAgree();
+        String nickname = editRequest.getNickname() != null? editRequest.getNickname() : memberDTO.getNickname();
+        Boolean isDmAgree = editRequest.getDmAgree() != null? editRequest.getDmAgree() : memberDTO.getDmAgree();
 
         Member member = memberRepository.findById(memberDTO.getId())
                 .orElseThrow(()->new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
+
+        if(nickname==null){
+            throw new MemberException(MemberErrorCode.NICKNAME_IS_NOT_EXIST);
+        }
+
         member.setNickname(nickname);
         member.setDmAgree(isDmAgree);
 
