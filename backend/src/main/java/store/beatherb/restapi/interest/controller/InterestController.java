@@ -9,6 +9,7 @@ import store.beatherb.restapi.global.auth.domain.LoginUser;
 import store.beatherb.restapi.interest.domain.Interest;
 import store.beatherb.restapi.interest.dto.request.DeleteInterestRequest;
 import store.beatherb.restapi.interest.dto.request.RegistInterestRequest;
+import store.beatherb.restapi.interest.dto.response.RegistInterestResponse;
 import store.beatherb.restapi.interest.service.InterestService;
 import store.beatherb.restapi.member.dto.MemberDTO;
 
@@ -20,7 +21,7 @@ public class InterestController {
     private final InterestService interestService;
 
     @PostMapping
-    public ResponseEntity<Interest> registInterest(@LoginUser MemberDTO memberDto, @RequestBody RegistInterestRequest registInterestRequest){
+    public ResponseEntity<RegistInterestResponse> registInterest(@LoginUser MemberDTO memberDto, @RequestBody RegistInterestRequest registInterestRequest){
         return ResponseEntity.ok(interestService.registInterest(memberDto, registInterestRequest));
     }
 

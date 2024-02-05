@@ -12,6 +12,7 @@ import store.beatherb.restapi.interest.domain.Interest;
 import store.beatherb.restapi.interest.domain.InterestRepository;
 import store.beatherb.restapi.interest.dto.request.DeleteInterestRequest;
 import store.beatherb.restapi.interest.dto.request.RegistInterestRequest;
+import store.beatherb.restapi.interest.dto.response.RegistInterestResponse;
 import store.beatherb.restapi.interest.exception.InterestErrorCode;
 import store.beatherb.restapi.interest.exception.InterestException;
 import store.beatherb.restapi.member.domain.Member;
@@ -28,7 +29,7 @@ public class InterestService {
     private final HashTagRepository hashTagRepository;
     private final MemberRepository memberRepository;
 
-    public Interest registInterest(@LoginUser MemberDTO memberDto, RegistInterestRequest registInterestRequest){
+    public RegistInterestResponse registInterest(@LoginUser MemberDTO memberDto, RegistInterestRequest registInterestRequest){
         HashTag hashTag = hashTagRepository.findById(registInterestRequest.getHashTagId())
                 .orElseThrow(() -> new HashTagException(HashTagErrorCode.HASHTAG_IS_NOT_EXIST));
 
@@ -42,7 +43,7 @@ public class InterestService {
 
         interestRepository.save(interest);
 
-        return interest;
+        return RegistInterestResponse.toDTO(interest);
     }
 
     public void deleteInterest(DeleteInterestRequest deleteInterestRequest){
