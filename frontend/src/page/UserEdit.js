@@ -60,12 +60,18 @@ export default function MyPage() {
                         <div className="text-left whitespace-nowrap pr-7 ml-6">닉네임</div>
                         <input type="text" placeholder="닉네임을 입력해주세요." className="input input-ghost w-full max-w-xs px-3" />
                     </div>
-                    <div className="flex pb-20">
+                    <div className="flex items-center pb-12">
                         {/* 향후 관심사 기능 추가 필요 */}
-                        <div className="text-left whitespace-nowrap pr-10 ml-6">관심사</div>
+                        <div className="text-left whitespace-nowrap pr-11 ml-6">관심사</div>
                         <div className="btn btn-primary btn-xs">+ 추가하기</div>
                     </div>
-                    
+                    <div className="flex items-center pb-20">
+                        <div className="text-left whitespace-nowrap pr-16 ml-6">DM</div>
+                        <div role="tablist" className="tabs tabs-boxed tabs-sm">
+                            <a role="tab" className="tab tab-active mr-1">Yes</a>
+                            <a role="tab" className="tab">No</a>
+                        </div>
+                    </div>
                     <div className="flex justify-center">
                         <div className="self-auto text-xl flex">
                             {/* 파일 업로드 로직 구현 필요 */}
