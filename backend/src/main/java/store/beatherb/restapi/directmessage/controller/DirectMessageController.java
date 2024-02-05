@@ -2,16 +2,20 @@ package store.beatherb.restapi.directmessage.controller;
 
 
 import jakarta.validation.Valid;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import store.beatherb.restapi.directmessage.domain.dto.request.DirectMessageRequest;
-import store.beatherb.restapi.directmessage.domain.dto.response.DirectMessageResponse;
+import store.beatherb.restapi.directmessage.domain.dto.request.DirectMessageFetchRequest;
+import store.beatherb.restapi.directmessage.domain.dto.request.DirectMessageSendRequest;
+import store.beatherb.restapi.directmessage.domain.dto.response.DirectMessageFetchResponse;
+import store.beatherb.restapi.directmessage.domain.dto.response.DirectMessageSendResponse;
 import store.beatherb.restapi.directmessage.service.DirectMessageService;
 import store.beatherb.restapi.global.auth.domain.LoginUser;
 import store.beatherb.restapi.global.response.ApiResponse;
 import store.beatherb.restapi.member.dto.MemberDTO;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/dm")
@@ -22,13 +26,24 @@ public class DirectMessageController {
 
 
     @PostMapping
-    public ResponseEntity<ApiResponse<DirectMessageResponse>> sendDirectMessage(@LoginUser MemberDTO memberDTO,
-                                                                  @Valid @RequestBody DirectMessageRequest directMessageRequest){
+    public ResponseEntity<ApiResponse<DirectMessageSendResponse>> sendDirectMessage(@LoginUser MemberDTO memberDTO,
+                                                                                    @Valid @RequestBody DirectMessageSendRequest directMessageSendRequest){
 
 
-        DirectMessageResponse directMessageResponse = directMessageService.sendDirectMessage(memberDTO,directMessageRequest);
-        ApiResponse<DirectMessageResponse> apiResponse = ApiResponse.of(200,directMessageResponse);
+        DirectMessageSendResponse directMessageSendResponse = directMessageService.sendDirectMessage(memberDTO,directMessageSendRequest);
+        ApiResponse<DirectMessageSendResponse> apiResponse = ApiResponse.of(200, directMessageSendResponse);
         return ResponseEntity.ok(apiResponse);
+    }
+
+
+    //time 뜯어오기.
+    @GetMapping
+    public ResponseEntity<ApiResponse<?>> getDirectMessageByTime(@LoginUser MemberDTO memberDTO, @Valid DirectMessageFetchRequest directMessageFetchRequest){
+
+
+        List<DirectMessageFetchResponse> list = directMessageService.findBySenderOrReceiverAndCreatedAtAfter(memberDTO, directMessageFetchRequest);
+        return ResponseEntity.ok(ApiResponse.of(200,list));
+
     }
 
 }

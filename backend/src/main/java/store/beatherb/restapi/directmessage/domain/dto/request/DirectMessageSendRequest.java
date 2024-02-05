@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class DirectMessageRequest {
+public class DirectMessageSendRequest {
 
     @NotNull(message = "수신자 id가 필요합니다.")
     Long receiverId;

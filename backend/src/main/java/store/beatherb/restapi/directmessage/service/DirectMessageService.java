@@ -1,12 +1,16 @@
 package store.beatherb.restapi.directmessage.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import store.beatherb.restapi.directmessage.domain.dto.request.DirectMessageRequest;
-import store.beatherb.restapi.directmessage.domain.dto.response.DirectMessageResponse;
-import store.beatherb.restapi.member.domain.Member;
+import store.beatherb.restapi.directmessage.domain.dto.request.DirectMessageFetchRequest;
+import store.beatherb.restapi.directmessage.domain.dto.request.DirectMessageSendRequest;
+import store.beatherb.restapi.directmessage.domain.dto.response.DirectMessageFetchResponse;
+import store.beatherb.restapi.directmessage.domain.dto.response.DirectMessageSendResponse;
 import store.beatherb.restapi.member.dto.MemberDTO;
+
+import java.util.List;
 
 public interface DirectMessageService {
 
-    DirectMessageResponse sendDirectMessage(MemberDTO senderDTO, DirectMessageRequest directMessageRequest) ;
+    DirectMessageSendResponse sendDirectMessage(MemberDTO senderDTO, DirectMessageSendRequest directMessageSendRequest) ;
+
+    List<DirectMessageFetchResponse> findBySenderOrReceiverAndCreatedAtAfter(MemberDTO memberDTO, DirectMessageFetchRequest directMessageFetchRequest);
 }

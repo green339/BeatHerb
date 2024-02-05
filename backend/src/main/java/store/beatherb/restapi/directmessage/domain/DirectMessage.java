@@ -32,7 +32,7 @@ public class DirectMessage {
     private Member receiver;
 
     @CreationTimestamp
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
     @Column(nullable = false)
     private String message;

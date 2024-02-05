@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class DirectMessageToKafkaResponse {
 
     @Builder
-    public DirectMessageToKafkaResponse(Long id, Member sender, Member receiver, Timestamp createdAt, String message) {
+    public DirectMessageToKafkaResponse(Long id, Member sender, Member receiver, LocalDateTime createdAt, String message) {
         this.id = id;
         this.sender =
                 DMMember.builder().id(sender.getId())
@@ -41,7 +41,7 @@ public class DirectMessageToKafkaResponse {
     DMMember sender;
     DMMember receiver;
 
-    Timestamp createdAt;
+    LocalDateTime createdAt;
     String message;
 
 
