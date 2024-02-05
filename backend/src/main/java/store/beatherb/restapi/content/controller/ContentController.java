@@ -3,11 +3,11 @@ package store.beatherb.restapi.content.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import store.beatherb.restapi.content.domain.Content;
+import store.beatherb.restapi.content.dto.request.CreatorAgreeRequest;
 import store.beatherb.restapi.content.dto.request.ContentUploadRequest;
 import store.beatherb.restapi.content.dto.respone.ContentUploadRespone;
 import store.beatherb.restapi.content.service.ContentService;
@@ -15,7 +15,6 @@ import store.beatherb.restapi.global.auth.domain.LoginUser;
 import store.beatherb.restapi.global.response.ApiResponse;
 import store.beatherb.restapi.member.dto.MemberDTO;
 
-import java.io.File;
 import java.util.List;
 
 @RestController
@@ -55,6 +54,16 @@ public class ContentController {
         ContentUploadRespone contentUploadRespone = contentService.uploadContent(memberDTO,contentUploadRequest);
         ApiResponse<ContentUploadRespone> response = ApiResponse.of(HttpStatus.CREATED,contentUploadRespone);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/agree")
+    public ResponseEntity<ApiResponse<?>> contentAgreeAboutCreator(@LoginUser MemberDTO memberDTO, @Valid @RequestBody CreatorAgreeRequest creatorAgreeRequest){
+
+
+        contentService.contentAgreeAboutCreator(memberDTO, creatorAgreeRequest);
+
+        ApiResponse<?> response = ApiResponse.successWithoutData();
+        return ResponseEntity.status(response.getCode()).body(response);
     }
 //    @GetMapping("/test")
 //    public ResponseEntity<?> test(){
