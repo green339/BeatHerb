@@ -1,8 +1,42 @@
 //Dm 컴포넌트
 import { useState } from "react";
+import DmDetail from "./DmDetail";
 
 export default function Dm() {
   const [personNum, setPersonNum] = useState(5);
+  const [selectedUser, setSelectedUser] = useState(null);
+
+  const handleUserSelect = (user) => {
+    setSelectedUser(user + 1);
+  };
+
+  const handleBackClick = () => {
+    setSelectedUser(null);
+  };
+
+  if (selectedUser) {
+    return (
+      <div>
+        <button onClick={handleBackClick} className="flex">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
+            />
+          </svg>
+        </button>
+        <DmDetail user={selectedUser} />
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -16,6 +50,7 @@ export default function Dm() {
             <div
               className="w-1/2 mx-auto border-b border-base-cotent hover:bg-base-100"
               key={index}
+              onClick={() => handleUserSelect(index)}
             >
               <div key={index} className="flex pt-6 items-center justify-between">
                 <div className="inline-block">
