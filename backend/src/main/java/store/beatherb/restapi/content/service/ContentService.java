@@ -4,10 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import net.bramp.ffmpeg.FFmpeg;
-import net.bramp.ffmpeg.FFmpegExecutor;
-import net.bramp.ffmpeg.FFprobe;
-import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -15,13 +11,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import store.beatherb.restapi.content.domain.*;
+import store.beatherb.restapi.content.dto.request.CreatorAgreeRequest;
 import store.beatherb.restapi.content.dto.request.ContentUploadRequest;
 import store.beatherb.restapi.content.dto.respone.ContentUploadRespone;
 import store.beatherb.restapi.content.exception.ContentErrorCode;
 import store.beatherb.restapi.content.exception.ContentException;
-import store.beatherb.restapi.directmessage.domain.dto.response.DirectMessageResponse;
-import store.beatherb.restapi.directmessage.exception.DirectMessageErrorCode;
-import store.beatherb.restapi.directmessage.exception.DirectMessageException;
+import store.beatherb.restapi.content.exception.CreatorErrorCode;
+import store.beatherb.restapi.content.exception.CreatorException;
+import store.beatherb.restapi.global.auth.exception.AuthErrorCode;
+import store.beatherb.restapi.global.auth.exception.AuthException;
 import store.beatherb.restapi.global.exception.BeatHerbErrorCode;
 import store.beatherb.restapi.global.exception.BeatHerbException;
 import store.beatherb.restapi.global.validate.MusicValid;
@@ -45,11 +43,12 @@ import java.util.Set;
 public class ContentService {
 
 
-
     private final ContentRepository contentRepository;
     private final MemberRepository memberRepository;
 
     private final HashTagRepository hashTagRepository;
+
+    private final CreatorRepository creatorRepository;
 
     private final KafkaProducerService kafkaProducerService;
 
@@ -66,14 +65,16 @@ public class ContentService {
                           MemberRepository memberRepository,
                           HashTagRepository hashTagRepository,
                           KafkaProducerService kafkaProducerService,
-                          @Value("${resource.directory.music.cropped}")String CROPPED_DIRECTORY,
+                          CreatorRepository creatorRepository,
+                          @Value("${resource.directory.music.cropped}") String CROPPED_DIRECTORY,
                           @Value("${resource.directory.music.reference}") String REFERENCE_DIRECTORY
 //                          @Value("${ffmpeg.directory.ffmpeg}") String FFMPEG_LOCATION,
 //                          @Value("${ffmpeg.directory.ffprobe}") String FFPROBE_LOCATION
-                          ) {
+    ) {
         this.contentRepository = contentRepository;
         this.memberRepository = memberRepository;
         this.hashTagRepository = hashTagRepository;
+        this.creatorRepository = creatorRepository;
         this.kafkaProducerService = kafkaProducerService;
         this.CROPPED_DIRECTORY = CROPPED_DIRECTORY;
         this.REFERENCE_DIRECTORY = REFERENCE_DIRECTORY;
@@ -82,26 +83,26 @@ public class ContentService {
     }
 
 
-    public List<Content> getContentsOrderByHit(){
+    public List<Content> getContentsOrderByHit() {
         Optional<List<Content>> contentListOptional = contentRepository.findAllByOrderByHitDesc();
         return contentListOptional.orElseThrow(() -> new ContentException(ContentErrorCode.LIST_HAS_NOT_CONTENT));
     }
 
-    public Resource getPlayList(Integer contentNumber){
+    public Resource getPlayList(Integer contentNumber) {
         String fileFullPath = CROPPED_DIRECTORY +
                 "/" +
                 contentNumber +
                 "/playlist.m3u8";
 
         Resource resource = new FileSystemResource(fileFullPath);
-        if(resource.exists()){
+        if (resource.exists()) {
             return resource;
         }
         throw new ContentException(ContentErrorCode.CONTENT_NOT_FOUND);
     }
 
-    public Resource getSegmentByContentNumberAndSegmentName(Integer contentNumber, String segmentName){
-        String fileFullPath = CROPPED_DIRECTORY + "/"+contentNumber+"/" + segmentName;
+    public Resource getSegmentByContentNumberAndSegmentName(Integer contentNumber, String segmentName) {
+        String fileFullPath = CROPPED_DIRECTORY + "/" + contentNumber + "/" + segmentName;
         Resource resource = new FileSystemResource(fileFullPath);
         if (resource.exists()) {
             return resource;
@@ -111,15 +112,15 @@ public class ContentService {
 
 
     @Transactional
-    public ContentUploadRespone uploadContent(MemberDTO memberDTO,ContentUploadRequest request){
-        if(!MusicValid.isMusicFile(request.getMusic())){
+    public ContentUploadRespone uploadContent(MemberDTO memberDTO, ContentUploadRequest request) {
+        if (!MusicValid.isMusicFile(request.getMusic())) {
             throw new ContentException(ContentErrorCode.MUSIC_NOT_VALID);
         }
         Member writer = memberRepository.findById(memberDTO.getId()).
                 orElseThrow(
-                    () -> {
-                        return new MemberException(MemberErrorCode.MEMBER_FIND_ERROR);
-                    }
+                        () -> {
+                            return new MemberException(MemberErrorCode.MEMBER_FIND_ERROR);
+                        }
                 );
         Set<Long> creatorIds = request.getCreatorIds();
         Creator baseCreator = Creator.builder()
@@ -128,7 +129,7 @@ public class ContentService {
                 .build();
         List<Creator> creators = new ArrayList<>();
         creators.add(baseCreator);
-        for (Long creatorId : creatorIds){ //창작가들을 찾을수 없으면 Throw
+        for (Long creatorId : creatorIds) { //창작가들을 찾을수 없으면 Throw
             Member member = memberRepository.findById(creatorId)
                     .orElseThrow(
                             () -> {
@@ -147,13 +148,13 @@ public class ContentService {
         List<HashTag> hashTags = new ArrayList<>();
 
 
-        for(Long hashTagId : hashTagsIds){
+        for (Long hashTagId : hashTagsIds) {
             HashTag hashTag = hashTagRepository.findById(hashTagId)
                     .orElseThrow(
-                            ()-> {
+                            () -> {
                                 return new ContentException(ContentErrorCode.HASHTAG_NOT_FOUND);
                             }
-            );
+                    );
             hashTags.add(hashTag);
         }
 
@@ -173,7 +174,7 @@ public class ContentService {
         String fileName = music.getOriginalFilename();
 
         String format = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
-        log.info("Music File 확장자 : [{}]",format);
+        log.info("Music File 확장자 : [{}]", format);
 
         contentRepository.save(content);
 
@@ -195,14 +196,45 @@ public class ContentService {
             String contentUploadToKafkaResponseJson = objectMapper.writeValueAsString(contentUploadToKafkaResponse);
             kafkaProducerService.sendProcessingHls(contentUploadToKafkaResponseJson);
 
+
+            //동의 비동의 처리
+
         } catch (JsonProcessingException e) {
             throw new BeatHerbException(BeatHerbErrorCode.INTERNAL_SERVER_ERROR);
         }
 
         return ContentUploadRespone.builder().id(content.getId()).build();
 
+    }
 
 
+    @Transactional
+    public void contentAgreeAboutCreator(MemberDTO memberDTO, CreatorAgreeRequest creatorAgreeRequest) {
+
+        Member member = memberRepository.findById(memberDTO.getId()).orElseThrow(
+                () -> {
+                    return new MemberException(MemberErrorCode.MEMBER_FIND_ERROR);
+                }
+        );
+
+        Creator creator = creatorRepository.findById(creatorAgreeRequest.getId()).orElseThrow(
+                () -> {
+                    return new CreatorException(CreatorErrorCode.CREATOR_NOT_FOUND);
+                }
+        );
+
+        if (creator.getCreator() != member) {
+            throw new AuthException(AuthErrorCode.PERMISSION_DENIED);
+        }
+        if (creator.isAgree()) {
+            throw new CreatorException(CreatorErrorCode.ALREADY_AGREE);
+        }
+        if (!creatorAgreeRequest.getAgree()) {
+            creatorRepository.delete(creator);
+        } else {
+            creator.setAgree(true);
+            creatorRepository.save(creator);
+        }
 
     }
 

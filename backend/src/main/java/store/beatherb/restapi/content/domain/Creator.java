@@ -24,6 +24,7 @@ public class Creator {
     @JoinColumn(name = "content_id")
     Content content;
 
+    @Setter
     @Column
     private boolean agree;
 
