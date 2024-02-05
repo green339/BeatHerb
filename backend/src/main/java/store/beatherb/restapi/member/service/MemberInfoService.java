@@ -23,13 +23,14 @@ public class MemberInfoService {
     private final OAuthService oauthService;
 
     //회원 정보 수정
+    //프로필 이미지 파일 받아왔을 때 체크해 줄 필요있음
     public void edit(MemberDTO memberDTO, EditRequest editRequest) {
 
-        String nickname = editRequest.getNickname() != null ? editRequest.getNickname() : memberDTO.getNickname();
-        Boolean isDmAgree = editRequest.getDmAgree() != null ? editRequest.getDmAgree() : memberDTO.getDmAgree();
+        String nickname = editRequest.getNickname();
+        Boolean isDmAgree = editRequest.getDmAgree();
 
         Member member = memberRepository.findById(memberDTO.getId())
-                        .orElseThrow(()->new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
+                .orElseThrow(()->new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
         member.setNickname(nickname);
         member.setDmAgree(isDmAgree);
 
