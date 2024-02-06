@@ -3,8 +3,9 @@ import WaveSurfer from 'wavesurfer.js';
 import RecordPlugin from 'wavesurfer.js/dist/plugins/record.js';
 import WaveSurferPlayer from './WaveSurferPlayer';
 
-export default function AudioRecorder({ addTrack, recordedUrl, setRecordedUrl }) {
+export default function AudioRecorder({ getRecordResult }) {
   const wavesurfer = useRef(null);
+  const [recordedUrl,setRecordedUrl] = useState(null);
   const record = useRef(null);
   const [devices, setDevices] = useState([]);
   const [selectedDevice, setSelectedDevice] = useState('');
@@ -20,9 +21,7 @@ export default function AudioRecorder({ addTrack, recordedUrl, setRecordedUrl })
 
   useEffect(() => {
     if (!record.current) return;
-
     record.current.on('record-progress', updateProgress);
-
     return () => {
       record.current.un('record-progress', updateProgress);
     };
@@ -100,6 +99,10 @@ export default function AudioRecorder({ addTrack, recordedUrl, setRecordedUrl })
       progressRef.current.style.display = 'inline';
     });
   };
+  const uploadRecording = () => {
+    getRecordResult(recordedUrl)
+    console.log("upload")
+  }
 
   return (
     <div>
@@ -122,7 +125,7 @@ export default function AudioRecorder({ addTrack, recordedUrl, setRecordedUrl })
           ))}
         </select>
       </div>
-      <button className="btn btn-primary" onClick={addTrack}>Go!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</button>
+      <button className="btn btn-primary" onClick={uploadRecording}>Go!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</button>
     </div>
   );
 }

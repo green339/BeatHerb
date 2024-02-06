@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { forwardRef, useEffect, useRef, useState,useImperativeHandle } from "react";
 import MusicCard from "./MusicCard";
 import { useDrop } from "react-dnd";
 
-const MusicEdit = () => {
+const MusicEdit = forwardRef(({ },ref) => {
   const audios = [
     {
       id: 1,
@@ -16,18 +16,28 @@ const MusicEdit = () => {
       x: 20,
       y: 20,
     },
+    {
+      id: 3,
+      src: "https://node5.wookoo.shop/api/content/play/0",
+      x: 2,
+      y:2,
+    }
   ];
   const [barPosition, setBarPosition] = useState(0);
   const childMusicRefs = useRef([]);
   const [audioData, setAudioData] = useState(audios);
   const [playAll, setPlayAll] = useState(false);
-  const [cnt, setCnt] = useState(3);
+  const [cnt, setCnt] = useState(4);
   const childPosChange = (x, y, id) => {
     setAudioData((prevData) =>
       prevData.map((audio) => (audio.id == id ? { ...audio, x: x, y: y } : audio))
     );
     console.log(audioData)
   };
+
+  useImperativeHandle(ref, () => ({
+    handleRecordingUpload,
+  }));
 
   const [{ isOver }, drop] = useDrop(() => ({
     accept: "div",
@@ -39,11 +49,15 @@ const MusicEdit = () => {
       isOver: monitor.isOver(),
     }),
   }));
-
-  const handleFileUpload = (event) => {
+  const handleRecordingUpload = (url) => { //악기랑 음성녹음 업로드
+    setAudioData((prevAudios) => [...prevAudios, { id: cnt, src: url, x: 1,y:0 }]);
+    setCnt((cnt) => cnt + 1);
+    console.log("handle",url)
+  }
+  const handleFileUpload = (event) => { //파일업로드
     const file = event.target.files[0];
     const url = URL.createObjectURL(file);
-    setAudioData((prevAudios) => [...prevAudios, { id: cnt, src: url, position: 15 }]);
+    setAudioData((prevAudios) => [...prevAudios, { id: cnt, src: url, x: 1,y:0  }]);
     setCnt((cnt) => cnt + 1);
   };
   const buttonClick = () => {
@@ -53,7 +67,6 @@ const MusicEdit = () => {
 
   useEffect(() => {
     let interval = null;
-
     if (playAll) {
       interval = setInterval(() => {
         setBarPosition((prevPosition) => prevPosition + 1);
@@ -67,7 +80,7 @@ const MusicEdit = () => {
   }, [playAll]);
 
   useEffect(() => {
-    audios.forEach((audio, index) => {
+    audioData.forEach((audio, index) => {
       if (barPosition >= audio.x) {
         childMusicRefs.current[index].playMusic();
       }
@@ -75,8 +88,9 @@ const MusicEdit = () => {
   }, [barPosition, audios]);
 
   useEffect(() => {
-    audios.forEach((audio, index) => {
+    audioData.forEach((audio, index) => {
       if (!playAll) {
+        console.log("aaaa")
         childMusicRefs.current[index].pauseMusic();
       }
     });
@@ -88,12 +102,11 @@ const MusicEdit = () => {
       <input type="file" onChange={handleFileUpload} />
       <div
         ref={drop}
-        style={{ overflow: "scroll", width: "3000px", height: "500px", overflowY: "hidden" }}
       >
         <div style={{ height: "10px", width: `${barPosition}px`, background: "blue" }} />
         <div>
           {audioData.map((audio, index) => (
-            <div>
+            <div key={audio.id}>
               <div className="text-white">{audio.id}</div>
               <MusicCard
                 audio={audio}
@@ -106,6 +119,6 @@ const MusicEdit = () => {
       </div>
     </div>
   );
-};
+});
 
 export default MusicEdit;

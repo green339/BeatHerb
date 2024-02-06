@@ -1,10 +1,11 @@
 import * as Tone from "tone"
 import React, { useEffect,useState } from 'react';
 
-const Piano = () => {
+const Piano = ({ getRecordResult }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [recorder, setRecorder] = useState(null);
   const [playPiano, setPlayPiano] = useState(null)
+  const [result, setResult] = useState(null);
 
   useEffect(() => {
     Tone.loaded().then(() => {
@@ -39,10 +40,22 @@ const Piano = () => {
     if (isRecording) {
       setIsRecording(false)
       const recording = await recorder.stop();
-      const url = URL.createObjectURL(recording);//blob객체
-      const audio = new Audio(url)
-      audio.play()
+      setResult(recording)
+      // const url = URL.createObjectURL(recording);//blob객체
+      // const audio = new Audio(url)
     }
+  }
+
+  const playRecording = () => {
+    const url = URL.createObjectURL(result);//blob객체
+    const audio = new Audio(url)
+    audio.play()
+  }
+
+  const uploadRecording = () => {
+    const url = URL.createObjectURL(result);//blob객체
+    getRecordResult(url)
+    console.log("upload")
   }
 
   const whiteKey = {
@@ -68,6 +81,12 @@ const Piano = () => {
       </button>
       <button onClick={stopRecording}>
         멈추기
+      </button>
+      <button onClick={playRecording}>
+        플레이하기
+      </button>
+      <button onClick={uploadRecording}>
+        작업실로 올리기
       </button>
       <div className="flex">
       <div style={whiteKey} onClick={() => playNote('C4')}>1</div>

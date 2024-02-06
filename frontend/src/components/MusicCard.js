@@ -1,4 +1,6 @@
-import React, { forwardRef, useRef, useState, useImperativeHandle } from "react";
+import React, { forwardRef, useRef,useEffect, useState, useImperativeHandle } from "react";
+import Hls from 'hls.js';
+
 import { useDrag } from "react-dnd";
 
 const MusicCard = forwardRef(({ audio, childPosChange }, ref) => {
@@ -15,6 +17,7 @@ const MusicCard = forwardRef(({ audio, childPosChange }, ref) => {
 
   const onDrag = (event) => {
     setAudioData((audio) => (audio = { ...audio, x: event.clientX, y: event.clientY }));
+    console.log(event.clientX,event.clientY)
     childPosChange(event.clientX, event.clientY, audio.id);
   };
 
@@ -41,11 +44,23 @@ const MusicCard = forwardRef(({ audio, childPosChange }, ref) => {
     audioRef.current.pause();
   };
 
+  useEffect(() => {
+    if (Hls.isSupported() && audioData.id===3) {
+      console.log(audioData)
+      const hls = new Hls();
+      hls.loadSource(audioData.src);
+      hls.attachMedia(audioRef.current);
+    } else {
+      audioRef.current.src=audioData.src
+    }
+  }, [audioRef]);
+
+
   return (
     <div
       ref={drag}
-      id={audio.id}
-      key={audio.id}
+      id={audioData.id}
+      key={audioData.id}
       draggable
       onDragStart={onDragStart}
       onDrag={onDrag}
@@ -58,14 +73,14 @@ const MusicCard = forwardRef(({ audio, childPosChange }, ref) => {
         top: `${audioData.y}px`,
       }}
     >
-      <audio
+      <video
         controls
-        key={audio.id}
+        key={audioData.id}
         ref={audioRef}
-        src={audio.src}
+        src={audioData.src}
         onLoadedMetadata={(event) => handleLoadedMetadata(event)}
       />
-      {audio.id}
+      {audioData.id}
     </div>
   );
 });
