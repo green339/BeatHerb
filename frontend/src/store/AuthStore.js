@@ -5,4 +5,7 @@ export const useAuthStore = create((set) => ({
   setAccessToken: (token) => {
     set((prev) => ({accessToken: token}))
   },
+  removeAccessToken: () => {
+    set((prev) => ({accessToken: null}))
+  }
 }));
