@@ -24,9 +24,9 @@ import java.util.Map;
 public class MemberInfoController {
     private final MemberInfoService memberInfoService;
 
-    //회원 정보 수정
+    // 회원 정보 수정
     @PutMapping("/")
-    public ApiResponse<?> edit(@LoginUser MemberDTO memberDTO, @RequestBody EditRequest editRequest){
+    public ApiResponse<?> edit(@LoginUser MemberDTO memberDTO, @ModelAttribute EditRequest editRequest){
         memberInfoService.edit(memberDTO, editRequest);
         return ApiResponse.successWithoutData();
     }

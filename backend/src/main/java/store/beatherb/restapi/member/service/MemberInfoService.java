@@ -3,7 +3,12 @@ package store.beatherb.restapi.member.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.multipart.MultipartFile;
+import store.beatherb.restapi.global.exception.BeatHerbErrorCode;
+import store.beatherb.restapi.global.exception.BeatHerbException;
 import store.beatherb.restapi.member.domain.Member;
 import store.beatherb.restapi.member.domain.MemberRepository;
 import store.beatherb.restapi.member.dto.MemberDTO;
@@ -14,18 +19,21 @@ import store.beatherb.restapi.oauth.dto.Provider;
 import store.beatherb.restapi.oauth.dto.request.OAuthRequest;
 import store.beatherb.restapi.oauth.service.OAuthService;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class MemberInfoService {
+
     private final MemberRepository memberRepository;
     private final OAuthService oauthService;
+    @Value("${resource.directory}")
+    private String REFERENCE_DIRECTORY;
 
     //회원 정보 수정
-    //프로필 이미지 파일 받아왔을 때 체크해 줄 필요있음
-
     @Transactional
     public void edit(MemberDTO memberDTO, EditRequest editRequest) {
 
@@ -43,6 +51,26 @@ public class MemberInfoService {
         member.setDmAgree(isDmAgree);
 
         memberRepository.save(member);
+
+        // 요청 시 이미지가 있는 경우에만, 이미지 저장
+        if(editRequest.getPicture() != null){
+
+            MultipartFile picture = editRequest.getPicture();
+            String fileName = picture.getOriginalFilename();
+            String format = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
+
+            String saveFileName = member.getId() + format;
+
+            File file = new File(REFERENCE_DIRECTORY + File.separator + saveFileName);
+
+            try {
+                FileCopyUtils.copy(picture.getBytes(), file);
+            } catch (IOException e) {
+                throw new BeatHerbException(BeatHerbErrorCode.INTERNAL_SERVER_ERROR);
+            }
+
+        }
+
 
     }
 
