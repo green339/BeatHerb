@@ -1,5 +1,7 @@
 package store.beatherb.restapi.infrastructure.kafka.domain.dto.response;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,6 +43,9 @@ public class DirectMessageToKafkaResponse {
     DMMember sender;
     DMMember receiver;
 
+
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     LocalDateTime createdAt;
     String message;
 
