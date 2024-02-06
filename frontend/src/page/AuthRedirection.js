@@ -94,6 +94,7 @@ export default function AuthRedirection() {
       })
       .then((response) => {
         console.log(response.data);
+        navigate("/auth_email")
       })
       .catch((error) => {
         alert("오류가 발생했습니다.");
