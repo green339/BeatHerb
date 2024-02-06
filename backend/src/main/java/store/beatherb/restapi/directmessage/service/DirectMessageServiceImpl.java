@@ -92,7 +92,7 @@ public class DirectMessageServiceImpl implements DirectMessageService {
                     return new MemberException(MemberErrorCode.MEMBER_FIND_ERROR);
                 }
         );
-        List<DirectMessage> directMessageList = directMessageRepository.findBySenderOrReceiverAndCreatedAtAfter(member,member,directMessageFetchRequest.getTime());
+        List<DirectMessage> directMessageList = directMessageRepository.findByCreatedAtAfterAndSenderOrReceiver(directMessageFetchRequest.getTime(),member,member);
 
         List<DirectMessageFetchResponse> directMessageFetchResponseList = new ArrayList<>();
         for(DirectMessage d: directMessageList){

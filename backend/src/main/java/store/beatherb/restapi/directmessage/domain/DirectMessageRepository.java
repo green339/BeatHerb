@@ -11,5 +11,5 @@ import java.util.List;
 @Repository
 public interface DirectMessageRepository extends JpaRepository<DirectMessage,Long> {
 
-    List<DirectMessage> findBySenderOrReceiverAndCreatedAtAfter(Member sender, Member receiver, LocalDateTime localDateTime);
+    List<DirectMessage> findByCreatedAtAfterAndSenderOrReceiver(LocalDateTime localDateTime,Member sender, Member receiver);
 }
