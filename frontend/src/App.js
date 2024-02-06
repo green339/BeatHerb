@@ -3,6 +3,7 @@
 import './App.css';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Main from './page/Main.js';
+import Admin from './page/Admin.js';
 import LogIn from './page/LogIn.js';
 import AuthEmail from './page/AuthEmail.js';
 import AuthSuccess from './page/AuthSuccess.js'
@@ -23,6 +24,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Main />} />
+          <Route path="/admin" element={<Admin />} />
           <Route path="/login" element={<LogIn />} />
           <Route path="/auth_email" element={<AuthEmail />} />
           <Route path="/auth_success" element={<AuthSuccess />} />

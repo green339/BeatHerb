@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { useRef } from "react";
 import Dm from "./Dm";
+import { useAuthStore } from "../store/AuthStore";
 
 export default function UserButton() {
-  const isLogin = true;
+  const { accessToken } = useAuthStore();
   const dmModalRef = useRef();
 
-  if(isLogin) {
+  if(accessToken) {
     return (
       <>
         <div className="flex gap-1 items-center">
