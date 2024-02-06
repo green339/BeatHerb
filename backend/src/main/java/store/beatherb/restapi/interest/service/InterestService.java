@@ -1,5 +1,6 @@
 package store.beatherb.restapi.interest.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,8 @@ public class InterestService {
     private final HashTagRepository hashTagRepository;
     private final MemberRepository memberRepository;
 
+
+    @Transactional
     public RegistInterestResponse registInterest(@LoginUser MemberDTO memberDto, RegistInterestRequest registInterestRequest){
         HashTag hashTag = hashTagRepository.findById(registInterestRequest.getHashTagId())
                 .orElseThrow(() -> new HashTagException(HashTagErrorCode.HASHTAG_IS_NOT_EXIST));
@@ -46,6 +49,7 @@ public class InterestService {
         return RegistInterestResponse.toDTO(interest);
     }
 
+    @Transactional
     public void deleteInterest(DeleteInterestRequest deleteInterestRequest){
         interestRepository.delete(
                 interestRepository.findById(deleteInterestRequest.getInterestId())
