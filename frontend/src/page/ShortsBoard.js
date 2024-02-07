@@ -1,16 +1,36 @@
 // 쇼츠 게시판 페이지 항목
 
 import ShortsItem from "../components/ShortsItem";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function ShortsBoard() {
   const [sortOption, setSortOption] = useState("recent");
+  const [shortsList, setShortsList] = useState([]);
+
+  useEffect(() => {
+    // axios({
+    //   method: "",
+    //   url: ""
+    // })
+    // .then((response) => {
+    //   setShortsList(response.data);
+    // })
+    // .catch((error) => {
+    //   alert("데이터를 받는 도중 문제가 발생했습니다.")
+    // })
+
+    // 임시
+    //백엔드랑 연결 후 삭제 예정
+    const shortsNum = (sortOption === "recent" ? 100 : 5);
+    const newShortsList = Array(shortsNum).fill().map((v,i)=>i+1)
+    setShortsList(newShortsList);
+
+    return () => setShortsList([]);
+  }, [sortOption])
 
   const handleSortOptionChange = (e) => {
     setSortOption(e.target.value);
   }
-
-  const contentsNum = (sortOption === "recent" ? 100 : 5);
 
   return (
     <div className="w-full h-full">
@@ -31,7 +51,7 @@ export default function ShortsBoard() {
 
       <div className="grid grid-cols-4 gap-4 items-center">
         {
-          Array(contentsNum).fill().map((v,i)=>i+1).map((_, index) => {
+          shortsList.map((_, index) => {
             return (
               <div key={index} className="flex justify-center">
                 <ShortsItem title={sortOption}/>

@@ -1,16 +1,36 @@
 // 라이브 게시판 페이지 항목
 
 import LiveItem from "../components/LiveItem";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function LiveBoard() {
   const [sortOption, setSortOption] = useState("recent");
+  const [liveList, setLiveList] = useState([]);
+
+  useEffect(() => {
+    // axios({
+    //   method: "",
+    //   url: ""
+    // })
+    // .then((response) => {
+    //   setShortsList(response.data);
+    // })
+    // .catch((error) => {
+    //   alert("데이터를 받는 도중 문제가 발생했습니다.")
+    // })
+
+    // 임시
+    //백엔드랑 연결 후 삭제 예정
+    const liveNum = (sortOption === "recent" ? 100 : 5);
+    const newLiveList = Array(liveNum).fill().map((v,i)=>i+1)
+    setLiveList(newLiveList);
+
+    return () => setLiveList([]);
+  }, [sortOption])
 
   const handleSortOptionChange = (e) => {
     setSortOption(e.target.value);
   }
-
-  const contentsNum = (sortOption === "recent" ? 100 : 5);
 
   return (
     <div className="w-full h-full">
@@ -31,7 +51,7 @@ export default function LiveBoard() {
 
       <div className="grid grid-cols-3 gap-4 items-center">
         {
-          Array(contentsNum).fill().map((v,i)=>i+1).map((value, index) => {
+          liveList.map((value, index) => {
             return (
               <div key={index} className="flex justify-center">
                 <LiveItem title={sortOption}/>

@@ -1,6 +1,6 @@
 // 컨텐츠 게시판 페이지 항목
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import ContentsItem from "../components/ContentsItem";
 import { useLocation } from "react-router-dom";
 
@@ -13,15 +13,34 @@ const tabs = [
 
 export default function ContentsBoard() {
   const location = useLocation();
-
   const [category, setCategory] = useState(location.state?.category || "melody");
   const [sortOption, setSortOption] = useState(location.state?.sortOption || "recent");
+  const [contentList, setContentList] = useState([]);
+
+  useEffect(() => {
+    // axios({
+    //   method: "",
+    //   url: ""
+    // })
+    // .then((response) => {
+    //   setContentList(response.data);
+    // })
+    // .catch((error) => {
+    //   alert("데이터를 받는 도중 문제가 발생했습니다.")
+    // })
+
+    // 임시
+    //백엔드랑 연결 후 삭제 예정
+    const contentsNum = (sortOption === "recent" ? 100 : 5);
+    const newContentList = Array(contentsNum).fill().map((v,i)=>i+1)
+    setContentList(newContentList);
+
+    return () => setContentList([]);
+  }, [category, sortOption])
 
   const handleSortOptionChange = (e) => {
     setSortOption(e.target.value);
   }
-
-  const contentsNum = (sortOption === "recent" ? 100 : 5);
 
   return (
     <div className="w-full h-full">
@@ -53,7 +72,7 @@ export default function ContentsBoard() {
 
       <div className="grid grid-cols-4 gap-4 items-center">
         {
-          Array(contentsNum).fill().map((v,i)=>i+1).map((value, index) => {
+          contentList.map((value, index) => {
             return (
               <div key={value} className="flex justify-center">
                 <ContentsItem contentsId={value} size={150} title={category}/>
