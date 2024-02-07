@@ -3,8 +3,11 @@ import MainButton from '../components/MainButton';
 import { Link } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
 import UserButton from '../components/UserButton';
+import { useAuthStore } from '../store/AuthStore';
 
 export default function Main() {
+  const { setAccessToken, removeAccessToken } = useAuthStore();
+
   return (
     <div>
       <div className="fixed top-2 right-2 z-10">
