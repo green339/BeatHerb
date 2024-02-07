@@ -7,5 +7,5 @@ import store.beatherb.restapi.member.domain.Member;
 @Data
 @Builder
 public class FollowersResponse {
-    private Member member;
+    private String name;
 }

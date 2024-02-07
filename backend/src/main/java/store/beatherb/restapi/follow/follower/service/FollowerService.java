@@ -19,6 +19,7 @@ import store.beatherb.restapi.member.exception.MemberException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -32,26 +33,34 @@ public class FollowerService {
 
         Member followMember = memberRepository.findById(registFollowerRequest.getId()).orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
 
-        Follow follow = Follow.builder()
+        Optional<Follow> follow = followRepository.findByMemberIdAndFollowMemberId(member.getId(), followMember.getId());
+
+        //이미 팔로우 한 사람임
+        if(follow.isPresent()){
+            throw new FollowerException(FollowerErrorCode.ALREADY_FOLLOWER);
+        }
+
+        //팔로우한 사람이 아니라면
+        Follow notFollow = Follow.builder()
                 .member(member)
                 .followMember(followMember)
                 .build();
 
-        followRepository.save(follow);
+        followRepository.save(notFollow);
 
-        return RegistFollowerResponse.toDto(follow);
+        return RegistFollowerResponse.toDto(notFollow);
     }
 
     //나의 팔로워들을 리스트로 가져온다
     public List<FollowersResponse> getFollowerList(MemberDTO memberDTO){
-        List<Follow> listFollow = followRepository.findByMemberId(memberDTO.getId()).orElseThrow(() -> new FollowerException(FollowerErrorCode.FOLLOWER_LIST_IS_NULL));
+        List<Follow> listFollow = followRepository.findByMemberId(memberDTO.getId()).orElseThrow();
 
         List<FollowersResponse> listFollowers = new ArrayList<>();
         for(Follow follow : listFollow){
             Member member = memberRepository.findById(follow.getFollowMember().getId())
                     .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
 
-            listFollowers.add(FollowersResponse.builder().member(member).build());
+            listFollowers.add(FollowersResponse.builder().name(member.getName()).build());
         }
 
         return listFollowers;
