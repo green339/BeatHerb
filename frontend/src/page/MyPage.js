@@ -43,7 +43,12 @@ export default function MyPage() {
   if (category === "melody" || category === "vocal" || category === "music") {
     itemList = tempArray.map((value, index) => (
       <div key={index} className="flex justify-center">
-        <ContentsItem contentsId={value} size={150} title={category} showFavorite={false} />
+        <ContentsItem
+          contentsId={value}
+          size={150}
+          title={category}
+          showFavorite={false}
+        />
       </div>
     ));
   } else if (category === "shorts") {
@@ -79,14 +84,28 @@ export default function MyPage() {
                 </div>
               </div>
               <div className="flex flex-col justify-center space-y-2">
-                <p className="text-base-content text-left text-3xl font-semibold">BeatHerb</p>
-                <p className="text-base-content text-left">총 좋아요 수: 123456789</p>
+                <p className="text-base-content text-left text-3xl font-semibold">
+                  BeatHerb
+                </p>
+                <p className="text-base-content text-left">
+                  총 좋아요 수: 123456789
+                </p>
                 <div className="flex gap-1 flex-wrap">
-                  <div className="badge badge-lg badge-primary text-primary-content">primary</div>
-                  <div className="badge badge-lg badge-primary text-primary-content">primary</div>
-                  <div className="badge badge-lg badge-primary text-primary-content">primary</div>
-                  <div className="badge badge-lg badge-primary text-primary-content">primary</div>
-                  <div className="badge badge-lg badge-primary text-primary-content">primary</div>
+                  <div className="badge badge-lg badge-primary text-primary-content">
+                    primary
+                  </div>
+                  <div className="badge badge-lg badge-primary text-primary-content">
+                    primary
+                  </div>
+                  <div className="badge badge-lg badge-primary text-primary-content">
+                    primary
+                  </div>
+                  <div className="badge badge-lg badge-primary text-primary-content">
+                    primary
+                  </div>
+                  <div className="badge badge-lg badge-primary text-primary-content">
+                    primary
+                  </div>
                 </div>
               </div>
             </div>
@@ -97,7 +116,9 @@ export default function MyPage() {
                   onClick={handleClickFollower}
                 >
                   <div className="stat-title">팔로워</div>
-                  <div className="stat-value font-semibold text-3xl">998,244,353</div>
+                  <div className="stat-value font-semibold text-3xl">
+                    998,244,353
+                  </div>
                 </div>
                 <div
                   className="stat place-items-center cursor-pointer hover:bg-base-200"
@@ -110,7 +131,10 @@ export default function MyPage() {
                 </div>
               </div>
               <div className="flex place-items-center">
-                <button className="btn btn-ghost" onClick={() => dmModalRef.current?.showModal()}>
+                <button
+                  className="btn btn-ghost"
+                  onClick={() => dmModalRef.current?.showModal()}
+                >
                   <svg
                     className="fill-primary"
                     xmlns="http://www.w3.org/2000/svg"
@@ -130,7 +154,8 @@ export default function MyPage() {
                 key={tab.value}
                 role="tab"
                 className={
-                  "tab w-1/2 translate-x-1/2" + (category === tab.value ? " tab-active" : "")
+                  "tab w-1/2 translate-x-1/2" +
+                  (category === tab.value ? " tab-active" : "")
                 }
                 onClick={() => setCategory(tab.value)}
               >
