@@ -2,10 +2,17 @@ import { Link } from "react-router-dom";
 import { useRef } from "react";
 import Dm from "./Dm";
 import { useAuthStore } from "../store/AuthStore";
+import { removeRefreshToken } from "../store/cookie";
 
 export default function UserButton() {
   const { accessToken } = useAuthStore();
   const dmModalRef = useRef();
+  const { removeAccessToken } = useAuthStore();
+
+  const logout = () => {
+    removeAccessToken();
+    removeRefreshToken();
+  }
 
   if(accessToken) {
     return (
@@ -22,9 +29,9 @@ export default function UserButton() {
             </summary>
             
             <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-200 rounded-box w-52">
-              <li><button className="text-base-content hover:text-base-content" onClick={() => dmModalRef.current?.showModal()}>메시지</button></li>
+              <li><button className="text-base-content" onClick={() => dmModalRef.current?.showModal()}>메시지</button></li>
               <li><Link to="/mypage" className="text-base-content hover:text-base-content">마이페이지</Link></li>
-              <li><a className="text-base-content hover:text-base-content" href="/">로그아웃</a></li>
+              <li><buttton className="text-base-content" onClick={logout}>로그아웃</buttton></li>
             </ul>
           </details>
         </div>
