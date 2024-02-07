@@ -1,46 +1,72 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { forwardRef, useEffect, useRef, useState,useImperativeHandle } from "react";
+import MusicCard from "./MusicCard";
+import { useDrop } from "react-dnd";
 
-const MusicEdit = () => {
+const MusicEdit = forwardRef(({ },ref) => {
   const audios = [
     {
       id: 1,
       src: "https://p.scdn.co/mp3-preview/0ba9d38f5d1ad30f0e31fc8ee80c1bebf0345a0c",
-      position: 10,
+      x: 10,
+      y: 10,
     },
     {
       id: 2,
       src: "https://p.scdn.co/mp3-preview/0ba9d38f5d1ad30f0e31fc8ee80c1bebf0345a0c",
-      position: 20,
+      x: 20,
+      y: 20,
     },
+    {
+      id: 3,
+      src: "https://node5.wookoo.shop/api/content/play/0",
+      x: 2,
+      y:2,
+    }
   ];
   const [barPosition, setBarPosition] = useState(0);
-  const audioRefs = useRef([]);
+  const childMusicRefs = useRef([]);
   const [audioData, setAudioData] = useState(audios);
   const [playAll, setPlayAll] = useState(false);
+  const [cnt, setCnt] = useState(4);
+  const childPosChange = (x, y, id) => {
+    setAudioData((prevData) =>
+      prevData.map((audio) => (audio.id == id ? { ...audio, x: x, y: y } : audio))
+    );
+    console.log(audioData)
+  };
 
-  const handleFileUpload = (event) => {
+  useImperativeHandle(ref, () => ({
+    handleRecordingUpload,
+  }));
+
+  const [{ isOver }, drop] = useDrop(() => ({
+    accept: "div",
+    drop: (item, monitor) => {
+      console.log(item);
+      return { name: item, monitor };
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
+  }));
+  const handleRecordingUpload = (url) => { //악기랑 음성녹음 업로드
+    setAudioData((prevAudios) => [...prevAudios, { id: cnt, src: url, x: 1,y:0 }]);
+    setCnt((cnt) => cnt + 1);
+    console.log("handle",url)
+  }
+  const handleFileUpload = (event) => { //파일업로드
     const file = event.target.files[0];
     const url = URL.createObjectURL(file);
-    setAudioData((prevAudios) => [
-      ...prevAudios,
-      { id: prevAudios.length + 1, src: url, position: 15 },
-    ]);
+    setAudioData((prevAudios) => [...prevAudios, { id: cnt, src: url, x: 1,y:0  }]);
+    setCnt((cnt) => cnt + 1);
   };
   const buttonClick = () => {
     setPlayAll(!playAll);
     console.log(playAll);
   };
-  const handleLoadedMetadata = (event, id) => {
-    const duration = event.target.duration;
-    console.log(duration);
-    console.log(audioData);
-    setAudioData((prevData) =>
-      prevData.map((audio) => (audio.id == id ? { ...audio, duration } : audio))
-    );
-  };
+
   useEffect(() => {
     let interval = null;
-
     if (playAll) {
       interval = setInterval(() => {
         setBarPosition((prevPosition) => prevPosition + 1);
@@ -54,17 +80,18 @@ const MusicEdit = () => {
   }, [playAll]);
 
   useEffect(() => {
-    audios.forEach((audio, index) => {
-      if (barPosition >= audio.position) {
-        audioRefs.current[index].play();
+    audioData.forEach((audio, index) => {
+      if (barPosition >= audio.x) {
+        childMusicRefs.current[index].playMusic();
       }
     });
   }, [barPosition, audios]);
 
   useEffect(() => {
-    audios.forEach((audio, index) => {
+    audioData.forEach((audio, index) => {
       if (!playAll) {
-        audioRefs.current[index].pause();
+        console.log("aaaa")
+        childMusicRefs.current[index].pauseMusic();
       }
     });
   }, [barPosition, audios, playAll]);
@@ -74,33 +101,24 @@ const MusicEdit = () => {
       <button onClick={buttonClick}>{playAll ? "일시정지" : "재생"}</button>
       <input type="file" onChange={handleFileUpload} />
       <div
-
-        style={{ overflow: "scroll", width: "3000px", height: "500px", overflowY: "hidden" }}>
+        ref={drop}
+      >
         <div style={{ height: "10px", width: `${barPosition}px`, background: "blue" }} />
         <div>
           {audioData.map((audio, index) => (
-            <div
-              draggable="true"
-              id={audio.id}
-              key={audio.id}
-              style={{
-                height: "50px",
-                width: `${audio.duration || 0}px`, // 재생 시간에 비례하여 길이를 설정
-                background: 'blue',
-              }}>
-              <audio
-                key={audio.id}
-                ref={(el) => (audioRefs.current[index] = el)}
-                src={audio.src}
-                onLoadedMetadata={(event) => handleLoadedMetadata(event, audio.id)}
-              />
+            <div key={audio.id}>
+              <div className="text-white">{audio.id}</div>
+              <MusicCard
+                audio={audio}
+                childPosChange={childPosChange}
+                ref={(el) => (childMusicRefs.current[index] = el)}
+              ></MusicCard>
             </div>
           ))}
         </div>
       </div>
     </div>
-  )
-      
-};
+  );
+});
 
 export default MusicEdit;
