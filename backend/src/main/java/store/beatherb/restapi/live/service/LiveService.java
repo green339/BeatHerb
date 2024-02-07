@@ -80,7 +80,7 @@ public class LiveService {
 
         openviduService.createSessionById(live.getId());
 
-        return openviduService.joinSessionByIdAndRole(live.getId(),"PUBLISHER");
+        return openviduService.joinSessionByIdAndRole(live.getId(), "PUBLISHER");
         //TODO : httpRequest 날려서 가져오기.
         //https://openvidu.beatherb.store/openvidu/api/sessions
 
@@ -88,30 +88,46 @@ public class LiveService {
     }
 
     @Transactional
-    public void joinLive(MemberDTO memberDTO, LiveJoinRequest liveJoinRequest){
+    public LiveJoinResponse joinLive(MemberDTO memberDTO, LiveJoinRequest liveJoinRequest) {
         Member member = memberRepository.findById(memberDTO.getId()).orElseThrow(
                 () -> {
                     return new MemberException(MemberErrorCode.MEMBER_FIND_ERROR);
                 }
         );
-        Live live = liveRepository.findById(liveJoinRequest.getLiveId()).orElseThrow(
+        Live live = liveRepository.findById(liveJoinRequest.getId()).orElseThrow(
                 () -> {
                     return new LiveException(LiveErrorCode.LIVE_IS_NOT_EXIST);
                 }
         );
-        if(live.getMember() == member){
-            throw new LiveException(LiveErrorCode.LIVE_ALREADY_EXIST);
-        }
         String role = "SUBSCRIBER";
-        for (Publisher p : live.getPublisherList()){
-            if(p.getMember() == member){
+        if (live.getMember() == member) {
+            role = "PUBLISHER";
+        }
+        for (Publisher p : live.getPublisherList()) {
+            if (p.getMember() == member) {
                 role = "PUBLISHER";
                 break;
             }
         }
-        //여기서 이제 fetch 시작
-
+        return openviduService.joinSessionByIdAndRole(live.getId(), role);
     }
 
 
+    public void deleteLive(MemberDTO memberDTO) {
+        Member member = memberRepository.findById(memberDTO.getId()).orElseThrow(
+                () -> {
+                    return new MemberException(MemberErrorCode.MEMBER_FIND_ERROR);
+                }
+        );
+        Live live = liveRepository.findByMember(member).orElseThrow(
+                () -> {
+                    return new LiveException(LiveErrorCode.LIVE_IS_NOT_EXIST);
+                }
+        );
+
+        openviduService.deleteSessionById(live.getId());
+        liveRepository.delete(live);
+
+
+    }
 }

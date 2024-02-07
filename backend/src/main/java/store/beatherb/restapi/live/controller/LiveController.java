@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -11,6 +12,7 @@ import store.beatherb.restapi.global.auth.domain.LoginUser;
 import store.beatherb.restapi.global.response.ApiResponse;
 import store.beatherb.restapi.live.domain.Live;
 import store.beatherb.restapi.live.domain.dto.request.LiveCreateRequest;
+import store.beatherb.restapi.live.domain.dto.request.LiveJoinRequest;
 import store.beatherb.restapi.live.domain.dto.response.LiveJoinResponse;
 import store.beatherb.restapi.live.service.LiveService;
 import store.beatherb.restapi.member.dto.MemberDTO;
@@ -23,9 +25,6 @@ import store.beatherb.restapi.openvidu.property.OpenviduProperties;
 public class LiveController {
     private final LiveService liveService;
 
-    private final OpenviduProperties openviduProperties;
-    private final WebClient openviduWebClient;
-
     @GetMapping("{id}")
     public ResponseEntity<Live> liveDetail(@PathVariable Long id){
         Live live = liveService.liveDetail(id);
@@ -35,14 +34,22 @@ public class LiveController {
     @PostMapping
     public ResponseEntity<ApiResponse<?>> createLive(@LoginUser MemberDTO memberDTO,@Valid @RequestBody LiveCreateRequest liveCreateRequest){
 
-        LiveJoinResponse test = liveService.createLive(memberDTO,liveCreateRequest);
-        //방 생성 후 join 하기.
-        return ResponseEntity.ok(ApiResponse.successWithData(test));
+        LiveJoinResponse liveJoinResponse = liveService.createLive(memberDTO,liveCreateRequest);
+        ApiResponse<LiveJoinResponse> response = ApiResponse.of(HttpStatus.CREATED,liveJoinResponse);
+        return ResponseEntity.status(response.getCode()).body(response);
 
     }
-    @GetMapping
-    public ResponseEntity<String> test(){
-        openviduWebClient.method(HttpMethod.POST);
-        return ResponseEntity.ok(openviduProperties.getDefaultHeader());
+    @GetMapping("join/{id}")
+    public ResponseEntity<ApiResponse<LiveJoinResponse>> joinLive(@LoginUser MemberDTO memberDTO, @PathVariable Long id){
+        LiveJoinRequest liveJoinRequest = LiveJoinRequest.builder().id(id).build();
+
+        LiveJoinResponse response = liveService.joinLive(memberDTO,liveJoinRequest);
+        return ResponseEntity.ok(ApiResponse.successWithData(response));
+    }
+    @DeleteMapping
+    public ResponseEntity<ApiResponse<?>> deleteLive(@LoginUser MemberDTO memberDTO){
+        liveService.deleteLive(memberDTO);
+
+        return ResponseEntity.ok(ApiResponse.successWithoutData());
     }
 }

@@ -4,6 +4,7 @@ package store.beatherb.restapi.openvidu.service;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import store.beatherb.restapi.openvidu.property.OpenviduSessionProperties;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OpenviduService {
 
     private final WebClient openviduWebClient;
@@ -56,6 +58,28 @@ public class OpenviduService {
                 .block();
         }catch (WebClientException e){
             throw new LiveException(LiveErrorCode.LIVE_IS_NOT_EXIST);
+        }
+    }
+
+    public void deleteSessionById(Long id) {
+
+
+        try {
+
+            log.info("deleteSessionById = [{}]",openviduSessionProperties.getOpenviduSessionPath() + "/" + id  );
+            openviduWebClient
+                    .method(HttpMethod.DELETE)
+                    .uri(builder -> builder
+                            .path(openviduSessionProperties.getOpenviduSessionPath() + "/" + id )
+                            .build())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+
+        }
+        catch (WebClientException e){
+            e.printStackTrace();
         }
     }
 

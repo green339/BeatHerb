@@ -31,8 +31,6 @@ public class Live {
     @Column(name="created_at")
     private LocalDateTime createdAt;
 
-    @Column(name="watcher")
-    private Long watcher;
 
     @Column(name="describe")
     private String describe;
@@ -41,11 +39,10 @@ public class Live {
     private List<Publisher> publisherList;
 
     @Builder
-    public Live(Member member, String title, LocalDateTime createdAt, Long watcher, String describe, List<Publisher> publisherList) {
+    public Live(Member member, String title, LocalDateTime createdAt, String describe, List<Publisher> publisherList) {
         this.member = member;
         this.title = title;
         this.createdAt = createdAt;
-        this.watcher = watcher;
         this.describe = describe;
         this.publisherList = publisherList;
 
