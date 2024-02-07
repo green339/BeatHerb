@@ -1,11 +1,16 @@
 // 라이브 게시판 페이지 항목
 
 import LiveItem from "../components/LiveItem";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function LiveBoard() {
+  const navigate = useNavigate();
   const [sortOption, setSortOption] = useState("recent");
   const [liveList, setLiveList] = useState([]);
+  const [liveTitle, setLiveTitle] = useState("");
+  const [liveDescription, setLiveDescription] = useState("");
+  const liveCreateRef = useRef();
 
   useEffect(() => {
     // axios({
@@ -32,34 +37,87 @@ export default function LiveBoard() {
     setSortOption(e.target.value);
   }
 
+  const handleLiveCreateClick = () => {
+    navigate("/live/1");
+  }
+
+  const openLiveCreateModal = () => {
+    liveCreateRef.current?.showModal();
+  }
+  
+  const closeLiveCreateModal = (e) => {
+    e.preventDefault();
+    setLiveTitle("");
+    setLiveDescription("");
+  }
+
   return (
-    <div className="w-full h-full">
-      <div className="w-full flex justify-start my-8 ms-12">
-        <h1 className="text-primary text-3xl font-semibold">라이브</h1>
-      </div>
+    <>
+      <div className="w-full h-full">
+        <div className="w-full flex justify-start my-8 ms-12 gap-12">
+          <h1 className="text-primary text-3xl font-semibold">라이브</h1>
+          <button className="btn btn-ghost btn-sm text-base-content" onClick={openLiveCreateModal}>+ 라이브 생성</button>
+        </div>
 
-      <div className="w-full flex justify-end mb-8 pr-8">
-        <select 
-          value={sortOption} 
-          className="select select-ghost w-full max-w-xs text-base-content justify-self-end"
-          onChange={handleSortOptionChange}
-        >
-          <option key="recent" value="recent">최신 순</option>
-          <option key="popularity" value="popularity">인기 순</option>
-        </select>
-      </div>
+        <div className="w-full flex justify-end mb-8 pr-8">
+          <select 
+            value={sortOption} 
+            className="select select-ghost w-full max-w-xs text-base-content justify-self-end"
+            onChange={handleSortOptionChange}
+          >
+            <option key="recent" value="recent">최신 순</option>
+            <option key="popularity" value="popularity">인기 순</option>
+          </select>
+        </div>
 
-      <div className="grid grid-cols-3 gap-4 items-center">
-        {
-          liveList.map((value, index) => {
-            return (
-              <div key={index} className="flex justify-center">
-                <LiveItem title={sortOption}/>
-              </div>
-            )
-          })
-        }
+        <div className="grid grid-cols-3 gap-4 items-center">
+          {
+            liveList.map((value, index) => {
+              return (
+                <div key={index} className="flex justify-center">
+                  <LiveItem title={sortOption}/>
+                </div>
+              )
+            })
+          }
+        </div>
       </div>
-    </div>
+      
+      <dialog className="modal" ref={liveCreateRef}>
+        <div className="modal-box w-4/3 max-w-5xl bg-base-200 space-y-8">
+          <p className="text text-primary text-3xl text-semibold">라이브 생성</p>
+          <div className="w-full flex place-content-center">
+            <div className="w-3/4 flex flex-col place-items-left gap-4">
+              <input
+                type="text"
+                placeholder="제목"
+                className="input input-bordered w-full max-w-xs"
+                value={liveTitle}
+                onChange={(e) => setLiveTitle(e.target.value)}
+              />
+              <textarea
+                placeholder="설명"
+                className="textarea textarea-bordered w-full h-40"
+                value={liveDescription}
+                onChange={(e) => setLiveDescription(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="modal-action">
+            <form method="dialog">
+            <button 
+              className="btn btn-outline btn-primary"
+              onClick={handleLiveCreateClick}
+            >
+              라이브 생성
+            </button>
+            </form>
+          </div>
+        </div>
+        <form method="dialog" className="modal-backdrop" onSubmit={closeLiveCreateModal}>
+          <button>close</button>
+        </form>
+      </dialog>
+    </>
   );
 }

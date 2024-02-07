@@ -73,9 +73,14 @@ export default function ContentsBoard() {
       <div className="grid grid-cols-4 gap-4 items-center">
         {
           contentList.map((value, index) => {
+            const demoContent = {
+              albumArt: "https://img.freepik.com/free-vector/background-colorful-musical-notes_23-2147633120.jpg?w=740&t=st=1705448093~exp=1705448693~hmac=00f2208917eeabe7c5309cb7efc90defc713277bede12138776ae696c5456d04",
+              title: category,
+              artist: "Artist"
+            }
             return (
               <div key={value} className="flex justify-center">
-                <ContentsItem contentsId={value} size={150} title={category}/>
+                <ContentsItem contentsId={value} size={150} albumArt={demoContent.albumArt} title={demoContent.title} artist={demoContent.artist}/>
               </div>
             )
           })

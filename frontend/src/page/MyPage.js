@@ -53,16 +53,18 @@ export default function MyPage() {
   let itemList = null;
 
   if (category === "melody" || category === "vocal" || category === "music") {
-    itemList = tempArray.map((value, index) => (
-      <div key={index} className="flex justify-center">
-        <ContentsItem
-          contentsId={value}
-          size={150}
-          title={category}
-          showFavorite={false}
-        />
-      </div>
-    ));
+    itemList = tempArray.map((value, index) => {
+      const demoContent = {
+        albumArt: "https://img.freepik.com/free-vector/background-colorful-musical-notes_23-2147633120.jpg?w=740&t=st=1705448093~exp=1705448693~hmac=00f2208917eeabe7c5309cb7efc90defc713277bede12138776ae696c5456d04",
+        title: category,
+        artist: "Artist"
+      }
+      return (
+        <div key={value} className="flex justify-center">
+          <ContentsItem contentsId={value} size={150} albumArt={demoContent.albumArt} title={demoContent.title} artist={demoContent.artist} showFavorite={false} />
+        </div>
+      )
+    });
   } else if (category === "shorts") {
     itemList = tempArray.map((value, index) => (
       <div key={index} className="flex justify-center">

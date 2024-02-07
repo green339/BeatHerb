@@ -16,6 +16,7 @@ import ContentDetail from './page/ContentDetail.js';
 import UploadMusic from './page/UploadMusic.js';
 import TestModal from './page/TestModal.js';
 import UserEdit from './page/UserEdit.js';
+import Live from './page/Live.js';
 
 
 export default function App() {
@@ -35,6 +36,7 @@ export default function App() {
           <Route path="/useredit" element={<UserEdit />} />
           <Route path="/content/:id" element={<ContentDetail />} />
           <Route path="/workplace" element={<WorkPlace />} />
+          <Route path="/live/:id" element={<Live />} />
           <Route path="/test" element={<Test />} />
           <Route path="/test_modal" element={<TestModal />} />
           <Route path="/*" element={<Navigate to="/" />} />
