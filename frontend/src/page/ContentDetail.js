@@ -25,6 +25,19 @@ export default function ContentDetail() {
   const [category, setCategory] = useState("melody");
   const [comment, setComment] = useState("comment");
 
+  // useEffect(() => {
+  //   axios({
+  //     method: "",
+  //     url: ""
+  //   })
+  //   .then((response) => {
+
+  //   })
+  //   .catch((error) => {
+  //     alert("데이터를 받는 도중 문제가 발생했습니다.")
+  //   })
+  // }, [])
+
   const tempArray = Array(20)
     .fill()
     .map((v, i) => i + 1);

@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 export default function SearchBar({ initQuery = "" }) {
   const navigate = useNavigate();
   const [query, setQuery] = useState(initQuery);
+  const [hashtagList, setHashtagList] = useState(["AAAAAAA", "BBBBBBBB", "CCCCCCCCC", "DDDDDDDDD"]);
 
   const handleSearchChange = (e) => {
     setQuery(e.target.value);
@@ -40,12 +41,16 @@ export default function SearchBar({ initQuery = "" }) {
         </div>
         <div className="flex justify-between mt-4">
           <div className="flex gap-x-2 gap-y-2 flex-wrap">
-            <div className="badge badge-lg badge-primary text-primary-content">primary</div>
-            <div className="badge badge-lg badge-primary text-primary-content">primary</div>
-            <div className="badge badge-lg badge-primary text-primary-content">primary</div>
-            <div className="badge badge-lg badge-primary text-primary-content">primary</div>
+            {
+              hashtagList.map(hashtag => (
+                <div key={hashtag} className="badge badge-lg badge-primary text-primary-content">{hashtag}</div>
+              ))
+            }
           </div>
-          <div className="text-base-content w-20 text-nowrap">
+          <div
+            className="text-base-content w-20 text-nowrap cursor-pointer"
+            onClick={() => console.log("click detail search")}
+          >
             상세 검색
           </div>
         </div>

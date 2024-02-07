@@ -19,9 +19,21 @@ const tabs = [
 
 export default function MyPage() {
   const [category, setCategory] = useState("melody");
-
   const [followType, setFollowType] = useState("follower");
   const followModalRef = useRef();
+
+  // useEffect(() => {
+  //   axios({
+  //     method: "",
+  //     url: ""
+  //   })
+  //   .then((response) => {
+
+  //   })
+  //   .catch((error) => {
+  //     alert("데이터를 받는 도중 문제가 발생했습니다.")
+  //   })
+  // }, [])
 
   const handleClickFollower = () => {
     setFollowType("follower");
