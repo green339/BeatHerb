@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function SearchBar({ initQuery = "" }) {
   const navigate = useNavigate();
-  const [query, setQuery] = useState( initQuery );
+  const [query, setQuery] = useState(initQuery);
 
   const handleSearchChange = (e) => {
     setQuery(e.target.value);

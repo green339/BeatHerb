@@ -84,7 +84,7 @@ export default function MyPage() {
           <div className="flex justify-center pb-5" width="200" height="200">
             <img
               src={image}
-              alt="Profile Image"
+              alt="Profile"
               style={{
                 margin: "20px",
                 width: "200px",
@@ -124,20 +124,20 @@ export default function MyPage() {
           <div className="flex items-center pb-20">
             <div className="text-left whitespace-nowrap pr-16 ml-6">DM</div>
             <div role="tablist" className="tabs tabs-boxed tabs-sm">
-              <a
+              <button
                 role="tab"
                 className={`tab ${isActive ? "tab-active" : ""} mr-1`}
                 onClick={handleToggle}
               >
                 Yes
-              </a>
-              <a
+              </button>
+              <button
                 role="tab"
                 className={`tab ${!isActive ? "tab-active" : ""}`}
                 onClick={handleToggle}
               >
                 No
-              </a>
+              </button>
             </div>
           </div>
           <div className="flex justify-center">

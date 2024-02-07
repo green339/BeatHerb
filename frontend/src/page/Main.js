@@ -3,11 +3,11 @@ import MainButton from '../components/MainButton';
 import { Link } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
 import UserButton from '../components/UserButton';
-import { useAuthStore } from '../store/AuthStore';
+import contentsIcon from "../assets/contents.png";
+import shortsIcon from "../assets/shorts.png";
+import workplaceIcon from "../assets/workplace.png";
 
 export default function Main() {
-  const { setAccessToken, removeAccessToken } = useAuthStore();
-
   return (
     <div>
       <div className="fixed top-2 right-2 z-10">
@@ -26,17 +26,17 @@ export default function Main() {
         <div className="flex flex-row justify-center">
           <Link to="/board/contents" className="text-primary-content hover:text-primary-content">
             <div className="flex mx-1.5">
-              <MainButton imgSrc="https://img.freepik.com/free-vector/background-colorful-musical-notes_23-2147633120.jpg?w=740&t=st=1705448093~exp=1705448693~hmac=00f2208917eeabe7c5309cb7efc90defc713277bede12138776ae696c5456d04" text="컨텐츠" />
+              <MainButton imgSrc={contentsIcon} text="컨텐츠" />
             </div>
           </Link>
           <Link to="/board/shorts" className="text-primary-content hover:text-primary-content">
             <div className="flex mx-1.5">
-              <MainButton imgSrc="https://img.freepik.com/free-vector/background-colorful-musical-notes_23-2147633120.jpg?w=740&t=st=1705448093~exp=1705448693~hmac=00f2208917eeabe7c5309cb7efc90defc713277bede12138776ae696c5456d04" text="Shorts" />
+              <MainButton imgSrc={shortsIcon} text="Shorts" />
             </div>
           </Link>
           <Link to="/workplace" className="text-primary-content hover:text-primary-content">
             <div className="flex mx-1.5">
-              <MainButton imgSrc="https://img.freepik.com/free-vector/background-colorful-musical-notes_23-2147633120.jpg?w=740&t=st=1705448093~exp=1705448693~hmac=00f2208917eeabe7c5309cb7efc90defc713277bede12138776ae696c5456d04" text="작업실" />
+              <MainButton imgSrc={workplaceIcon} text="작업실" />
             </div>
           </Link>
         </div>

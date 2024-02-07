@@ -18,7 +18,7 @@ export default function LiveBoard() {
         <h1 className="text-primary text-3xl font-semibold">라이브</h1>
       </div>
 
-      <div className="w-full flex justify-end mb-8">
+      <div className="w-full flex justify-end mb-8 pr-8">
         <select 
           value={sortOption} 
           className="select select-ghost w-full max-w-xs text-base-content justify-self-end"

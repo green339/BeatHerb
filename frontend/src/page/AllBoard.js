@@ -9,7 +9,8 @@ import { useSearchParams } from "react-router-dom";
 
 export default function AllBoard() {
   const [searchParams] = useSearchParams();
-  const query = searchParams.get('query'); 
+  const queryParam = searchParams.get('query'); 
+  const query = queryParam ? queryParam : ""; 
   
   return (
     <>

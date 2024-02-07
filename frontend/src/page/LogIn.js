@@ -25,7 +25,6 @@ export default function LogIn() {
       url: "https://backend.wookoo.shop/api/verify?token=uuid1",
     })
     .then(response => {
-      console.log(response.data.data);
       const { accessToken, refreshToken, refreshTokenExpiresIn } = response.data.data;
       setAccessToken(accessToken);
       setRefreshToken(refreshToken, refreshTokenExpiresIn);

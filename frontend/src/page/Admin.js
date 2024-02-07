@@ -131,7 +131,7 @@ export default function Admin() {
                   category.hashtags.map((hashtag) => (
                     <div 
                       key={"hashtag"+hashtag.id} 
-                      className="badge badge-lg badge-primary text-primary-content" 
+                      className="badge badge-lg badge-primary text-primary-content cursor-pointer" 
                       id={"hashtag" + hashtag.id}
                       onClick={handleOnClickHashtagToken}
                     >
