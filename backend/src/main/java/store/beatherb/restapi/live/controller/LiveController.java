@@ -11,6 +11,7 @@ import store.beatherb.restapi.global.auth.domain.LoginUser;
 import store.beatherb.restapi.global.response.ApiResponse;
 import store.beatherb.restapi.live.domain.Live;
 import store.beatherb.restapi.live.domain.dto.request.LiveCreateRequest;
+import store.beatherb.restapi.live.domain.dto.response.LiveJoinResponse;
 import store.beatherb.restapi.live.service.LiveService;
 import store.beatherb.restapi.member.dto.MemberDTO;
 import store.beatherb.restapi.openvidu.property.OpenviduProperties;
@@ -34,8 +35,9 @@ public class LiveController {
     @PostMapping
     public ResponseEntity<ApiResponse<?>> createLive(@LoginUser MemberDTO memberDTO,@Valid @RequestBody LiveCreateRequest liveCreateRequest){
 
-        liveService.createLive(memberDTO,liveCreateRequest);
-        return ResponseEntity.ok(ApiResponse.successWithoutData());
+        LiveJoinResponse test = liveService.createLive(memberDTO,liveCreateRequest);
+        //방 생성 후 join 하기.
+        return ResponseEntity.ok(ApiResponse.successWithData(test));
 
     }
     @GetMapping
