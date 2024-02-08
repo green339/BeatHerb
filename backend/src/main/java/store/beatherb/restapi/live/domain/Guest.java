@@ -1,10 +1,7 @@
 package store.beatherb.restapi.live.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import store.beatherb.restapi.member.domain.Member;
 
@@ -12,13 +9,14 @@ import store.beatherb.restapi.member.domain.Member;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class LiveGuest {
+public class Guest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "live_id")
+    @Setter
     private Live live;
 
     @ManyToOne
@@ -29,7 +27,7 @@ public class LiveGuest {
     private Boolean agree;
 
     @Builder
-    public LiveGuest(Live live, Member member, Boolean agree){
+    public Guest(Live live, Member member, Boolean agree){
         this.live = live;
         this.member = member;
         this.agree = agree;
