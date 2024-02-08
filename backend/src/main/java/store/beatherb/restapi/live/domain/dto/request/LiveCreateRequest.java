@@ -16,14 +16,19 @@ public class LiveCreateRequest {
     String title;
     @NotNull(message = "describe 가 필요합니다.")
     String describe;
-    Set<Long> publisherId;
+    Set<Long> guestIdList;
+    Set<Long> contentIdList;
 
-    public LiveCreateRequest(String title, String describe, Set<Long> publisherId) {
+    public LiveCreateRequest(String title, String describe, Set<Long> guestIdList,Set<Long> contentIdList) {
         this.title = title;
         this.describe = describe;
-        this.publisherId = publisherId;
-        if(publisherId ==null){
-            this.publisherId = new HashSet<>();
+        this.guestIdList = guestIdList;
+        if(guestIdList ==null){
+            this.guestIdList = new HashSet<>();
         }
+        if(contentIdList == null){
+            contentIdList = new HashSet<>();
+        }
+        this.contentIdList = contentIdList;
     }
 }

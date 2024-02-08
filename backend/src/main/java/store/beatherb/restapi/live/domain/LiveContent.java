@@ -1,10 +1,7 @@
 package store.beatherb.restapi.live.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import store.beatherb.restapi.content.domain.Content;
 
@@ -18,6 +15,7 @@ public class LiveContent {
     private Long id;
 
     @ManyToOne
+    @Setter
     @JoinColumn(name = "live_id")
     private Live live;
 

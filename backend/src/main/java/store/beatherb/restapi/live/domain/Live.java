@@ -3,6 +3,7 @@ package store.beatherb.restapi.live.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.repository.query.Param;
 import store.beatherb.restapi.content.domain.Creator;
 import store.beatherb.restapi.member.domain.Member;
 
@@ -36,20 +37,31 @@ public class Live {
     private String describe;
 
     @OneToMany(mappedBy = "live", cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<Publisher> publisherList;
+    private List<Guest> guestList;
+
+    @OneToMany(mappedBy = "live", cascade =  CascadeType.ALL,orphanRemoval = true)
+    private List<LiveContent> liveContentList;
 
     @Builder
-    public Live(Member member, String title, LocalDateTime createdAt, String describe, List<Publisher> publisherList) {
+    public Live(Member member, String title, LocalDateTime createdAt, String describe, List<Guest> guestList,List<LiveContent> liveContentList) {
         this.member = member;
         this.title = title;
         this.createdAt = createdAt;
         this.describe = describe;
-        this.publisherList = publisherList;
+        this.guestList = guestList;
 
-        if(this.publisherList !=null){
-            for (Publisher p: this.publisherList){
-                p.setLive(this);
+        this.liveContentList = liveContentList;
+        if(this.guestList !=null){
+            for (Guest g: this.guestList){
+                g.setLive(this);
             }
         }
+        if(this.liveContentList != null){
+            for(LiveContent l: this.liveContentList){
+                l.setLive(this);
+            }
+        }
+
+
     }
 }
