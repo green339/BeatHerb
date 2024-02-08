@@ -18,11 +18,11 @@ public class Creator {
     private Long id;
 
     @ManyToOne
-    Member creator;
+    private Member creator;
 
     @ManyToOne
     @JoinColumn(name = "content_id")
-    Content content;
+    private Content content;
 
     @Setter
     @Column
