@@ -32,17 +32,23 @@ public class MemberService {
         Email.validate(signUpRequest.getEmail());
         memberRepository.findByEmail(signUpRequest.getEmail())
                 .ifPresent(i->{throw new MemberException(MemberErrorCode.EMAIL_EXIST);});
-        memberRepository.save(Member.builder().email(signUpRequest.getEmail()).build());
+        memberRepository.save(
+                Member.builder()
+                        .email(signUpRequest.getEmail())
+                        .img("blank.jpg")
+                        .build());
         //이메일 인증 보내기
-        MailVo mailVo=new MailVo();
-        mailVo.setAddress(signUpRequest.getEmail());
+        MailVo mailVo= MailVo.builder()
+                .address(signUpRequest.getEmail())
+                .build();
         mailService.authMailSend(mailVo);
         log.info("메일인증 발송!");
     }
     public void signIn (SignInRequest signInRequest){
         //이메일 인증 보내기
-        MailVo mailVo=new MailVo();
-        mailVo.setAddress(signInRequest.getEmail());
+        MailVo mailVo= MailVo.builder()
+                .address(signInRequest.getEmail())
+                .build();
         mailService.authMailSend(mailVo);
     }
     public VerifyTokenResponse socialSignIn(OAuthRequest oauthRequest, Provider provider){

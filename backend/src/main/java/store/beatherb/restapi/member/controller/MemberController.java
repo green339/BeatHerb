@@ -1,9 +1,8 @@
 package store.beatherb.restapi.member.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import store.beatherb.restapi.global.auth.dto.response.VerifyTokenResponse;
 import store.beatherb.restapi.global.response.ApiResponse;
@@ -14,14 +13,14 @@ import store.beatherb.restapi.oauth.dto.Provider;
 import store.beatherb.restapi.oauth.dto.request.OAuthRequest;
 
 @RestController
-@RequestMapping("/api/member")
+@RequestMapping("/member")
 @Slf4j
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/signup")
-    public ApiResponse<?> signUp(@RequestBody SignUpRequest signUpRequest){
+    public ApiResponse<?> signUp(@Valid @RequestBody SignUpRequest signUpRequest){
         memberService.signUp(signUpRequest);
         return ApiResponse.successWithoutData();
     }

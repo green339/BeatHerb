@@ -63,7 +63,7 @@ public class Member {
 
 
     @Builder
-    public Member(String email, String name, String nickname, Boolean advertise, boolean dmAgree, String naver, String kakao, String google) {
+    public Member(String email, String name, String nickname, Boolean advertise, boolean dmAgree, String naver, String kakao, String google,String img) {
         this.email = email;
         this.name = name;
         this.nickname = nickname;
@@ -72,6 +72,7 @@ public class Member {
         this.naver = naver;
         this.kakao = kakao;
         this.google = google;
+        this.img = img;
     }
 }
 
