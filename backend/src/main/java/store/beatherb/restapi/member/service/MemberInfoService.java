@@ -66,7 +66,7 @@ public class MemberInfoService {
         // 요청 시 이미지가 있는 경우에만, 이미지 저장
         if(editRequest.getPicture() != null){
             if (!PictureValid.isPictureFile(editRequest.getPicture())) {
-                throw new ContentException(ContentErrorCode.MUSIC_NOT_VALID);
+                throw new MemberException(MemberErrorCode.PROFILE_IMAGE_NOT_VALID);
             }
 
 
