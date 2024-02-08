@@ -44,8 +44,13 @@ public class Member {
     @UpdateTimestamp
     private LocalDateTime updated_at;
 
+    @Setter
     @Column(name="dm_agree")
     private boolean dmAgree;
+
+    @Setter
+    @Column(name="img")
+    private String img;
 
     @Column(name="naver")
     private String naver;
@@ -58,7 +63,7 @@ public class Member {
 
 
     @Builder
-    public Member(String email, String name, String nickname, Boolean advertise, boolean dmAgree, String naver, String kakao, String google) {
+    public Member(String email, String name, String nickname, Boolean advertise, boolean dmAgree, String naver, String kakao, String google,String img) {
         this.email = email;
         this.name = name;
         this.nickname = nickname;
@@ -67,6 +72,7 @@ public class Member {
         this.naver = naver;
         this.kakao = kakao;
         this.google = google;
+        this.img = img;
     }
 }
 

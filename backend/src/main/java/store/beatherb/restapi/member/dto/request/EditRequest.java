@@ -8,7 +8,7 @@ import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Builder
-@Getter
+@Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -19,4 +19,8 @@ public class EditRequest {
     // 향후 파일 업로드 로직 확인하고 Service Layer 및 Entity에 반영 필요
     MultipartFile picture;
 
+    @Override
+    public String toString(){
+        return "nickname is " + this.nickname + "\n dmAgree is " + this.dmAgree + "\n picture is " + this.picture;
+    }
 }

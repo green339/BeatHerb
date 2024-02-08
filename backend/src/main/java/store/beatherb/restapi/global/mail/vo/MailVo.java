@@ -1,12 +1,11 @@
 package store.beatherb.restapi.global.mail.vo;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@Setter
-@NoArgsConstructor
 public class MailVo {
     private final String FROM_ADDRESS = "beatherb.store@gmail.com";
     private String address;
@@ -74,4 +73,9 @@ public class MailVo {
             "    </div>\n" +
             "  </body>" +
             "</html>";
+
+    @Builder
+    public MailVo(String address) {
+        this.address = address;
+    }
 }
