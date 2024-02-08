@@ -44,8 +44,13 @@ public class Member {
     @UpdateTimestamp
     private LocalDateTime updated_at;
 
+    @Setter
     @Column(name="dm_agree")
     private boolean dmAgree;
+
+    @Setter
+    @Column(name="img")
+    private String img;
 
     @Column(name="naver")
     private String naver;

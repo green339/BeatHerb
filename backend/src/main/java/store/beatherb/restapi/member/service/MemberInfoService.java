@@ -7,8 +7,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
+import store.beatherb.restapi.content.exception.ContentErrorCode;
+import store.beatherb.restapi.content.exception.ContentException;
 import store.beatherb.restapi.global.exception.BeatHerbErrorCode;
 import store.beatherb.restapi.global.exception.BeatHerbException;
+import store.beatherb.restapi.global.validate.MusicValid;
+import store.beatherb.restapi.global.validate.PictureValid;
 import store.beatherb.restapi.member.domain.Member;
 import store.beatherb.restapi.member.domain.MemberRepository;
 import store.beatherb.restapi.member.dto.MemberDTO;
@@ -25,13 +29,20 @@ import java.util.Map;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class MemberInfoService {
 
     private final MemberRepository memberRepository;
     private final OAuthService oauthService;
-    @Value("${resource.directory}")
-    private String REFERENCE_DIRECTORY;
+    private final String IMG_DIRECTORY;
+
+
+    public MemberInfoService(MemberRepository memberRepository,
+                             OAuthService oauthService,
+                             @Value("${resource.directory.img}") String IMG_DIRECTORY) {
+        this.memberRepository = memberRepository;
+        this.oauthService = oauthService;
+        this.IMG_DIRECTORY = IMG_DIRECTORY;
+    }
 
     //회원 정보 수정
     @Transactional
@@ -50,10 +61,14 @@ public class MemberInfoService {
         member.setNickname(nickname);
         member.setDmAgree(isDmAgree);
 
-        memberRepository.save(member);
+
 
         // 요청 시 이미지가 있는 경우에만, 이미지 저장
         if(editRequest.getPicture() != null){
+            if (!PictureValid.isPictureFile(editRequest.getPicture())) {
+                throw new ContentException(ContentErrorCode.MUSIC_NOT_VALID);
+            }
+
 
             MultipartFile picture = editRequest.getPicture();
             String fileName = picture.getOriginalFilename();
@@ -61,15 +76,18 @@ public class MemberInfoService {
 
             String saveFileName = member.getId() + format;
 
-            File file = new File(REFERENCE_DIRECTORY + File.separator + saveFileName);
+            File file = new File(IMG_DIRECTORY + File.separator + saveFileName);
 
             try {
                 FileCopyUtils.copy(picture.getBytes(), file);
+                member.setImg(saveFileName);
             } catch (IOException e) {
                 throw new BeatHerbException(BeatHerbErrorCode.INTERNAL_SERVER_ERROR);
             }
 
         }
+
+        memberRepository.save(member);
 
 
     }
