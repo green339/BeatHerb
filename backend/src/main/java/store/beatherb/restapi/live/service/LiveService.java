@@ -4,10 +4,11 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import store.beatherb.restapi.live.domain.Live;
-import store.beatherb.restapi.live.domain.LiveRepository;
-import store.beatherb.restapi.live.domain.Publisher;
+import store.beatherb.restapi.content.domain.Content;
+import store.beatherb.restapi.content.domain.ContentRepository;
+import store.beatherb.restapi.content.exception.ContentErrorCode;
+import store.beatherb.restapi.content.exception.ContentException;
+import store.beatherb.restapi.live.domain.*;
 import store.beatherb.restapi.live.domain.dto.request.LiveCreateRequest;
 import store.beatherb.restapi.live.domain.dto.request.LiveJoinRequest;
 import store.beatherb.restapi.live.domain.dto.response.LiveJoinResponse;
@@ -18,10 +19,7 @@ import store.beatherb.restapi.member.domain.MemberRepository;
 import store.beatherb.restapi.member.dto.MemberDTO;
 import store.beatherb.restapi.member.exception.MemberErrorCode;
 import store.beatherb.restapi.member.exception.MemberException;
-import store.beatherb.restapi.openvidu.property.OpenviduProperties;
-import store.beatherb.restapi.openvidu.property.OpenviduSessionProperties;
 import store.beatherb.restapi.openvidu.service.OpenviduService;
-import store.beatherb.restapi.openvidu.util.OpenviduConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +33,8 @@ public class LiveService {
     private final MemberRepository memberRepository;
 
     private final OpenviduService openviduService;
+    private final ContentRepository contentRepository;
+    private final LiveContentRepository liveContentRepository;
 
 
     @Transactional
@@ -56,24 +56,35 @@ public class LiveService {
             throw new LiveException(LiveErrorCode.LIVE_ALREADY_EXIST);
         });
 
-        List<Publisher> publisherList = new ArrayList<>();
-        for (Long publisherId : liveCreateRequest.getPublisherId()) {
-            Member publishMember = memberRepository.findById(publisherId).orElseThrow(
+        List<Guest> guestList = new ArrayList<>();
+        for (Long guestId : liveCreateRequest.getGuestIdList()) {
+            Member guestMember = memberRepository.findById(guestId).orElseThrow(
                     () -> {
                         return new MemberException(MemberErrorCode.MEMBER_FIND_ERROR);
                     }
             );
-            Publisher publisher = Publisher.builder()
-                    .member(publishMember)
+            Guest guest = Guest.builder()
+                    .member(guestMember)
                     .build();
 
-            publisherList.add(publisher);
+            guestList.add(guest);
+        }
+        List<LiveContent> liveContentList = new ArrayList<>();
+        for(Long contentId : liveCreateRequest.getContentIdList()){
+            Content content = contentRepository.findById(contentId).orElseThrow(
+                    () -> {
+                        return new ContentException(ContentErrorCode.CONTENT_NOT_FOUND);
+                    }
+            );
+            LiveContent liveContent = LiveContent.builder().content(content).build();
+            liveContentList.add(liveContent);
         }
         Live live = Live.builder()
                 .member(member)
                 .title(liveCreateRequest.getTitle())
                 .describe(liveCreateRequest.getDescribe())
-                .publisherList(publisherList)
+                .guestList(guestList)
+                .liveContentList(liveContentList)
                 .build();
 
         liveRepository.save(live);
@@ -103,8 +114,8 @@ public class LiveService {
         if (live.getMember() == member) {
             role = "PUBLISHER";
         }
-        for (Publisher p : live.getPublisherList()) {
-            if (p.getMember() == member) {
+        for (Guest g : live.getGuestList()) {
+            if (g.getMember() == member) {
                 role = "PUBLISHER";
                 break;
             }

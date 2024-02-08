@@ -5,6 +5,6 @@ import store.beatherb.restapi.member.domain.Member;
 
 import java.util.Optional;
 
-public interface PublisherRepository extends JpaRepository<Publisher, Long> {
-    Optional<Publisher> findByMember(Member member);
+public interface GuestRepository extends JpaRepository<Guest, Long> {
+    Optional<Guest> findByMember(Member member);
 }
