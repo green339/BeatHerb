@@ -34,11 +34,11 @@ export default function ShortsBoard() {
 
   return (
     <div className="w-full h-full">
-      <div className="w-full flex justify-start my-8 ms-12">
+      <div className="w-full flex justify-start my-8 ps-12">
         <h1 className="text-primary text-3xl font-semibold">Shorts</h1>
       </div>
 
-      <div className="w-full flex justify-end mb-8  pr-8">
+      <div className="w-full flex justify-end mb-8">
         <select 
           value={sortOption} 
           className="select select-ghost w-full max-w-xs text-base-content justify-self-end"

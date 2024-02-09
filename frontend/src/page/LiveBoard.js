@@ -1,8 +1,8 @@
 // 라이브 게시판 페이지 항목
-
 import LiveItem from "../components/LiveItem";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function LiveBoard() {
   const navigate = useNavigate();
@@ -38,7 +38,30 @@ export default function LiveBoard() {
   }
 
   const handleLiveCreateClick = () => {
-    navigate("/live/1");
+    axios({
+      method: "post",
+      url: "https://node5.wookoo.shop/api/live",
+      headers: {
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MX0.miJGqRO1oHnRY5NQq_Oo3uTU9mzZ9-aedSstOQkMF1U'
+      },
+      data: {
+        "title" : "엄",
+        "describe" : "준식"
+      }
+    })
+    .then((response) => {
+      console.log(response);
+      const id = response.data.id;
+      const token = response.data.data.token;
+      const role = response.data.data.role;
+
+      console.log()
+      navigate(`/live/1`, {state: {token, role}});
+    })
+    .catch((error) => {
+      console.log(error);
+      alert(error.message);
+    })
   }
 
   const openLiveCreateModal = () => {
@@ -46,7 +69,6 @@ export default function LiveBoard() {
   }
   
   const closeLiveCreateModal = (e) => {
-    e.preventDefault();
     setLiveTitle("");
     setLiveDescription("");
   }
@@ -54,7 +76,7 @@ export default function LiveBoard() {
   return (
     <>
       <div className="w-full h-full">
-        <div className="w-full flex justify-start my-8 ms-12 gap-12">
+        <div className="w-full flex justify-start my-8 ps-12 gap-12">
           <h1 className="text-primary text-3xl font-semibold">라이브</h1>
           <button className="btn btn-ghost btn-sm text-base-content" onClick={openLiveCreateModal}>+ 라이브 생성</button>
         </div>
