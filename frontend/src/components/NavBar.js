@@ -1,6 +1,7 @@
 // 상단 네비게이션 바
 
 import UserButton from "./UserButton";
+import { Link } from "react-router-dom";
 
 // 게시판 탭 드롭다운에 들어갈 메뉴들
 const boardMenus = [
@@ -15,9 +16,9 @@ export default function NavBar() {
   return (
     <div className="navbar bg-base-100 text-base-content">
       <div className="navbar-start">
-        <a className="btn btn-ghost text-xl text-primary hover:text-primary" href="/">BeatHerb</a>
+        <Link to="/" className="btn btn-ghost text-xl text-primary hover:text-primary">BeatHerb</Link>
         <ul className="menu menu-horizontal px-1">
-          <li><a className="text-base-content hover:text-base-content" href="/">Home</a></li>
+          <li><Link to="/" className="text-base-content hover:text-base-content">Home</Link></li>
           <li>
             <details>
               <summary>게시판</summary>
@@ -25,14 +26,14 @@ export default function NavBar() {
                 {
                   boardMenus.map((menu) => (
                     <li key={menu.title}>
-                      <a className="text-base-content hover:text-base-content" href={menu.href}>{menu.title}</a>
+                      <Link to={menu.href} className="text-base-content hover:text-base-content" >{menu.title}</Link>
                     </li>
                   ))
                 }
               </ul>
             </details>
           </li>
-          <li><a className="text-base-content hover:text-base-content" href="/workplace">작업실</a></li>
+          <li><Link to="/workplace" className="text-base-content hover:text-base-content">작업실</Link></li>
         </ul>
       </div>
       <div className="navbar-end">

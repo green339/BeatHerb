@@ -17,6 +17,7 @@ import UploadMusic from './page/UploadMusic.js';
 import TestModal from './page/TestModal.js';
 import UserEdit from './page/UserEdit.js';
 import Live from './page/Live.js';
+import MusicPlayer from './components/MusicPlayer.js';
 
 
 export default function App() {
@@ -42,6 +43,7 @@ export default function App() {
           <Route path="/*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
+      <MusicPlayer />
     </div>
   );
 }
