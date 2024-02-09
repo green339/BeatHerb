@@ -1,22 +1,21 @@
 // App Component
 
-import './App.css';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Main from './page/Main.js';
-import Admin from './page/Admin.js';
-import LogIn from './page/LogIn.js';
-import AuthEmail from './page/AuthEmail.js';
-import AuthSuccess from './page/AuthSuccess.js'
-import AuthRedirection from './page/AuthRedirection.js';
-import Board from './page/Board.js';
-import Test from './page/Test.js';
-import MyPage from './page/MyPage.js';
-import WorkPlace from './page/WorkPlace.js';
-import ContentDetail from './page/ContentDetail.js';
-import UploadMusic from './page/UploadMusic.js';
-import TestModal from './page/TestModal.js';
-import UserEdit from './page/UserEdit.js';
-
+import "./App.css";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Main from "./page/Main.js";
+import Admin from "./page/Admin.js";
+import LogIn from "./page/LogIn.js";
+import AuthEmail from "./page/AuthEmail.js";
+import AuthSuccess from "./page/AuthSuccess.js";
+import AuthRedirection from "./page/AuthRedirection.js";
+import Board from "./page/Board.js";
+import Test from "./page/Test.js";
+import MyPage from "./page/MyPage.js";
+import WorkPlace from "./page/WorkPlaceV2.js";
+import ContentDetail from "./page/ContentDetail.js";
+import UploadMusic from "./page/UploadMusic.js";
+import TestModal from "./page/TestModal.js";
+import UserEdit from "./page/UserEdit.js";
 
 export default function App() {
   return (
