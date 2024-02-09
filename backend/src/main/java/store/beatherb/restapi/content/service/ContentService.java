@@ -11,13 +11,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import store.beatherb.restapi.content.domain.*;
+import store.beatherb.restapi.content.domain.embed.ContentTypeEnum;
 import store.beatherb.restapi.content.dto.request.CreatorAgreeRequest;
 import store.beatherb.restapi.content.dto.request.ContentUploadRequest;
 import store.beatherb.restapi.content.dto.respone.ContentUploadRespone;
-import store.beatherb.restapi.content.exception.ContentErrorCode;
-import store.beatherb.restapi.content.exception.ContentException;
-import store.beatherb.restapi.content.exception.CreatorErrorCode;
-import store.beatherb.restapi.content.exception.CreatorException;
+import store.beatherb.restapi.content.dto.response.ContentResponse;
+import store.beatherb.restapi.content.dto.response.ContentListInterface;
+import store.beatherb.restapi.content.exception.*;
 import store.beatherb.restapi.global.auth.exception.AuthErrorCode;
 import store.beatherb.restapi.global.auth.exception.AuthException;
 import store.beatherb.restapi.global.exception.BeatHerbErrorCode;
@@ -33,10 +33,11 @@ import store.beatherb.restapi.member.exception.MemberException;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -52,6 +53,10 @@ public class ContentService {
 
     private final KafkaProducerService kafkaProducerService;
 
+    private final PlayRepository playRepository;
+
+    private final ContentTypeRepository contentTypeRepository;
+
     private final String CROPPED_DIRECTORY;
     private final String REFERENCE_DIRECTORY;
 
@@ -66,6 +71,8 @@ public class ContentService {
                           HashTagRepository hashTagRepository,
                           KafkaProducerService kafkaProducerService,
                           CreatorRepository creatorRepository,
+                          PlayRepository playRepository,
+                          ContentTypeRepository contentTypeRepository,
                           @Value("${resource.directory.music.cropped}") String CROPPED_DIRECTORY,
                           @Value("${resource.directory.music.reference}") String REFERENCE_DIRECTORY
 //                          @Value("${ffmpeg.directory.ffmpeg}") String FFMPEG_LOCATION,
@@ -76,6 +83,8 @@ public class ContentService {
         this.hashTagRepository = hashTagRepository;
         this.creatorRepository = creatorRepository;
         this.kafkaProducerService = kafkaProducerService;
+        this.playRepository = playRepository;
+        this.contentTypeRepository = contentTypeRepository;
         this.CROPPED_DIRECTORY = CROPPED_DIRECTORY;
         this.REFERENCE_DIRECTORY = REFERENCE_DIRECTORY;
 //        this.FFMPEG_LOCATION = FFMPEG_LOCATION;
@@ -265,4 +274,92 @@ public class ContentService {
 //        }
 //
 //    }
+
+    //daily 인기 차트 가져오기
+    public List<ContentResponse> getPopularityDaily(ContentTypeEnum contentTypeEnum){
+            ContentType contentType = contentTypeRepository.findByType(contentTypeEnum)
+                    .orElseThrow(() -> new ContentTypeException(ContentTypeErrorCode.CONTENT_TYPE_NOT_FOUND));
+
+            Date nowDate = new Date();
+            SimpleDateFormat todayDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String strNowDate = todayDateFormat.format(nowDate);
+            List<ContentListInterface> contentList = playRepository.findByCreatedAtDate(strNowDate, contentType.getId());
+
+            List<ContentResponse> content = new ArrayList<>();
+            for(ContentListInterface response : contentList){
+            Member findMember = memberRepository.findById(response.getContentWriterId())
+                    .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
+
+            content.add(ContentResponse.builder().title(response.getTitle()).name(findMember.getName()).build());
+        }
+
+        return content;
+    }
+
+    //weekly 인기 차트 가져오기
+    public List<ContentResponse> getPopularityWeekly(ContentTypeEnum contentTypeEnum) {
+        ContentType contentType = contentTypeRepository.findByType(contentTypeEnum)
+                .orElseThrow(() -> new ContentTypeException(ContentTypeErrorCode.CONTENT_TYPE_NOT_FOUND));
+
+        String[] week = whatWeekPeriod();
+        List<ContentListInterface> contentList = playRepository.findByCreatedAtPeriod(contentType.getId(), week[0], week[1]);
+
+        List<ContentResponse> content = new ArrayList<>();
+        for(ContentListInterface response : contentList){
+            Member findMember = memberRepository.findById(response.getContentWriterId())
+                    .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
+
+            content.add(ContentResponse.builder().title(response.getTitle()).name(findMember.getName()).build());
+        }
+
+        return content;
+    }
+
+    //monthly 인기 차트 가져오기
+    public List<ContentResponse> getPopularityMonthly(ContentTypeEnum contentTypeEnum) {
+        ContentType contentType = contentTypeRepository.findByType(contentTypeEnum)
+                .orElseThrow(() -> new ContentTypeException(ContentTypeErrorCode.CONTENT_TYPE_NOT_FOUND));
+
+        String[] month = whatMonthPeriod();
+        List<ContentListInterface> contentList = playRepository.findByCreatedAtPeriod(contentType.getId(), month[0], month[1]);
+
+        List<ContentResponse> content = new ArrayList<>();
+        for(ContentListInterface response : contentList){
+            Member findMember = memberRepository.findById(response.getContentWriterId())
+                    .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
+
+            content.add(ContentResponse.builder().title(response.getTitle()).name(findMember.getName()).build());
+        }
+
+        return content;
+    }
+
+    // 현재 날짜가 어떤 주에 속해 있는가?
+    private static String[] whatWeekPeriod(){
+        LocalDate currentDate = LocalDate.now();
+
+        LocalDate startOfWeek = currentDate.with(DayOfWeek.MONDAY);
+        LocalDate endOfWeek = startOfWeek.plusDays(6);
+
+        String[] week = new String[2];
+        week[0] = startOfWeek.toString();
+        week[1] = endOfWeek.toString();
+
+        return week;
+    }
+
+    // 현재 날짜가 어떤 달에 속해 있는가?
+    private static String[] whatMonthPeriod(){
+        LocalDate currentDate = LocalDate.now();
+
+        LocalDate startOfMonth = currentDate.with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate endOfMonth = currentDate.with(TemporalAdjusters.lastDayOfMonth());
+
+        String[] month = new String[2];
+        month[0] = startOfMonth.toString();
+        month[1] = endOfMonth.toString();
+
+        return month;
+    }
 }
+
