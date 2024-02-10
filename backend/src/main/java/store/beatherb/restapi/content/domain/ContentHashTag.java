@@ -13,7 +13,7 @@ public class ContentHashTag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
-    private long id;
+    private Long id;
 
     /*
     TODO: 해시태그 테이블이랑 연관관계 설정
@@ -24,11 +24,14 @@ public class ContentHashTag {
 
     @ManyToOne
     @JoinColumn(name="content_id")
+    @Setter
     private Content content;
 
+
     @Builder
-    public ContentHashTag(HashTag hashtag, Content content) {
-        this.hashTag = hashtag;
+
+    public ContentHashTag(HashTag hashTag, Content content) {
+        this.hashTag = hashTag;
         this.content = content;
     }
 }

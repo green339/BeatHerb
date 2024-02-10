@@ -14,8 +14,9 @@ public class ContentDetailService {
     private final ContentDetailRepository contentDetailRepository;
 
     public ContentDetailResponse detail(ContentDetailRequest contentDetailRequest){
-        return ContentDetailResponse.builder()
-                .contentDetails(contentDetailRepository.findDetailById(contentDetailRequest.getId()))
-                .build();
+//        return ContentDetailResponse.builder()
+//                .contentDetails(contentDetailRepository.findDetailById(contentDetailRequest.getId()))
+//                .build();
+        return null;
     }
 }

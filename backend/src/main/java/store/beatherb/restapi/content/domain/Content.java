@@ -1,5 +1,6 @@
 package store.beatherb.restapi.content.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -27,8 +28,10 @@ public class Content {
 
     //TODO : 추후 복합 등록자 추가.
 
+    @JsonIgnore
     @OneToMany(mappedBy = "content", cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<Creator> creators;
+
+    private List<Creator> creatorList;
     @NotNull
     private String title;
 
@@ -39,21 +42,12 @@ public class Content {
 
     @ManyToOne
     @JoinColumn(name="content_type_id")
+//    @Enumerated(EnumType.STRING)
     private ContentType contentType;
 
-    @OneToMany
-    private List<Content> inorder;
-
-
-    @ManyToMany
-    @JoinTable(
-            name = "content_hashtags",
-            joinColumns = @JoinColumn(name = "content_id"),
-            inverseJoinColumns = @JoinColumn(name = "hashtag_id")
-    )
-
-    @NotNull
-    private List<HashTag> hashTags;
+    @JsonIgnore
+    @OneToMany(mappedBy = "content", cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<ContentHashTag> contentHashTagList;
 
 
     @Column(name="lyrics")
@@ -63,6 +57,7 @@ public class Content {
     private String describe;
 
     @Column(name="hit")
+    @Setter
     private int hit;
 
     @CreationTimestamp
@@ -72,23 +67,45 @@ public class Content {
     @Setter
     boolean processed;
 
+    @OneToMany(mappedBy = "childContent", cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonIgnore
+    List<InOrder> inOrderList;
+
+    @OneToMany(mappedBy = "rootContent", cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonIgnore
+    List<InOrder> outOrderList;
+
+    private String image;
+
 
     @Builder
-    public Content(String title, Member writer, ContentType contentType, List<Content> inorder, List<HashTag> hashTags, List<Creator> creators, String lyrics, String describe, int hit, LocalDateTime createdAt) {
+    public Content(String title, Member writer, ContentType contentType,List<InOrder> outOrderList, List<InOrder> inOrderList, List<Creator> creatorList, String lyrics, String describe,List<ContentHashTag> contentHashTagList, int hit, LocalDateTime createdAt,String image) {
         this.title = title;
         this.writer = writer;
         this.contentType = contentType;
-        this.inorder = inorder;
-        this.hashTags = hashTags;
-        this.creators = creators;
+        this.creatorList = creatorList;
         this.lyrics = lyrics;
         this.describe = describe;
         this.hit = hit;
         this.createdAt = createdAt;
-        processed = false;
+        this.inOrderList = inOrderList;
+        this.processed = false;
+        this.contentHashTagList = contentHashTagList;
+        this.image = image;
+        this.outOrderList = outOrderList;
 
-        if(this.creators !=null){
-            for (Creator c: this.creators){
+        if(this.creatorList !=null){
+            for (Creator c: this.creatorList){
+                c.setContent(this);
+            }
+        }
+        if(this.inOrderList != null){
+            for( InOrder i:  this.inOrderList){
+                i.setChildContent(this);
+            }
+        }
+        if(this.contentHashTagList != null){
+            for(ContentHashTag c : this.contentHashTagList){
                 c.setContent(this);
             }
         }

@@ -5,19 +5,22 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import store.beatherb.restapi.content.domain.HashTagRepository;
 import store.beatherb.restapi.content.dto.request.DeleteHashTagRequest;
+import store.beatherb.restapi.content.dto.request.HashTagSearchNameRequest;
 import store.beatherb.restapi.content.dto.request.RegistHashTagRequest;
 import store.beatherb.restapi.content.dto.request.UpdateHashTagRequest;
-import store.beatherb.restapi.content.dto.respone.RegistHashTagResponse;
-import store.beatherb.restapi.content.dto.respone.UpdateHashTagResponse;
+import store.beatherb.restapi.content.dto.response.HashTagListResponse;
+import store.beatherb.restapi.content.dto.response.RegistHashTagResponse;
+import store.beatherb.restapi.content.dto.response.UpdateHashTagResponse;
 import store.beatherb.restapi.content.service.HashTagService;
 import store.beatherb.restapi.global.response.ApiResponse;
+
+import java.util.List;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/hashtag")
+@RequestMapping("/content/hashtag")
 public class HashTagController {
     private final HashTagService hashTagService;
 
@@ -26,6 +29,15 @@ public class HashTagController {
         RegistHashTagResponse response = hashTagService.registHashTag(registHashTagRequest);
         ApiResponse<RegistHashTagResponse> apiResponse = ApiResponse.successWithData(response);
         return ResponseEntity.status(apiResponse.getCode()).body(apiResponse);
+    }
+
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<HashTagListResponse>>> findAllORfindByNameContains(@ModelAttribute HashTagSearchNameRequest hashTagSearchNameRequest){
+        log.info("HashTagSearchNameRequest =  [ {} ]",hashTagSearchNameRequest);
+        List<HashTagListResponse> list = hashTagService.findAllORfindByNameStartsWith(hashTagSearchNameRequest);
+        ApiResponse<List<HashTagListResponse>> response = ApiResponse.successWithData(list);
+        return ResponseEntity.status(response.getCode()).body(response);
     }
 
     @PutMapping

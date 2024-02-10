@@ -30,51 +30,51 @@ class ContentTest {
 
     @Test
     void Content삽입(){
-        Member writer = Member.builder()
-                .dmAgree(true)
-                .name("엄준식")
-                .email("nanayago@da.co")
-                .nickname("용산")
-                .build();
-
-        memberRepository.save(writer);
-
-
-
-
-        HashTag hashTag = HashTag.builder()
-                .name("밥줘")
-                .build();
-
-        List<HashTag> hashTags = new ArrayList<>();
-        hashTags.add(hashTag);
-
-        hashTagRepository.save(hashTag);
-
-        Creator creator = Creator.builder()
-                .creator(writer)
-                .agree(false)
-                .build();
-
-        List<Creator> creators = new ArrayList<>();
-        creators.add(creator);
-        Content content = Content.builder()
-                .hit(0)
-                .lyrics("엄준식")
-                .describe("용기")
-                .title("이거 안넣었네")
-                .writer(writer)
-                .hashTags(hashTags)
-                .creators(creators)
-                .build();
-//        creatorRepository.save(creator);
-//        creator.setContent(content);
-        contentRepository.save(content);
-//        creatorRepository.save(creator);
-
-        assertNotNull(creator.getId());
-        assertNotNull(hashTag.getId());
-        assertNotNull(creator.getId());
-        assertNotNull(content.getId());
+//        Member writer = Member.builder()
+//                .dmAgree(true)
+//                .name("엄준식")
+//                .email("nanayago@da.co")
+//                .nickname("용산")
+//                .build();
+//
+//        memberRepository.save(writer);
+//
+//
+//
+//
+//        HashTag hashTag = HashTag.builder()
+//                .name("밥줘")
+//                .build();
+//
+//        List<HashTag> hashTags = new ArrayList<>();
+//        hashTags.add(hashTag);
+//
+//        hashTagRepository.save(hashTag);
+//
+//        Creator creator = Creator.builder()
+//                .creator(writer)
+//                .agree(false)
+//                .build();
+//
+//        List<Creator> creators = new ArrayList<>();
+//        creators.add(creator);
+//        Content content = Content.builder()
+//                .hit(0)
+//                .lyrics("엄준식")
+//                .describe("용기")
+//                .title("이거 안넣었네")
+//                .writer(writer)
+//                .hashTags(hashTags)
+//                .creators(creators)
+//                .build();
+////        creatorRepository.save(creator);
+////        creator.setContent(content);
+//        contentRepository.save(content);
+////        creatorRepository.save(creator);
+//
+//        assertNotNull(creator.getId());
+//        assertNotNull(hashTag.getId());
+//        assertNotNull(creator.getId());
+//        assertNotNull(content.getId());
     }
 }

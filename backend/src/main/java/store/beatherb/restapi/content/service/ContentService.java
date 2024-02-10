@@ -14,7 +14,8 @@ import store.beatherb.restapi.content.domain.*;
 import store.beatherb.restapi.content.domain.embed.ContentTypeEnum;
 import store.beatherb.restapi.content.dto.request.CreatorAgreeRequest;
 import store.beatherb.restapi.content.dto.request.ContentUploadRequest;
-import store.beatherb.restapi.content.dto.respone.ContentUploadRespone;
+import store.beatherb.restapi.content.dto.response.ContentDetailResponse;
+import store.beatherb.restapi.content.dto.response.ContentUploadRespone;
 import store.beatherb.restapi.content.dto.response.ContentResponse;
 import store.beatherb.restapi.content.dto.response.ContentListInterface;
 import store.beatherb.restapi.content.exception.*;
@@ -23,6 +24,7 @@ import store.beatherb.restapi.global.auth.exception.AuthException;
 import store.beatherb.restapi.global.exception.BeatHerbErrorCode;
 import store.beatherb.restapi.global.exception.BeatHerbException;
 import store.beatherb.restapi.global.validate.MusicValid;
+import store.beatherb.restapi.global.validate.PictureValid;
 import store.beatherb.restapi.infrastructure.kafka.domain.dto.response.ContentUploadToKafkaResponse;
 import store.beatherb.restapi.infrastructure.kafka.service.KafkaProducerService;
 import store.beatherb.restapi.member.domain.Member;
@@ -59,6 +61,7 @@ public class ContentService {
 
     private final String CROPPED_DIRECTORY;
     private final String REFERENCE_DIRECTORY;
+    private final String IMAGE_DIRECTORY;
 
 
 //
@@ -74,7 +77,8 @@ public class ContentService {
                           PlayRepository playRepository,
                           ContentTypeRepository contentTypeRepository,
                           @Value("${resource.directory.music.cropped}") String CROPPED_DIRECTORY,
-                          @Value("${resource.directory.music.reference}") String REFERENCE_DIRECTORY
+                          @Value("${resource.directory.music.reference}") String REFERENCE_DIRECTORY,
+                          @Value("${resource.directory.music.image}") String IMAGE_DIRECTORY
 //                          @Value("${ffmpeg.directory.ffmpeg}") String FFMPEG_LOCATION,
 //                          @Value("${ffmpeg.directory.ffprobe}") String FFPROBE_LOCATION
     ) {
@@ -87,6 +91,7 @@ public class ContentService {
         this.contentTypeRepository = contentTypeRepository;
         this.CROPPED_DIRECTORY = CROPPED_DIRECTORY;
         this.REFERENCE_DIRECTORY = REFERENCE_DIRECTORY;
+        this.IMAGE_DIRECTORY = IMAGE_DIRECTORY;
 //        this.FFMPEG_LOCATION = FFMPEG_LOCATION;
 //        this.FFPROBE_LOCATION = FFPROBE_LOCATION;
     }
@@ -122,6 +127,23 @@ public class ContentService {
 
     @Transactional
     public ContentUploadRespone uploadContent(MemberDTO memberDTO, ContentUploadRequest request) {
+        String type = request.getType();
+        ContentTypeEnum contentTypeEnum;
+        try {
+            contentTypeEnum = ContentTypeEnum.valueOf(type);
+        } catch (IllegalArgumentException e) {
+            throw new ContentException(ContentErrorCode.CONTENT_TYPE_NOT_VALID);
+        }
+        ContentType contentType = contentTypeRepository.findByType(contentTypeEnum).orElseGet(
+                () -> {
+                    ContentType temp =
+                            ContentType.builder().type(contentTypeEnum).build();
+                    contentTypeRepository.save(temp);
+                    return temp;
+                }
+        );
+
+
         if (!MusicValid.isMusicFile(request.getMusic())) {
             throw new ContentException(ContentErrorCode.MUSIC_NOT_VALID);
         }
@@ -131,21 +153,21 @@ public class ContentService {
                             return new MemberException(MemberErrorCode.MEMBER_FIND_ERROR);
                         }
                 );
-        Set<Long> creatorIds = request.getCreatorIds();
+        Set<Long> creatorIdList = request.getCreatorIdList();
         Creator baseCreator = Creator.builder()
                 .creator(writer)
                 .agree(true)
                 .build();
-        List<Creator> creators = new ArrayList<>();
-        creators.add(baseCreator);
-        for (Long creatorId : creatorIds) { //창작가들을 찾을수 없으면 Throw
+        List<Creator> creatorList = new ArrayList<>();
+        creatorList.add(baseCreator);
+        for (Long creatorId : creatorIdList) { //창작가들을 찾을수 없으면 Throw
             Member member = memberRepository.findById(creatorId)
                     .orElseThrow(
                             () -> {
                                 return new MemberException(MemberErrorCode.MEMBER_FIND_ERROR);
                             }
                     );
-            creators.add(
+            creatorList.add(
                     Creator.builder()
                             .creator(member)
                             .agree(false)
@@ -153,18 +175,59 @@ public class ContentService {
             );
         }
 
-        Set<Long> hashTagsIds = request.getHashTagIds();
-        List<HashTag> hashTags = new ArrayList<>();
+        Set<Long> hashTagsIdList = request.getHashTagIdList();
+        List<ContentHashTag> contentHashTagList = new ArrayList<>();
 
 
-        for (Long hashTagId : hashTagsIds) {
+        for (Long hashTagId : hashTagsIdList) { //HashTag 를 찾을수 없으면 Throw
             HashTag hashTag = hashTagRepository.findById(hashTagId)
                     .orElseThrow(
                             () -> {
-                                return new ContentException(ContentErrorCode.HASHTAG_NOT_FOUND);
+                                return new HashTagException(HashTagErrorCode.HASHTAG_IS_NOT_EXIST);
                             }
                     );
-            hashTags.add(hashTag);
+            log.info("hashTag IsNull? = [{}]", hashTag);
+            ContentHashTag contentHashTag = ContentHashTag.builder() //HashTags to ContentHashTag
+                    .hashTag(hashTag)
+                    .build();
+            contentHashTagList.add(contentHashTag);
+            log.info("contentHashTag = [{}]", contentHashTag.getHashTag().getName());
+        }
+
+        Set<Long> rootContentIdList = request.getRootContentIdList();
+        List<InOrder> inOrderList = new ArrayList<>();
+        for (Long rootContentId : rootContentIdList) {
+            Content rootContent = contentRepository.findById(rootContentId).orElseThrow(
+                    () -> {
+                        return new ContentException(ContentErrorCode.CONTENT_NOT_FOUND);
+                    }
+            );
+            InOrder inOrder = InOrder.builder()
+                    .rootContent(rootContent)
+                    .build();
+
+            inOrderList.add(inOrder);
+        }
+
+
+        MultipartFile image = request.getImage();
+        String imagefileName = null;
+        if (image != null) {
+
+            if (!PictureValid.isPictureFile(image)) {
+                throw new ContentException(ContentErrorCode.CONTENT_IMAGE_NOT_VALID);
+            }
+            String imageName = image.getOriginalFilename();
+            String imageFormat = imageName.substring(imageName.lastIndexOf(".")).toLowerCase();
+            String uuid = UUID.randomUUID().toString();
+
+            imagefileName = uuid + imageFormat;
+            File imgfile = new File(IMAGE_DIRECTORY + File.separator + imagefileName);
+            try {
+                FileCopyUtils.copy(image.getBytes(), imgfile);
+            } catch (IOException e) {
+                throw new BeatHerbException(BeatHerbErrorCode.INTERNAL_SERVER_ERROR);
+            }
         }
 
 
@@ -173,9 +236,12 @@ public class ContentService {
                 .describe(request.getDescribe())
                 .title(request.getTitle())
                 .lyrics(request.getLyrics())
-                .creators(creators)
+                .creatorList(creatorList)
                 .writer(writer)
-                .hashTags(hashTags)
+                .contentType(contentType)
+                .contentHashTagList(contentHashTagList)
+                .inOrderList(inOrderList)
+                .image(imagefileName)
                 .build();
 
         MultipartFile music = request.getMusic();
@@ -276,17 +342,17 @@ public class ContentService {
 //    }
 
     //daily 인기 차트 가져오기
-    public List<ContentResponse> getPopularityDaily(ContentTypeEnum contentTypeEnum){
-            ContentType contentType = contentTypeRepository.findByType(contentTypeEnum)
-                    .orElseThrow(() -> new ContentTypeException(ContentTypeErrorCode.CONTENT_TYPE_NOT_FOUND));
+    public List<ContentResponse> getPopularityDaily(ContentTypeEnum contentTypeEnum) {
+        ContentType contentType = contentTypeRepository.findByType(contentTypeEnum)
+                .orElseThrow(() -> new ContentTypeException(ContentTypeErrorCode.CONTENT_TYPE_NOT_FOUND));
 
-            Date nowDate = new Date();
-            SimpleDateFormat todayDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String strNowDate = todayDateFormat.format(nowDate);
-            List<ContentListInterface> contentList = playRepository.findByCreatedAtDate(strNowDate, contentType.getId());
+        Date nowDate = new Date();
+        SimpleDateFormat todayDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String strNowDate = todayDateFormat.format(nowDate);
+        List<ContentListInterface> contentList = playRepository.findByCreatedAtDate(strNowDate, contentType.getId());
 
-            List<ContentResponse> content = new ArrayList<>();
-            for(ContentListInterface response : contentList){
+        List<ContentResponse> content = new ArrayList<>();
+        for (ContentListInterface response : contentList) {
             Member findMember = memberRepository.findById(response.getContentWriterId())
                     .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
 
@@ -305,7 +371,7 @@ public class ContentService {
         List<ContentListInterface> contentList = playRepository.findByCreatedAtPeriod(contentType.getId(), week[0], week[1]);
 
         List<ContentResponse> content = new ArrayList<>();
-        for(ContentListInterface response : contentList){
+        for (ContentListInterface response : contentList) {
             Member findMember = memberRepository.findById(response.getContentWriterId())
                     .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
 
@@ -324,7 +390,7 @@ public class ContentService {
         List<ContentListInterface> contentList = playRepository.findByCreatedAtPeriod(contentType.getId(), month[0], month[1]);
 
         List<ContentResponse> content = new ArrayList<>();
-        for(ContentListInterface response : contentList){
+        for (ContentListInterface response : contentList) {
             Member findMember = memberRepository.findById(response.getContentWriterId())
                     .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
 
@@ -335,7 +401,7 @@ public class ContentService {
     }
 
     // 현재 날짜가 어떤 주에 속해 있는가?
-    private static String[] whatWeekPeriod(){
+    private static String[] whatWeekPeriod() {
         LocalDate currentDate = LocalDate.now();
 
         LocalDate startOfWeek = currentDate.with(DayOfWeek.MONDAY);
@@ -349,7 +415,7 @@ public class ContentService {
     }
 
     // 현재 날짜가 어떤 달에 속해 있는가?
-    private static String[] whatMonthPeriod(){
+    private static String[] whatMonthPeriod() {
         LocalDate currentDate = LocalDate.now();
 
         LocalDate startOfMonth = currentDate.with(TemporalAdjusters.firstDayOfMonth());
@@ -360,6 +426,45 @@ public class ContentService {
         month[1] = endOfMonth.toString();
 
         return month;
+    }
+
+    public ContentDetailResponse showDetailByContentId(Long contentId) {
+        Content content = contentRepository.findById(contentId)
+                .orElseThrow(
+                        () -> {
+                            return new ContentException(ContentErrorCode.CONTENT_NOT_FOUND);
+                        }
+                );
+        content.setHit(content.getHit()+1);
+        contentRepository.save(content);
+        return ContentDetailResponse.toDto(content);
+    }
+
+    public Resource getImage(Long id) {
+        Content content = contentRepository.findById(id).orElseThrow(
+                () -> {
+                    return new ContentException(ContentErrorCode.CONTENT_NOT_FOUND);
+                }
+        );
+        String fileName = content.getImage();
+        if (fileName == null) {
+            fileName = "noimage.jpeg";
+        }
+        String filePath = IMAGE_DIRECTORY + "/" + fileName;
+
+        File file = new File(filePath);
+        if (!file.exists()) {
+            file = new File(IMAGE_DIRECTORY + "/noimage.jpeg");
+        }
+
+        try {
+            Resource resource = new FileSystemResource(file);
+            return resource;
+        } catch (Exception e) {
+            throw new ContentException(ContentErrorCode.CONTENT_IMAGE_NOT_VALID);
+        }
+
+
     }
 }
 

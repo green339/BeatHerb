@@ -14,7 +14,7 @@ public class ContentType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
-    private long id;
+    private Long id;
 
     @Column(name="type")
     private ContentTypeEnum type;

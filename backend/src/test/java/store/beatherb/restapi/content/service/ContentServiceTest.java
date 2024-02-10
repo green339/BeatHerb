@@ -57,8 +57,8 @@ class ContentServiceTest {
         hashTagIds.add(hashTag.getId());
         ContentUploadRequest contentUploadRequest = ContentUploadRequest.builder()
                 .title("제목")
-                .hashTagIds(hashTagIds)
-                .creatorIds(new HashSet<>())
+                .hashTagIdList(hashTagIds)
+                .creatorIdList(new HashSet<>())
                 .build();
 
         contentService.uploadContent(memberDTO,contentUploadRequest);

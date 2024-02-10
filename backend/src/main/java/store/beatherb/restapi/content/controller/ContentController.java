@@ -10,13 +10,14 @@ import store.beatherb.restapi.content.domain.Content;
 import store.beatherb.restapi.content.domain.embed.ContentTypeEnum;
 import store.beatherb.restapi.content.dto.request.CreatorAgreeRequest;
 import store.beatherb.restapi.content.dto.request.ContentUploadRequest;
-import store.beatherb.restapi.content.dto.respone.ContentUploadRespone;
+import store.beatherb.restapi.content.dto.response.ContentUploadRespone;
 import store.beatherb.restapi.content.dto.response.ContentResponse;
 import store.beatherb.restapi.content.service.ContentService;
 import store.beatherb.restapi.global.auth.domain.LoginUser;
 import store.beatherb.restapi.global.response.ApiResponse;
 import store.beatherb.restapi.member.dto.MemberDTO;
 
+import java.io.InputStream;
 import java.util.List;
 
 @RestController
@@ -26,10 +27,36 @@ import java.util.List;
 public class ContentController {
     private final ContentService contentService;
 
+    @GetMapping("/image/{id}")
+    public ResponseEntity<?> getImage(@PathVariable Long id){
+
+
+        // 다운로드할 때 사용할 HttpHeaders 설정
+        HttpHeaders headers = new HttpHeaders();
+        Resource resource = contentService.getImage(id);
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"");
+
+        // 다운로드할 파일의 MIME 타입 설정
+        MediaType mediaType = MediaType.IMAGE_PNG;
+
+        // 응답 생성
+        return ResponseEntity.ok()
+                .contentType(mediaType)
+                .headers(headers)
+                .body(resource);
+
+    }
+
     @GetMapping
     public ResponseEntity<ApiResponse<List<Content>>> contentsOrderByHit(){
         List<Content> response= contentService.getContentsOrderByHit();
         return ResponseEntity.ok(ApiResponse.successWithData(response));
+    }
+
+    @GetMapping("/{contentId}")
+    public ResponseEntity<?> showDetail(@PathVariable Long contentId){
+
+        return ResponseEntity.ok(ApiResponse.successWithData(contentService.showDetailByContentId(contentId)));
     }
 
     @GetMapping("/play/{contentNumber}")

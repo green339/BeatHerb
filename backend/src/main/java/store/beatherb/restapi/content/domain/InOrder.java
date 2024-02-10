@@ -9,18 +9,24 @@ import lombok.extern.slf4j.Slf4j;
 @Table(name="inorder")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Inorder {
+public class InOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
-    private long id;
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "root_content_id")
+    private Content rootContent;
 
     @ManyToOne
     @JoinColumn(name = "content_id")
-    private Content content;
+    @Setter
+    private Content childContent;
+
 
     @Builder
-    public Inorder(Content content) {
-        this.content = content;
+    public InOrder(Content rootContent, Content childContent) {
+        this.rootContent = rootContent;
     }
 }

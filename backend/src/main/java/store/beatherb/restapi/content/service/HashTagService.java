@@ -6,12 +6,17 @@ import org.springframework.stereotype.Service;
 import store.beatherb.restapi.content.domain.HashTag;
 import store.beatherb.restapi.content.domain.HashTagRepository;
 import store.beatherb.restapi.content.dto.request.DeleteHashTagRequest;
+import store.beatherb.restapi.content.dto.request.HashTagSearchNameRequest;
 import store.beatherb.restapi.content.dto.request.RegistHashTagRequest;
 import store.beatherb.restapi.content.dto.request.UpdateHashTagRequest;
-import store.beatherb.restapi.content.dto.respone.RegistHashTagResponse;
-import store.beatherb.restapi.content.dto.respone.UpdateHashTagResponse;
+import store.beatherb.restapi.content.dto.response.HashTagListResponse;
+import store.beatherb.restapi.content.dto.response.RegistHashTagResponse;
+import store.beatherb.restapi.content.dto.response.UpdateHashTagResponse;
 import store.beatherb.restapi.content.exception.HashTagErrorCode;
 import store.beatherb.restapi.content.exception.HashTagException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -43,5 +48,30 @@ public class HashTagService {
         hashTagRepository.delete(
                 hashTagRepository.findById(deleteHashTagRequest.getId())
                         .orElseThrow(() -> new HashTagException(HashTagErrorCode.HASHTAG_IS_NOT_EXIST)));
+    }
+
+    public List<HashTagListResponse> findAllHashTag(){
+
+        List<HashTag> list = hashTagRepository.findAll();
+        List<HashTagListResponse> result = new ArrayList<>();
+        for(HashTag t: list){
+            result.add(HashTagListResponse.toDto(t));
+        }
+        return result;
+    }
+
+    public List<HashTagListResponse> findAllORfindByNameStartsWith(HashTagSearchNameRequest hashTagSearchNameRequest) {
+        List<HashTag> list;
+        if(hashTagSearchNameRequest.getName() == null){
+            list = hashTagRepository.findAll();
+        }
+        else{
+            list =  hashTagRepository.findByNameStartsWith(hashTagSearchNameRequest.getName());
+        }
+        List<HashTagListResponse> result = new ArrayList<>();
+        for(HashTag t: list){
+            result.add(HashTagListResponse.toDto(t));
+        }
+        return result;
     }
 }
