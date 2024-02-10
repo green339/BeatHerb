@@ -1,4 +1,4 @@
-package store.beatherb.restapi.content.dto.respone;
+package store.beatherb.restapi.content.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;

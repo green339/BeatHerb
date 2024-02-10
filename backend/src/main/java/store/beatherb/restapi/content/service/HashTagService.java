@@ -9,9 +9,9 @@ import store.beatherb.restapi.content.dto.request.DeleteHashTagRequest;
 import store.beatherb.restapi.content.dto.request.HashTagSearchNameRequest;
 import store.beatherb.restapi.content.dto.request.RegistHashTagRequest;
 import store.beatherb.restapi.content.dto.request.UpdateHashTagRequest;
-import store.beatherb.restapi.content.dto.respone.HashTagListResponse;
-import store.beatherb.restapi.content.dto.respone.RegistHashTagResponse;
-import store.beatherb.restapi.content.dto.respone.UpdateHashTagResponse;
+import store.beatherb.restapi.content.dto.response.HashTagListResponse;
+import store.beatherb.restapi.content.dto.response.RegistHashTagResponse;
+import store.beatherb.restapi.content.dto.response.UpdateHashTagResponse;
 import store.beatherb.restapi.content.exception.HashTagErrorCode;
 import store.beatherb.restapi.content.exception.HashTagException;
 

@@ -10,8 +10,7 @@ import store.beatherb.restapi.content.domain.Content;
 import store.beatherb.restapi.content.domain.embed.ContentTypeEnum;
 import store.beatherb.restapi.content.dto.request.CreatorAgreeRequest;
 import store.beatherb.restapi.content.dto.request.ContentUploadRequest;
-import store.beatherb.restapi.content.dto.respone.ContentUploadRespone;
-import store.beatherb.restapi.content.dto.response.ContentDetailResponse;
+import store.beatherb.restapi.content.dto.response.ContentUploadRespone;
 import store.beatherb.restapi.content.dto.response.ContentResponse;
 import store.beatherb.restapi.content.service.ContentService;
 import store.beatherb.restapi.global.auth.domain.LoginUser;
@@ -31,6 +30,13 @@ public class ContentController {
     public ResponseEntity<ApiResponse<List<Content>>> contentsOrderByHit(){
         List<Content> response= contentService.getContentsOrderByHit();
         return ResponseEntity.ok(ApiResponse.successWithData(response));
+    }
+
+    @GetMapping("/{contentId}")
+    public ResponseEntity<?> showDetail(@PathVariable Long contentId){
+        log.info("call here!");
+
+        return ResponseEntity.ok(ApiResponse.successWithData(contentService.showDetailByContentId(contentId)));
     }
 
     @GetMapping("/play/{contentNumber}")

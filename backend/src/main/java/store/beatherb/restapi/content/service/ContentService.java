@@ -14,7 +14,8 @@ import store.beatherb.restapi.content.domain.*;
 import store.beatherb.restapi.content.domain.embed.ContentTypeEnum;
 import store.beatherb.restapi.content.dto.request.CreatorAgreeRequest;
 import store.beatherb.restapi.content.dto.request.ContentUploadRequest;
-import store.beatherb.restapi.content.dto.respone.ContentUploadRespone;
+import store.beatherb.restapi.content.dto.response.ContentDetailResponse;
+import store.beatherb.restapi.content.dto.response.ContentUploadRespone;
 import store.beatherb.restapi.content.dto.response.ContentResponse;
 import store.beatherb.restapi.content.dto.response.ContentListInterface;
 import store.beatherb.restapi.content.exception.*;
@@ -164,15 +165,17 @@ public class ContentService {
                                 return new HashTagException(HashTagErrorCode.HASHTAG_IS_NOT_EXIST);
                             }
                     );
+            log.info("hashTag IsNull? = [{}]",hashTag);
             ContentHashTag contentHashTag = ContentHashTag.builder() //HashTags to ContentHashTag
-                    .hashtag(hashTag)
+                    .hashTag(hashTag)
                     .build();
             contentHashTagList.add(contentHashTag);
+            log.info("contentHashTag = [{}]",contentHashTag.getHashTag().getName() );
         }
 
         Set<Long> rootContentIdList = request.getRootContentIdList();
-        List<InOrder> inOrderList  = new ArrayList<>();
-        for(Long rootContentId : rootContentIdList){
+        List<InOrder> inOrderList = new ArrayList<>();
+        for (Long rootContentId : rootContentIdList) {
             Content rootContent = contentRepository.findById(rootContentId).orElseThrow(
                     () -> {
                         return new ContentException(ContentErrorCode.CONTENT_NOT_FOUND);
@@ -379,6 +382,16 @@ public class ContentService {
         month[1] = endOfMonth.toString();
 
         return month;
+    }
+
+    public ContentDetailResponse showDetailByContentId(Long contentId) {
+        Content content = contentRepository.findById(contentId)
+                .orElseThrow(
+                        () -> {
+                            return new ContentException(ContentErrorCode.CONTENT_NOT_FOUND);
+                        }
+                );
+        return ContentDetailResponse.toDto(content);
     }
 }
 

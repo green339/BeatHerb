@@ -1,5 +1,6 @@
 package store.beatherb.restapi.content.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -27,7 +28,9 @@ public class Content {
 
     //TODO : 추후 복합 등록자 추가.
 
+    @JsonIgnore
     @OneToMany(mappedBy = "content", cascade = CascadeType.ALL,orphanRemoval = true)
+
     private List<Creator> creatorList;
     @NotNull
     private String title;
@@ -41,8 +44,8 @@ public class Content {
     @JoinColumn(name="content_type_id")
     private ContentType contentType;
 
-    @OneToMany
-    @JoinColumn(name="content_hashtag_id")
+    @JsonIgnore
+    @OneToMany(mappedBy = "content", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<ContentHashTag> contentHashTagList;
 
 
@@ -63,11 +66,14 @@ public class Content {
     boolean processed;
 
     @OneToMany(mappedBy = "childContent", cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonIgnore
     List<InOrder> inOrderList;
+
+    private String image;
 
 
     @Builder
-    public Content(String title, Member writer, ContentType contentType, List<InOrder> inOrderList, List<Creator> creatorList, String lyrics, String describe,List<ContentHashTag> contentHashTagList, int hit, LocalDateTime createdAt) {
+    public Content(String title, Member writer, ContentType contentType, List<InOrder> inOrderList, List<Creator> creatorList, String lyrics, String describe,List<ContentHashTag> contentHashTagList, int hit, LocalDateTime createdAt,String image) {
         this.title = title;
         this.writer = writer;
         this.contentType = contentType;
@@ -79,6 +85,7 @@ public class Content {
         this.inOrderList = inOrderList;
         this.processed = false;
         this.contentHashTagList = contentHashTagList;
+        this.image = image;
 
         if(this.creatorList !=null){
             for (Creator c: this.creatorList){

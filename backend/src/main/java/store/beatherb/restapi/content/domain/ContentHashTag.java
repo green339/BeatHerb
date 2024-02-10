@@ -27,8 +27,11 @@ public class ContentHashTag {
     @Setter
     private Content content;
 
+
     @Builder
-    public ContentHashTag(HashTag hashtag, Content content) {
+
+    public ContentHashTag(HashTag hashTag, Content content) {
+        this.hashTag = hashTag;
         this.content = content;
     }
 }
