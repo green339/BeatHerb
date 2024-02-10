@@ -11,6 +11,7 @@ import store.beatherb.restapi.content.domain.embed.ContentTypeEnum;
 import store.beatherb.restapi.content.dto.request.CreatorAgreeRequest;
 import store.beatherb.restapi.content.dto.request.ContentUploadRequest;
 import store.beatherb.restapi.content.dto.respone.ContentUploadRespone;
+import store.beatherb.restapi.content.dto.response.ContentDetailResponse;
 import store.beatherb.restapi.content.dto.response.ContentResponse;
 import store.beatherb.restapi.content.service.ContentService;
 import store.beatherb.restapi.global.auth.domain.LoginUser;

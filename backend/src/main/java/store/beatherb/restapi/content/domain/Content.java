@@ -28,7 +28,7 @@ public class Content {
     //TODO : 추후 복합 등록자 추가.
 
     @OneToMany(mappedBy = "content", cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<Creator> creators;
+    private List<Creator> creatorList;
     @NotNull
     private String title;
 
@@ -42,18 +42,8 @@ public class Content {
     private ContentType contentType;
 
     @OneToMany
-    private List<Content> inorder;
-
-
-    @ManyToMany
-    @JoinTable(
-            name = "content_hashtags",
-            joinColumns = @JoinColumn(name = "content_id"),
-            inverseJoinColumns = @JoinColumn(name = "hashtag_id")
-    )
-
-    @NotNull
-    private List<HashTag> hashTags;
+    @JoinColumn(name="content_hashtag_id")
+    private List<ContentHashTag> contentHashTagList;
 
 
     @Column(name="lyrics")
@@ -72,23 +62,36 @@ public class Content {
     @Setter
     boolean processed;
 
+    @OneToMany(mappedBy = "childContent", cascade = CascadeType.ALL,orphanRemoval = true)
+    List<InOrder> inOrderList;
+
 
     @Builder
-    public Content(String title, Member writer, ContentType contentType, List<Content> inorder, List<HashTag> hashTags, List<Creator> creators, String lyrics, String describe, int hit, LocalDateTime createdAt) {
+    public Content(String title, Member writer, ContentType contentType, List<InOrder> inOrderList, List<Creator> creatorList, String lyrics, String describe,List<ContentHashTag> contentHashTagList, int hit, LocalDateTime createdAt) {
         this.title = title;
         this.writer = writer;
         this.contentType = contentType;
-        this.inorder = inorder;
-        this.hashTags = hashTags;
-        this.creators = creators;
+        this.creatorList = creatorList;
         this.lyrics = lyrics;
         this.describe = describe;
         this.hit = hit;
         this.createdAt = createdAt;
-        processed = false;
+        this.inOrderList = inOrderList;
+        this.processed = false;
+        this.contentHashTagList = contentHashTagList;
 
-        if(this.creators !=null){
-            for (Creator c: this.creators){
+        if(this.creatorList !=null){
+            for (Creator c: this.creatorList){
+                c.setContent(this);
+            }
+        }
+        if(this.inOrderList != null){
+            for( InOrder i:  this.inOrderList){
+                i.setChildContent(this);
+            }
+        }
+        if(this.contentHashTagList != null){
+            for(ContentHashTag c : this.contentHashTagList){
                 c.setContent(this);
             }
         }

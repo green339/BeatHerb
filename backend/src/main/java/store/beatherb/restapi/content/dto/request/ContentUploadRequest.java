@@ -23,34 +23,27 @@ public class ContentUploadRequest {
     @Builder.Default
     String describe = "설명이 없습니다.";
     @NotEmpty(message = "최소 한개 이상의 해시태그 아이디가 있어야 합니다.")
-    Set<Long> hashTagIds;
-    Set<Long> creatorIds;
+    Set<Long> hashTagIdList;
+    Set<Long> creatorIdList;
+    Set<Long> rootContentIdList;
     MultipartFile image;
     @NotNull(message = "음악은 필수 업로드 하셔야합니다.")
     MultipartFile music;
 
-    public ContentUploadRequest(String title, String lyrics, String describe, Set<Long> hashTagIds, Set<Long> creatorIds, MultipartFile image, MultipartFile music) {
+    public ContentUploadRequest(String title, String lyrics, String describe, Set<Long> hashTagIdList, Set<Long> creatorIdList,Set<Long> rootContentIdList, MultipartFile image, MultipartFile music) {
         this.title = title;
         this.lyrics = lyrics;
         this.describe = describe;
-        this.hashTagIds = hashTagIds;
-        if(creatorIds ==null){
-            creatorIds = new HashSet<>();
+        this.hashTagIdList = hashTagIdList;
+        if(creatorIdList ==null){
+            creatorIdList = new HashSet<>();
         }
-        this.creatorIds = creatorIds;
+        if(rootContentIdList == null){
+            rootContentIdList = new HashSet<>();
+        }
+        this.creatorIdList = creatorIdList;
+        this.rootContentIdList = rootContentIdList;
         this.image = image;
         this.music = music;
-    }
-
-    @Override
-    public String toString() {
-        return "ContentUploadRequest{" +
-                "title='" + title + '\'' +
-                ", lyrics='" + lyrics + '\'' +
-                ", describe='" + describe + '\'' +
-                ", hashTagIds=" + hashTagIds +
-                ", creatorIds=" + creatorIds +
-                ", image=" + image +
-                '}';
     }
 }

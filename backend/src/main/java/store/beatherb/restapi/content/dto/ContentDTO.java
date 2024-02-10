@@ -3,9 +3,7 @@ package store.beatherb.restapi.content.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import store.beatherb.restapi.content.domain.Content;
-import store.beatherb.restapi.content.domain.Creator;
-import store.beatherb.restapi.content.domain.HashTag;
+import store.beatherb.restapi.content.domain.*;
 import store.beatherb.restapi.member.dto.MemberDTO;
 
 import java.time.LocalDateTime;
@@ -31,20 +29,20 @@ public class ContentDTO {
     public static ContentDTO toDto(Content entity){
 
         List<ContentDTO> contentDTOs = new ArrayList<>();
-        for (Content c : entity.getInorder()){
-            ContentDTO dto = ContentDTO.toDto(c);
+        for (InOrder c : entity.getInOrderList()){
+            ContentDTO dto = ContentDTO.toDto(c.getChildContent());
             contentDTOs.add(dto);
         }
 
         List<CreatorDTO> creatorDTOs = new ArrayList<>();
-        for (Creator c : entity.getCreators()){
+        for (Creator c : entity.getCreatorList()){
             CreatorDTO dto = CreatorDTO.toDto(c);
             creatorDTOs.add(dto);
         }
 
         List<HashTagDTO> hashTagDTOS = new ArrayList<>();
-        for (HashTag c : entity.getHashTags()){
-            HashTagDTO dto = HashTagDTO.toDto(c);
+        for (ContentHashTag c : entity.getContentHashTagList()){
+            HashTagDTO dto = HashTagDTO.toDto(c.getHashTag());
             hashTagDTOS.add(dto);
         }
 

@@ -28,20 +28,20 @@ public class ContentDetailList {
 
     public static ContentDetailList toDto(Content content, List<CommentDTO> comments) {
         List<CreatorDTO> creatorDTOs = new ArrayList<>();
-        for (Creator c : content.getCreators()){
+        for (Creator c : content.getCreatorList()){
             CreatorDTO dto = CreatorDTO.toDto(c);
             creatorDTOs.add(dto);
         }
 
         List<ContentDTO> inorderDTOs = new ArrayList<>();
-        for (Content c : content.getInorder()){
-            ContentDTO dto = ContentDTO.toDto(c);
+        for (InOrder i : content.getInOrderList()){
+            ContentDTO dto = ContentDTO.toDto(i.getChildContent());
             inorderDTOs.add(dto);
         }
 
         List<HashTagDTO> hashTagDTOS = new ArrayList<>();
-        for (HashTag c : content.getHashTags()){
-            HashTagDTO dto = HashTagDTO.toDto(c);
+        for (ContentHashTag c : content.getContentHashTagList()){
+            HashTagDTO dto = HashTagDTO.toDto(c.getHashTag());
             hashTagDTOS.add(dto);
         }
 

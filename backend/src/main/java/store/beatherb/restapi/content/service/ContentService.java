@@ -131,21 +131,21 @@ public class ContentService {
                             return new MemberException(MemberErrorCode.MEMBER_FIND_ERROR);
                         }
                 );
-        Set<Long> creatorIds = request.getCreatorIds();
+        Set<Long> creatorIdList = request.getCreatorIdList();
         Creator baseCreator = Creator.builder()
                 .creator(writer)
                 .agree(true)
                 .build();
-        List<Creator> creators = new ArrayList<>();
-        creators.add(baseCreator);
-        for (Long creatorId : creatorIds) { //창작가들을 찾을수 없으면 Throw
+        List<Creator> creatorList = new ArrayList<>();
+        creatorList.add(baseCreator);
+        for (Long creatorId : creatorIdList) { //창작가들을 찾을수 없으면 Throw
             Member member = memberRepository.findById(creatorId)
                     .orElseThrow(
                             () -> {
                                 return new MemberException(MemberErrorCode.MEMBER_FIND_ERROR);
                             }
                     );
-            creators.add(
+            creatorList.add(
                     Creator.builder()
                             .creator(member)
                             .agree(false)
@@ -153,18 +153,36 @@ public class ContentService {
             );
         }
 
-        Set<Long> hashTagsIds = request.getHashTagIds();
-        List<HashTag> hashTags = new ArrayList<>();
+        Set<Long> hashTagsIdList = request.getHashTagIdList();
+        List<ContentHashTag> contentHashTagList = new ArrayList<>();
 
 
-        for (Long hashTagId : hashTagsIds) {
+        for (Long hashTagId : hashTagsIdList) { //HashTag 를 찾을수 없으면 Throw
             HashTag hashTag = hashTagRepository.findById(hashTagId)
                     .orElseThrow(
                             () -> {
-                                return new ContentException(ContentErrorCode.HASHTAG_NOT_FOUND);
+                                return new HashTagException(HashTagErrorCode.HASHTAG_IS_NOT_EXIST);
                             }
                     );
-            hashTags.add(hashTag);
+            ContentHashTag contentHashTag = ContentHashTag.builder() //HashTags to ContentHashTag
+                    .hashtag(hashTag)
+                    .build();
+            contentHashTagList.add(contentHashTag);
+        }
+
+        Set<Long> rootContentIdList = request.getRootContentIdList();
+        List<InOrder> inOrderList  = new ArrayList<>();
+        for(Long rootContentId : rootContentIdList){
+            Content rootContent = contentRepository.findById(rootContentId).orElseThrow(
+                    () -> {
+                        return new ContentException(ContentErrorCode.CONTENT_NOT_FOUND);
+                    }
+            );
+            InOrder inOrder = InOrder.builder()
+                    .rootContent(rootContent)
+                    .build();
+
+            inOrderList.add(inOrder);
         }
 
 
@@ -173,9 +191,10 @@ public class ContentService {
                 .describe(request.getDescribe())
                 .title(request.getTitle())
                 .lyrics(request.getLyrics())
-                .creators(creators)
+                .creatorList(creatorList)
                 .writer(writer)
-                .hashTags(hashTags)
+                .contentHashTagList(contentHashTagList)
+                .inOrderList(inOrderList)
                 .build();
 
         MultipartFile music = request.getMusic();
@@ -276,17 +295,17 @@ public class ContentService {
 //    }
 
     //daily 인기 차트 가져오기
-    public List<ContentResponse> getPopularityDaily(ContentTypeEnum contentTypeEnum){
-            ContentType contentType = contentTypeRepository.findByType(contentTypeEnum)
-                    .orElseThrow(() -> new ContentTypeException(ContentTypeErrorCode.CONTENT_TYPE_NOT_FOUND));
+    public List<ContentResponse> getPopularityDaily(ContentTypeEnum contentTypeEnum) {
+        ContentType contentType = contentTypeRepository.findByType(contentTypeEnum)
+                .orElseThrow(() -> new ContentTypeException(ContentTypeErrorCode.CONTENT_TYPE_NOT_FOUND));
 
-            Date nowDate = new Date();
-            SimpleDateFormat todayDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String strNowDate = todayDateFormat.format(nowDate);
-            List<ContentListInterface> contentList = playRepository.findByCreatedAtDate(strNowDate, contentType.getId());
+        Date nowDate = new Date();
+        SimpleDateFormat todayDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String strNowDate = todayDateFormat.format(nowDate);
+        List<ContentListInterface> contentList = playRepository.findByCreatedAtDate(strNowDate, contentType.getId());
 
-            List<ContentResponse> content = new ArrayList<>();
-            for(ContentListInterface response : contentList){
+        List<ContentResponse> content = new ArrayList<>();
+        for (ContentListInterface response : contentList) {
             Member findMember = memberRepository.findById(response.getContentWriterId())
                     .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
 
@@ -305,7 +324,7 @@ public class ContentService {
         List<ContentListInterface> contentList = playRepository.findByCreatedAtPeriod(contentType.getId(), week[0], week[1]);
 
         List<ContentResponse> content = new ArrayList<>();
-        for(ContentListInterface response : contentList){
+        for (ContentListInterface response : contentList) {
             Member findMember = memberRepository.findById(response.getContentWriterId())
                     .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
 
@@ -324,7 +343,7 @@ public class ContentService {
         List<ContentListInterface> contentList = playRepository.findByCreatedAtPeriod(contentType.getId(), month[0], month[1]);
 
         List<ContentResponse> content = new ArrayList<>();
-        for(ContentListInterface response : contentList){
+        for (ContentListInterface response : contentList) {
             Member findMember = memberRepository.findById(response.getContentWriterId())
                     .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
 
@@ -335,7 +354,7 @@ public class ContentService {
     }
 
     // 현재 날짜가 어떤 주에 속해 있는가?
-    private static String[] whatWeekPeriod(){
+    private static String[] whatWeekPeriod() {
         LocalDate currentDate = LocalDate.now();
 
         LocalDate startOfWeek = currentDate.with(DayOfWeek.MONDAY);
@@ -349,7 +368,7 @@ public class ContentService {
     }
 
     // 현재 날짜가 어떤 달에 속해 있는가?
-    private static String[] whatMonthPeriod(){
+    private static String[] whatMonthPeriod() {
         LocalDate currentDate = LocalDate.now();
 
         LocalDate startOfMonth = currentDate.with(TemporalAdjusters.firstDayOfMonth());
