@@ -29,7 +29,7 @@ public class ContentLoadController {
         String fileExtension = contentLoadService.getFileExtension();
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.parseMediaType("audio/mpeg"))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileExtension + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"loadfile" + fileExtension + "\"")
                 .body(resource);
 
     }
