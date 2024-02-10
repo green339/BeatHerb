@@ -23,15 +23,15 @@ public class InterestController {
     private final InterestService interestService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<RegistInterestResponse>> registInterest(@LoginUser MemberDTO memberDto, @RequestBody RegistInterestRequest registInterestRequest){
+    public ResponseEntity<ApiResponse<RegistInterestResponse>> registInterest(@LoginUser MemberDTO memberDto, @Valid @RequestBody RegistInterestRequest registInterestRequest){
         RegistInterestResponse response = interestService.registInterest(memberDto, registInterestRequest);
         ApiResponse<RegistInterestResponse> apiResponse = ApiResponse.successWithData(response);
         return ResponseEntity.status(apiResponse.getCode()).body(apiResponse);
     }
 
     @DeleteMapping
-    public ResponseEntity<ApiResponse<?>> deleteInterest(@Valid @RequestBody DeleteInterestRequest deleteInterestRequest){
-        interestService.deleteInterest(deleteInterestRequest);
+    public ResponseEntity<ApiResponse<?>> deleteInterest(@LoginUser MemberDTO memberDto, @Valid @RequestBody DeleteInterestRequest deleteInterestRequest){
+        interestService.deleteInterest(memberDto, deleteInterestRequest);
         ApiResponse<?> apiResponse = ApiResponse.successWithoutData();
         return ResponseEntity.status(apiResponse.getCode()).body(apiResponse);
     }
