@@ -69,11 +69,15 @@ public class Content {
     @JsonIgnore
     List<InOrder> inOrderList;
 
+    @OneToMany(mappedBy = "rootContent", cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonIgnore
+    List<InOrder> outOrderList;
+
     private String image;
 
 
     @Builder
-    public Content(String title, Member writer, ContentType contentType, List<InOrder> inOrderList, List<Creator> creatorList, String lyrics, String describe,List<ContentHashTag> contentHashTagList, int hit, LocalDateTime createdAt,String image) {
+    public Content(String title, Member writer, ContentType contentType,List<InOrder> outOrderList, List<InOrder> inOrderList, List<Creator> creatorList, String lyrics, String describe,List<ContentHashTag> contentHashTagList, int hit, LocalDateTime createdAt,String image) {
         this.title = title;
         this.writer = writer;
         this.contentType = contentType;
@@ -86,6 +90,7 @@ public class Content {
         this.processed = false;
         this.contentHashTagList = contentHashTagList;
         this.image = image;
+        this.outOrderList = outOrderList;
 
         if(this.creatorList !=null){
             for (Creator c: this.creatorList){

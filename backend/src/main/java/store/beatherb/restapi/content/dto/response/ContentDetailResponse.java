@@ -23,7 +23,9 @@ public class ContentDetailResponse {
     int hit;
     boolean processed;
     String contentType;
-    List<ContentDetailResponseInorder> inOrderList;
+    List<ContentDetailResponseOrder> inOrderList;
+    List<ContentDetailResponseOrder> outOrderList;
+    String image;
 
 
 
@@ -41,6 +43,7 @@ public class ContentDetailResponse {
 
         LocalDateTime createdAt = entity.getCreatedAt();
         List<InOrder> inOrderList = entity.getInOrderList();
+        List<InOrder> outOrderList = entity.getOutOrderList();
 
         List<ContentDetailResponseMember> creatorDtoList = new ArrayList<>();
         for(Creator c:creatorList){
@@ -54,11 +57,18 @@ public class ContentDetailResponse {
                     ContentDetailResponseHashTag.toDto(hashTag)
             );
         }
-        List<ContentDetailResponseInorder> contentDetailResponseInorderList = new ArrayList<>();
+        List<ContentDetailResponseOrder> contentDetailResponseInorderList = new ArrayList<>();
         for(InOrder inOrder: inOrderList ){
             contentDetailResponseInorderList.add(
 
-                    ContentDetailResponseInorder.toDto(inOrder)
+                    ContentDetailResponseOrder.toInOrderDto(inOrder)
+            );
+        }
+        List<ContentDetailResponseOrder> contentDetailResponseOutOrderList = new ArrayList<>();
+        for(InOrder outOrder: outOrderList){
+            contentDetailResponseOutOrderList.add(
+
+                    ContentDetailResponseOrder.toOutOrderDto(outOrder)
             );
         }
 
@@ -73,7 +83,9 @@ public class ContentDetailResponse {
                 .describe(describe)
                 .processed(processed)
                 //.contentType(contentType.getType().name())
+                .image("/api/content/image/" + entity.getId())
                 .inOrderList(contentDetailResponseInorderList)
+                .outOrderList(contentDetailResponseOutOrderList)
                 .build();
 
     }
@@ -126,21 +138,32 @@ public class ContentDetailResponse {
     }
 
     @Getter
-    private static class ContentDetailResponseInorder{
+    private static class ContentDetailResponseOrder{
 
         Long id;
         String title;
+        String image;
 
         @Builder
-        public ContentDetailResponseInorder(Long id, String title) {
+        public ContentDetailResponseOrder(Long id, String title,String image) {
             this.id = id;
             this.title = title;
+            this.image = image;
         }
-        public static ContentDetailResponseInorder toDto(InOrder inOrder){
+        public static ContentDetailResponseOrder toInOrderDto(InOrder inOrder){
             Content content = inOrder.getRootContent();
-            return ContentDetailResponseInorder.builder()
+            return ContentDetailResponseOrder.builder()
                     .id(content.getId())
                     .title(content.getTitle())
+                    .image("/api/content/image/"+content.getId())
+                    .build();
+        }
+        public static ContentDetailResponseOrder toOutOrderDto(InOrder inOrder){
+            Content content = inOrder.getChildContent();
+            return ContentDetailResponseOrder.builder()
+                    .id(content.getId())
+                    .title(content.getTitle())
+                    .image("/api/content/image/"+content.getId())
                     .build();
         }
     }

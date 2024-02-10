@@ -4,9 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +26,7 @@ import store.beatherb.restapi.global.auth.exception.AuthException;
 import store.beatherb.restapi.global.exception.BeatHerbErrorCode;
 import store.beatherb.restapi.global.exception.BeatHerbException;
 import store.beatherb.restapi.global.validate.MusicValid;
+import store.beatherb.restapi.global.validate.PictureValid;
 import store.beatherb.restapi.infrastructure.kafka.domain.dto.response.ContentUploadToKafkaResponse;
 import store.beatherb.restapi.infrastructure.kafka.service.KafkaProducerService;
 import store.beatherb.restapi.member.domain.Member;
@@ -34,6 +37,10 @@ import store.beatherb.restapi.member.exception.MemberException;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -60,6 +67,7 @@ public class ContentService {
 
     private final String CROPPED_DIRECTORY;
     private final String REFERENCE_DIRECTORY;
+    private final String IMAGE_DIRECTORY;
 
 
 //
@@ -75,7 +83,8 @@ public class ContentService {
                           PlayRepository playRepository,
                           ContentTypeRepository contentTypeRepository,
                           @Value("${resource.directory.music.cropped}") String CROPPED_DIRECTORY,
-                          @Value("${resource.directory.music.reference}") String REFERENCE_DIRECTORY
+                          @Value("${resource.directory.music.reference}") String REFERENCE_DIRECTORY,
+                          @Value("${resource.directory.music.image}") String IMAGE_DIRECTORY
 //                          @Value("${ffmpeg.directory.ffmpeg}") String FFMPEG_LOCATION,
 //                          @Value("${ffmpeg.directory.ffprobe}") String FFPROBE_LOCATION
     ) {
@@ -88,6 +97,7 @@ public class ContentService {
         this.contentTypeRepository = contentTypeRepository;
         this.CROPPED_DIRECTORY = CROPPED_DIRECTORY;
         this.REFERENCE_DIRECTORY = REFERENCE_DIRECTORY;
+        this.IMAGE_DIRECTORY = IMAGE_DIRECTORY;
 //        this.FFMPEG_LOCATION = FFMPEG_LOCATION;
 //        this.FFPROBE_LOCATION = FFPROBE_LOCATION;
     }
@@ -165,12 +175,12 @@ public class ContentService {
                                 return new HashTagException(HashTagErrorCode.HASHTAG_IS_NOT_EXIST);
                             }
                     );
-            log.info("hashTag IsNull? = [{}]",hashTag);
+            log.info("hashTag IsNull? = [{}]", hashTag);
             ContentHashTag contentHashTag = ContentHashTag.builder() //HashTags to ContentHashTag
                     .hashTag(hashTag)
                     .build();
             contentHashTagList.add(contentHashTag);
-            log.info("contentHashTag = [{}]",contentHashTag.getHashTag().getName() );
+            log.info("contentHashTag = [{}]", contentHashTag.getHashTag().getName());
         }
 
         Set<Long> rootContentIdList = request.getRootContentIdList();
@@ -189,6 +199,27 @@ public class ContentService {
         }
 
 
+        MultipartFile image = request.getImage();
+        String imagefileName = null;
+        if (image != null) {
+
+            if (!PictureValid.isPictureFile(image)) {
+                throw new ContentException(ContentErrorCode.CONTENT_IMAGE_NOT_VALID);
+            }
+            String imageName = image.getOriginalFilename();
+            String imageFormat = imageName.substring(imageName.lastIndexOf(".")).toLowerCase();
+            String uuid = UUID.randomUUID().toString();
+
+            imagefileName = uuid + imageFormat;
+            File imgfile = new File(IMAGE_DIRECTORY + File.separator + imagefileName);
+            try {
+                FileCopyUtils.copy(image.getBytes(), imgfile);
+            } catch (IOException e) {
+                throw new BeatHerbException(BeatHerbErrorCode.INTERNAL_SERVER_ERROR);
+            }
+        }
+
+
         Content content = Content.builder()
                 .hit(0)
                 .describe(request.getDescribe())
@@ -198,6 +229,7 @@ public class ContentService {
                 .writer(writer)
                 .contentHashTagList(contentHashTagList)
                 .inOrderList(inOrderList)
+                .image(imagefileName)
                 .build();
 
         MultipartFile music = request.getMusic();
@@ -392,6 +424,33 @@ public class ContentService {
                         }
                 );
         return ContentDetailResponse.toDto(content);
+    }
+
+    public Resource getImage(Long id) {
+        Content content = contentRepository.findById(id).orElseThrow(
+                () ->{
+                    return new ContentException(ContentErrorCode.CONTENT_NOT_FOUND);
+                }
+        );
+        String fileName = content.getImage();
+        if(fileName == null){
+            fileName = "noimage.jpeg";
+        }
+        String filePath = IMAGE_DIRECTORY +"/" + fileName;
+
+        File file = new File(filePath);
+        if(!file.exists()){
+            file = new File(IMAGE_DIRECTORY +"/noimage.jpeg");
+        }
+
+        try {
+            Resource resource = new FileSystemResource(file);
+            return  resource;
+        } catch (Exception e) {
+            throw new ContentException(ContentErrorCode.CONTENT_IMAGE_NOT_VALID);
+        }
+
+
     }
 }
 
