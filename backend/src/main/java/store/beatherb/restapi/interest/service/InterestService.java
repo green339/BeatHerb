@@ -50,10 +50,8 @@ public class InterestService {
     }
 
     @Transactional
-    public void deleteInterest(DeleteInterestRequest deleteInterestRequest){
-        interestRepository.delete(
-                interestRepository.findById(deleteInterestRequest.getInterestId())
-                        .orElseThrow(() -> new InterestException(InterestErrorCode.INTEREST_IS_NOT_EXIST))
-        );
+    public void deleteInterest(MemberDTO memberDTO, DeleteInterestRequest deleteInterestRequest){
+        interestRepository.delete(interestRepository.findByMemberIdAndHashTagId(memberDTO.getId(), deleteInterestRequest.getHashTagId())
+                .orElseThrow(() -> new InterestException(InterestErrorCode.INTEREST_IS_NOT_EXIST)));
     }
 }

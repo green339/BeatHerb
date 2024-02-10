@@ -8,6 +8,6 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 public class DeleteInterestRequest {
-    @NotNull(message = "interestId 는 null 이여선 안됩니다.")
-    private Long interestId;
+    @NotNull(message = "hashTagId 는 null 이여선 안됩니다.")
+    private Long hashTagId;
 }
