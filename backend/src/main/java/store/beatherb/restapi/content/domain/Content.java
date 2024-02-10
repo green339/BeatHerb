@@ -42,6 +42,7 @@ public class Content {
 
     @ManyToOne
     @JoinColumn(name="content_type_id")
+//    @Enumerated(EnumType.STRING)
     private ContentType contentType;
 
     @JsonIgnore
@@ -56,6 +57,7 @@ public class Content {
     private String describe;
 
     @Column(name="hit")
+    @Setter
     private int hit;
 
     @CreationTimestamp

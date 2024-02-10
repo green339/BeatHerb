@@ -29,12 +29,15 @@ public class ContentUploadRequest {
     MultipartFile image;
     @NotNull(message = "음악은 필수 업로드 하셔야합니다.")
     MultipartFile music;
+    @NotNull(message = "VOCAL,MELODY,SOUNDTRACK 중 하나가 필요합니다" )
+    String type;
 
-    public ContentUploadRequest(String title, String lyrics, String describe, Set<Long> hashTagIdList, Set<Long> creatorIdList,Set<Long> rootContentIdList, MultipartFile image, MultipartFile music) {
+    public ContentUploadRequest(String title, String lyrics, String describe, Set<Long> hashTagIdList, Set<Long> creatorIdList,Set<Long> rootContentIdList, MultipartFile image, MultipartFile music,String type) {
         this.title = title;
         this.lyrics = lyrics;
         this.describe = describe;
         this.hashTagIdList = hashTagIdList;
+        this.type = type;
         if(creatorIdList ==null){
             creatorIdList = new HashSet<>();
         }

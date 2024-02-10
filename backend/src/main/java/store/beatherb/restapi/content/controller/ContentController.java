@@ -55,7 +55,6 @@ public class ContentController {
 
     @GetMapping("/{contentId}")
     public ResponseEntity<?> showDetail(@PathVariable Long contentId){
-        log.info("call here!");
 
         return ResponseEntity.ok(ApiResponse.successWithData(contentService.showDetailByContentId(contentId)));
     }

@@ -51,7 +51,7 @@ public class ContentDTO {
               .creators(creatorDTOs)
               .title(entity.getTitle())
               .writer(MemberDTO.toDTO(entity.getWriter()))
-              .contentType(ContentTypeDTO.toDto(entity.getContentType()))
+//              .contentType(ContentTypeDTO.toDto(entity.getContentType()))
               .inorder(contentDTOs)
               .hashTags(hashTagDTOS)
               .lyrics(entity.getLyrics())

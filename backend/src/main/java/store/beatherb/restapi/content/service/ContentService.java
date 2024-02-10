@@ -4,11 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,10 +35,6 @@ import store.beatherb.restapi.member.exception.MemberException;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -133,6 +127,23 @@ public class ContentService {
 
     @Transactional
     public ContentUploadRespone uploadContent(MemberDTO memberDTO, ContentUploadRequest request) {
+        String type = request.getType();
+        ContentTypeEnum contentTypeEnum;
+        try {
+            contentTypeEnum = ContentTypeEnum.valueOf(type);
+        } catch (IllegalArgumentException e) {
+            throw new ContentException(ContentErrorCode.CONTENT_TYPE_NOT_VALID);
+        }
+        ContentType contentType = contentTypeRepository.findByType(contentTypeEnum).orElseGet(
+                () -> {
+                    ContentType temp =
+                            ContentType.builder().type(contentTypeEnum).build();
+                    contentTypeRepository.save(temp);
+                    return temp;
+                }
+        );
+
+
         if (!MusicValid.isMusicFile(request.getMusic())) {
             throw new ContentException(ContentErrorCode.MUSIC_NOT_VALID);
         }
@@ -227,6 +238,7 @@ public class ContentService {
                 .lyrics(request.getLyrics())
                 .creatorList(creatorList)
                 .writer(writer)
+                .contentType(contentType)
                 .contentHashTagList(contentHashTagList)
                 .inOrderList(inOrderList)
                 .image(imagefileName)
@@ -423,29 +435,31 @@ public class ContentService {
                             return new ContentException(ContentErrorCode.CONTENT_NOT_FOUND);
                         }
                 );
+        content.setHit(content.getHit()+1);
+        contentRepository.save(content);
         return ContentDetailResponse.toDto(content);
     }
 
     public Resource getImage(Long id) {
         Content content = contentRepository.findById(id).orElseThrow(
-                () ->{
+                () -> {
                     return new ContentException(ContentErrorCode.CONTENT_NOT_FOUND);
                 }
         );
         String fileName = content.getImage();
-        if(fileName == null){
+        if (fileName == null) {
             fileName = "noimage.jpeg";
         }
-        String filePath = IMAGE_DIRECTORY +"/" + fileName;
+        String filePath = IMAGE_DIRECTORY + "/" + fileName;
 
         File file = new File(filePath);
-        if(!file.exists()){
-            file = new File(IMAGE_DIRECTORY +"/noimage.jpeg");
+        if (!file.exists()) {
+            file = new File(IMAGE_DIRECTORY + "/noimage.jpeg");
         }
 
         try {
             Resource resource = new FileSystemResource(file);
-            return  resource;
+            return resource;
         } catch (Exception e) {
             throw new ContentException(ContentErrorCode.CONTENT_IMAGE_NOT_VALID);
         }
