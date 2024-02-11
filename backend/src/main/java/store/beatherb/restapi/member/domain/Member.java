@@ -1,14 +1,13 @@
 package store.beatherb.restapi.member.domain;
 
 import jakarta.persistence.*;
-import jdk.jfr.Timestamp;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.Optional;
 
 @Slf4j
 
@@ -61,9 +60,15 @@ public class Member {
     @Column(name="google")
     private String google;
 
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL,orphanRemoval = true)
+    private Verify verify;
+
+    public Optional<Verify> getVerify() {
+        return Optional.ofNullable(verify);
+    }
 
     @Builder
-    public Member(String email, String name, String nickname, Boolean advertise, boolean dmAgree, String naver, String kakao, String google,String img) {
+    public Member(String email, String name, String nickname, Boolean advertise, boolean dmAgree, String naver, String kakao, String google, String img, Verify verify) {
         this.email = email;
         this.name = name;
         this.nickname = nickname;
@@ -73,6 +78,7 @@ public class Member {
         this.kakao = kakao;
         this.google = google;
         this.img = img;
+        this.verify = verify;
     }
 }
 
