@@ -1,6 +1,7 @@
 package store.beatherb.restapi.member.dto;
 
 
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +11,7 @@ import store.beatherb.restapi.member.domain.Member;
 
 import java.util.Date;
 
+@Hidden
 @Data
 @AllArgsConstructor
 @Builder
