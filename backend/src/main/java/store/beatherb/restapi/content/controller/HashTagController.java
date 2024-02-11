@@ -10,6 +10,7 @@ import store.beatherb.restapi.content.dto.request.HashTagSearchNameRequest;
 import store.beatherb.restapi.content.dto.request.RegistHashTagRequest;
 import store.beatherb.restapi.content.dto.request.UpdateHashTagRequest;
 import store.beatherb.restapi.content.dto.response.HashTagListResponse;
+import store.beatherb.restapi.content.dto.response.HashTagUseResponse;
 import store.beatherb.restapi.content.dto.response.RegistHashTagResponse;
 import store.beatherb.restapi.content.dto.response.UpdateHashTagResponse;
 import store.beatherb.restapi.content.service.HashTagService;
@@ -52,5 +53,14 @@ public class HashTagController {
         hashTagService.deleteHashTag(deleteHashTagRequest);
         ApiResponse<?> apiResponse = ApiResponse.successWithoutData();
         return ResponseEntity.status(apiResponse.getCode()).body(apiResponse);
+    }
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<HashTagUseResponse>> hashTagUse(@PathVariable Long id){
+
+        HashTagUseResponse hashTagUseResponse = hashTagService.findMemberAndContentByUsingHashTagId(id);
+        ApiResponse<HashTagUseResponse> response = ApiResponse.successWithData(hashTagUseResponse);
+        return ResponseEntity.status(response.getCode()).body(response);
     }
 }
