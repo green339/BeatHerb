@@ -11,7 +11,8 @@ public class VerifyTokenResponse {
     private String refreshToken;
     private Long accessTokenExpiresIn;
     private Long refreshTokenExpiresIn;
-    private String name;
+    private String nickname;
+    private Long id;
 
 
 }

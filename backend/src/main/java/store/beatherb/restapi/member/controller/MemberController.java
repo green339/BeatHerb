@@ -31,6 +31,11 @@ public class MemberController {
         return ApiResponse.successWithoutData();
     }
 
+    @GetMapping("/verify")
+    public ApiResponse<VerifyTokenResponse> verify(@RequestParam String token){
+        return ApiResponse.successWithData( memberService.verify(token));
+    }
+
     @PostMapping("/signin/kakao")
     public ApiResponse<VerifyTokenResponse> KakaoSignIn(@RequestBody OAuthRequest oauthRequest){
         return ApiResponse.successWithData(memberService.socialSignIn(oauthRequest, Provider.KAKAO));

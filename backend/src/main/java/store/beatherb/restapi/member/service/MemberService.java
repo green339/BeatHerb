@@ -1,8 +1,13 @@
 package store.beatherb.restapi.member.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import store.beatherb.restapi.global.auth.exception.AuthErrorCode;
+import store.beatherb.restapi.global.auth.exception.AuthException;
+import store.beatherb.restapi.member.domain.Verify;
+import store.beatherb.restapi.member.domain.VerifyRepository;
 import store.beatherb.restapi.global.auth.dto.response.VerifyTokenResponse;
 import store.beatherb.restapi.global.auth.service.AuthService;
 import store.beatherb.restapi.global.mail.service.MailService;
@@ -10,6 +15,7 @@ import store.beatherb.restapi.global.mail.vo.MailVo;
 import store.beatherb.restapi.global.validate.Email;
 import store.beatherb.restapi.member.domain.Member;
 import store.beatherb.restapi.member.domain.MemberRepository;
+
 import store.beatherb.restapi.member.dto.request.SignInRequest;
 import store.beatherb.restapi.member.dto.request.SignUpRequest;
 import store.beatherb.restapi.member.exception.MemberErrorCode;
@@ -27,41 +33,102 @@ public class MemberService {
     private final OAuthService oauthService;
     private final MailService mailService;
     private final AuthService authService;
+    private final VerifyRepository verifyRepository;
 
-    public void signUp(SignUpRequest signUpRequest){
+
+
+    @Transactional
+    public void signUp(SignUpRequest signUpRequest) {
         Email.validate(signUpRequest.getEmail());
+
+        //1. 이메일 valid 검사
+
+
         memberRepository.findByEmail(signUpRequest.getEmail())
-                .ifPresent(i->{throw new MemberException(MemberErrorCode.EMAIL_EXIST);});
-        memberRepository.save(
-                Member.builder()
-                        .email(signUpRequest.getEmail())
-                        .img("blank.jpg")
-                        .build());
-        //이메일 인증 보내기
-        MailVo mailVo= MailVo.builder()
-                .address(signUpRequest.getEmail())
+                .ifPresent(member -> {
+                    throw new MemberException(MemberErrorCode.EMAIL_EXIST);
+                });
+
+        Member member = Member.builder()
+                .email(signUpRequest.getEmail())
+                .img("blank.jpg")
                 .build();
+        memberRepository.save(
+                member
+        );
+
+        Verify verify = Verify.builder()
+                .member(member)
+                .build();
+        verifyRepository.save(verify);
+        //이메일 인증 보내기
+        MailVo mailVo = MailVo.builder()
+                .address(signUpRequest.getEmail())
+                .uuid(verify.getUuid())
+                .build();
+
         mailService.authMailSend(mailVo);
         log.info("메일인증 발송!");
     }
-    public void signIn (SignInRequest signInRequest){
+
+    public void signIn(SignInRequest signInRequest) {
+        Member member = memberRepository.findByEmail(signInRequest.getEmail())
+                .orElseThrow(
+                () -> {
+                    return new MemberException(MemberErrorCode.MEMBER_FIND_ERROR);
+                }
+        );
+        Verify verify = member.getVerify().orElseGet( //token 이 없다면 생성 후 반환
+                ()->{
+                    Verify a = Verify.builder().member(member).build();
+                    verifyRepository.save(a);
+                    return a;
+                }
+
+        );
+
+        log.info("token = [{}] ", verify.getUuid());
         //이메일 인증 보내기
-        MailVo mailVo= MailVo.builder()
-                .address(signInRequest.getEmail())
+        MailVo mailVo = MailVo.builder()
+                .address(member.getEmail())
+                .uuid(verify.getUuid())
                 .build();
         mailService.authMailSend(mailVo);
     }
-    public VerifyTokenResponse socialSignIn(OAuthRequest oauthRequest, Provider provider){
-        String sub=oauthService.sub(oauthRequest, provider);
-        Member member=null;
-        switch(provider) {
-            case KAKAO -> member = memberRepository.findByKakao(sub).orElseThrow(() -> new MemberException(MemberErrorCode.SOCIAL_IS_NOT_EXIST));
-            case NAVER -> member = memberRepository.findByNaver(sub).orElseThrow(() -> new MemberException(MemberErrorCode.SOCIAL_IS_NOT_EXIST));
-            case GOOGLE -> member = memberRepository.findByGoogle(sub).orElseThrow(() -> new MemberException(MemberErrorCode.SOCIAL_IS_NOT_EXIST));
+
+    public VerifyTokenResponse socialSignIn(OAuthRequest oauthRequest, Provider provider) {
+        String sub = oauthService.sub(oauthRequest, provider);
+        Member member = null;
+        switch (provider) {
+            case KAKAO ->
+                    member = memberRepository.findByKakao(sub).orElseThrow(() -> new MemberException(MemberErrorCode.SOCIAL_IS_NOT_EXIST));
+            case NAVER ->
+                    member = memberRepository.findByNaver(sub).orElseThrow(() -> new MemberException(MemberErrorCode.SOCIAL_IS_NOT_EXIST));
+            case GOOGLE ->
+                    member = memberRepository.findByGoogle(sub).orElseThrow(() -> new MemberException(MemberErrorCode.SOCIAL_IS_NOT_EXIST));
         }
 
         //토큰 생성 결과값 보내기
         assert member != null;
+        return authService.generateVerifyTokenResponse(member.getId());
+    }
+
+
+    @Transactional
+    public VerifyTokenResponse verify(String token) {
+        // uuid 정보가 table에 존재하는지 확인
+        Verify verify = verifyRepository.findByUuid(token).orElseThrow(
+                () -> {
+                    return new AuthException(AuthErrorCode.INVALID_TOKEN);
+                }
+        );
+
+        Member member = verify.getMember().orElseThrow(
+                () -> {
+                    return new MemberException(MemberErrorCode.TOKEN_IS_NOT_VALID);
+                }
+        );
+
         return authService.generateVerifyTokenResponse(member.getId());
     }
 
