@@ -44,11 +44,11 @@ public class MailVo {
                 "      >\n" +
                 "        <div>아래 링크를 눌러 메일 인증을 완료하세요.</div>\n" +
                 "        <div>\n" +
-                "          <a href=\"https://beatherb.store/auth_email/redirct?token=" + this.uuid +"\"> https://beatherb.store/auth_email/redirct?token=" + this.uuid +"</a>\n" +
+                "          <a href=\"https://beatherb.store/auth_email/redirect?token=" + this.uuid +"\"> https://beatherb.store/auth_email/redirect?token=" + this.uuid +"</a>\n" +
                 "        </div>\n" +
                 "        <div></div>\n" +
                 "        <div style=\"display: flex; justify-content: center\">\n" +
-                "          <a href=\"https://beatherb.store/auth_email/redirct?token="+ this.uuid + "\">\n" +
+                "          <a href=\"https://beatherb.store/auth_email/redirect?token="+ this.uuid + "\">\n" +
                 "            <button\n" +
                 "              type=\"button\"\n" +
                 "              style=\"\n" +
