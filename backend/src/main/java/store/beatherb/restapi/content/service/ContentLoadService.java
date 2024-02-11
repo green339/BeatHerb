@@ -14,6 +14,7 @@ import store.beatherb.restapi.content.exception.ContentException;
 public class ContentLoadService {
 
     private final ResourceLoader resourceLoader;
+    @Getter
     private final String fileExtension;
     private final String RESOURCE_DIRECTORY_MUSIC;
 
