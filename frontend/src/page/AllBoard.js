@@ -12,7 +12,9 @@ import axios from "axios";
 export default function AllBoard() {
   const [searchParams] = useSearchParams();
   const queryParam = searchParams.get('query'); 
+  const hashtagListParam = searchParams.get('hashtagList');
   const query = queryParam ? queryParam : ""; 
+  const hashtagListString = hashtagListParam ? hashtagListParam : "";
 
   useEffect(() => {
     const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
@@ -32,7 +34,7 @@ export default function AllBoard() {
   return (
     <>
       <div className="my-16 w-full min-w-112 px-16">
-        <SearchBar initQuery={query} />
+        <SearchBar initQuery={query} initHashtagListString={hashtagListString} />
       </div>
 
       {query && <p className="text-primary text-3xl font-semibold">검색어는 {query}에요~~~~~~~~~~~~~~~</p>}

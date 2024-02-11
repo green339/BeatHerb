@@ -3,6 +3,7 @@ import LiveItem from "../components/LiveItem";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuthStore } from "../store/AuthStore";
 
 export default function LiveBoard() {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ export default function LiveBoard() {
   const [liveTitle, setLiveTitle] = useState("");
   const [liveDescription, setLiveDescription] = useState("");
   const liveCreateRef = useRef();
+  const { accessToken } = useAuthStore();
 
   const serverURL = process.env.REACT_APP_TEST_SERVER_BASE_URL;
 
@@ -44,11 +46,11 @@ export default function LiveBoard() {
       method: "post",
       url: `${serverURL}/live`,
       headers: {
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MX0.miJGqRO1oHnRY5NQq_Oo3uTU9mzZ9-aedSstOQkMF1U'
+        Authorization: `Bearer ${accessToken}`
       },
       data: {
-        "title" : "엄",
-        "describe" : "준식"
+        "title" : liveTitle,
+        "describe" : liveDescription
       }
     })
     .then((response) => {
@@ -57,8 +59,29 @@ export default function LiveBoard() {
       const token = response.data.data.token;
       const role = response.data.data.role;
 
-      console.log()
+      console.log(id);
       navigate(`/live/1`, {state: {token, role}});
+    })
+    .catch((error) => {
+      console.log(error);
+      alert(error.message);
+    })
+  }
+
+  const handleLiveDeleteClick = () => {
+    axios({
+      method: "delete",
+      url: `${serverURL}/live`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      data: {
+        "title" : liveTitle,
+        "describe" : liveDescription
+      }
+    })
+    .then((response) => {
+      console.log(response);
     })
     .catch((error) => {
       console.log(error);
@@ -81,6 +104,7 @@ export default function LiveBoard() {
         <div className="w-full flex justify-start my-8 ps-12 gap-12">
           <h1 className="text-primary text-3xl font-semibold">라이브</h1>
           <button className="btn btn-ghost btn-sm text-base-content" onClick={openLiveCreateModal}>+ 라이브 생성</button>
+          <button className="btn btn-ghost btn-sm text-base-content" onClick={handleLiveDeleteClick}>- 라이브 종료</button>
         </div>
 
         <div className="w-full flex justify-end mb-8 pr-8">

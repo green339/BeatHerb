@@ -102,7 +102,7 @@ export default function AuthRedirection() {
       // 서버로 요청을 보냄
       axios({
         method: 'post',
-        url: `${serverURL}/signin`,
+        url: `${serverURL}/signup`,
         data: {
           email : email
         },
@@ -113,21 +113,26 @@ export default function AuthRedirection() {
       })
       .catch((error) => {
         console.log(error);
-        axios({
-          method: 'post',
-          url: `${serverURL}/signup`,
-          data: {
-            email : email
-          },
-        })
-        .then((response) => {
-          console.log(response.data);
-          navigate("/auth_email")
-        })
-        .catch((error) => {
-          console.log(error.message);
-          navigate("/")
-        })
+        if(error.response.data.message[0] == "이미 가입한 이메일입니다.") {
+          axios({
+            method: 'post',
+            url: `${serverURL}/signin`,
+            data: {
+              email : email
+            },
+          })
+          .then((response) => {
+            console.log(response.data);
+            navigate("/auth_email");
+          })
+          .catch((error) => {
+            console.log(error.message);
+            navigate("/");
+          })
+        } else {
+          alert("로그인에 실패했습니다.")
+          navigate("/");
+        }
       })
     } else {
       alert("유효하지 않은 접근입니다.");

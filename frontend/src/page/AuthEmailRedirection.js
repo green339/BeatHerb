@@ -23,6 +23,7 @@ export default function AuthEmailRedirection() {
     })
     .then((response) => {
       const { accessToken, refreshToken, refreshTokenExpiresIn, name } = response.data;
+      console.log(accessToken);
       setAccessToken(accessToken);
       setRefreshToken(refreshToken, refreshTokenExpiresIn);
       setName(name);

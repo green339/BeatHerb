@@ -68,13 +68,10 @@ export default function Live() {
   const [subscribers, setSubscribers] = useState([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState();
 
-  const componentDidMount = () => {
+  useEffect(() => {
     window.addEventListener('beforeunload', onbeforeunload);
-  }
-
-  const componentWillUnmount = () => {
-    window.removeEventListener('beforeunload', onbeforeunload);
-  }
+    return () => window.removeEventListener('beforeunload', onbeforeunload);
+  }, [])
 
   const onbeforeunload = (event) => {
     leaveSession();
