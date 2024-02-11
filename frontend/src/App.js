@@ -17,6 +17,7 @@ import UploadMusic from './page/UploadMusic.js';
 import TestModal from './page/TestModal.js';
 import UserEdit from './page/UserEdit.js';
 import Live from './page/Live.js';
+import AuthEmailRedirection from './page/AuthEmailRedirection.js'
 import MusicPlayer from './components/MusicPlayer.js';
 
 
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="/admin" element={<Admin />} />
           <Route path="/login" element={<LogIn />} />
           <Route path="/auth_email" element={<AuthEmail />} />
+          <Route path="/auth_email/redirect" element={<AuthEmailRedirection />} />
           <Route path="/auth_success" element={<AuthSuccess />} />
           <Route path="/auth/redirect/:provider" element={<AuthRedirection />} />
           <Route path="/board/:category" element={<Board />} />

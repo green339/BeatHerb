@@ -98,6 +98,7 @@ export default function AuthRedirection() {
     } else if (provider === "email") {
       const encoded_email = new URL(window.location.href).searchParams.get("encoded");
       const email = atob(encoded_email);
+      console.log(email)
       // 서버로 요청을 보냄
       axios({
         method: 'post',
@@ -111,9 +112,22 @@ export default function AuthRedirection() {
         navigate("/auth_email")
       })
       .catch((error) => {
-        alert("오류가 발생했습니다.");
         console.log(error);
-        navigate("/");
+        axios({
+          method: 'post',
+          url: `${serverURL}/signup`,
+          data: {
+            email : email
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
+          navigate("/auth_email")
+        })
+        .catch((error) => {
+          console.log(error.message);
+          navigate("/")
+        })
       })
     } else {
       alert("유효하지 않은 접근입니다.");
