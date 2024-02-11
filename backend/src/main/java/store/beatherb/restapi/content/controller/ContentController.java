@@ -1,5 +1,7 @@
 package store.beatherb.restapi.content.controller;
 
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -78,7 +80,7 @@ public class ContentController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<ApiResponse<?>> upload(@LoginUser MemberDTO memberDTO, @Valid  @ModelAttribute  ContentUploadRequest contentUploadRequest){
+    public ResponseEntity<ApiResponse<?>> upload(@Parameter(hidden = true) @LoginUser MemberDTO memberDTO, @Valid  @ModelAttribute  ContentUploadRequest contentUploadRequest){
         //TODO : 수정 필요!!!!!!!
         ContentUploadRespone contentUploadRespone = contentService.uploadContent(memberDTO,contentUploadRequest);
         ApiResponse<ContentUploadRespone> response = ApiResponse.of(HttpStatus.CREATED,contentUploadRespone);
