@@ -57,7 +57,7 @@ export default function MyPage() {
     formData.append("dmAgree", isActive);
     formData.append("nickname", nicknameValue);
 
-    const serverURL = process.env.REACT_APP_USEREDIT_SERVER_URL;
+    //const serverURL = process.env.REACT_APP_USEREDIT_SERVER_URL;
 
     // for (let key of formData.keys()) {
     //   console.log(key, ":", formData.get(key));
@@ -67,10 +67,10 @@ export default function MyPage() {
     // 프론트에서 file 없을 시 null로 넘어감을 확인
     await axios({
       method: "PUT",
-      url: `${serverURL}`,
+      url: "https://node5.wookoo.shop/api/member",
       mode: "cors",
       headers: {
-        "Content-Type": "multipart/form-data", // Content-Type을 반드시 이렇게 하여야 한다.
+        Authorization: "Bearer apple",
       },
       data: formData, // data 전송시에 반드시 생성되어 있는 formData 객체만 전송 하여야 한다.
     });
@@ -148,7 +148,7 @@ export default function MyPage() {
                 수정하기
               </div>
               {/* </Link> */}
-              <Link to="/">
+              <Link to="/mypage/1">
                 <div className="px-8">취소하기</div>
               </Link>
             </div>

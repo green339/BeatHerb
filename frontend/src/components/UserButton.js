@@ -33,7 +33,7 @@ export default function UserButton() {
             <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-200 rounded-box w-52">
               <li><button className="text-base-content" onClick={() => notifyModalRef.current?.showModal()}>알림</button></li>
               <li><button className="text-base-content" onClick={() => dmModalRef.current?.showModal()}>메시지</button></li>
-              <li><Link to="/mypage" className="text-base-content hover:text-base-content">마이페이지</Link></li>
+              <li><Link to="/mypage/1" className="text-base-content hover:text-base-content">마이페이지</Link></li>
               <li><button className="text-base-content" onClick={logout}>로그아웃</button></li>
             </ul>
           </details>

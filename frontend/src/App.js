@@ -32,7 +32,7 @@ export default function App() {
           <Route path="/auth_success" element={<AuthSuccess />} />
           <Route path="/auth/redirect/:provider" element={<AuthRedirection />} />
           <Route path="/board/:category" element={<Board />} />
-          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/mypage/:id" element={<MyPage />} />
           <Route path="/upload_music" element={<UploadMusic />} />
           <Route path="/useredit" element={<UserEdit />} />
           <Route path="/content/:id" element={<ContentDetail />} />
@@ -43,7 +43,7 @@ export default function App() {
           <Route path="/*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
-      <MusicPlayer />
+      {/* <MusicPlayer /> */}
     </div>
   );
 }

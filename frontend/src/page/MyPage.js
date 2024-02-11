@@ -7,6 +7,7 @@ import ShortsItem from "../components/ShortsItem";
 import LiveItem from "../components/LiveItem";
 import Dm from "../components/Dm";
 import Follow from "../components/Follow";
+import { Link } from "react-router-dom";
 
 // 탭 리스트
 const tabs = [
@@ -159,6 +160,22 @@ export default function MyPage() {
                     <path d="M240-400h320v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z" />
                   </svg>
                 </button>
+                <Link to="/useredit" className="fill-primary hover:fill-primary">
+                  <button
+                    className="btn btn-ghost"
+                    onClick={() => dmModalRef.current?.showModal()}
+                  >
+                    <svg
+                      className="fill-primary"
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="32"
+                      viewBox="0 -960 960 960"
+                      width="32"
+                    >
+                      <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
+                    </svg>
+                  </button>
+                </Link>
               </div>
             </div>
           </div>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import ContentsItem from "../components/ContentsItem";
 import { useLocation } from "react-router-dom";
+import axios from "axios";
 
 // 탭 리스트
 const tabs = [
@@ -18,16 +19,18 @@ export default function ContentsBoard() {
   const [contentList, setContentList] = useState([]);
 
   useEffect(() => {
-    // axios({
-    //   method: "",
-    //   url: ""
-    // })
-    // .then((response) => {
-    //   setContentList(response.data);
-    // })
-    // .catch((error) => {
-    //   alert("데이터를 받는 도중 문제가 발생했습니다.")
-    // })
+    const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
+
+    axios({
+      method: "get",
+      url: `${serverUrl}/content`
+    })
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.log(error.message);
+    })
 
     // 임시
     //백엔드랑 연결 후 삭제 예정

@@ -12,6 +12,8 @@ export default function LiveBoard() {
   const [liveDescription, setLiveDescription] = useState("");
   const liveCreateRef = useRef();
 
+  const serverURL = process.env.REACT_APP_TEST_SERVER_BASE_URL;
+
   useEffect(() => {
     // axios({
     //   method: "",
@@ -40,7 +42,7 @@ export default function LiveBoard() {
   const handleLiveCreateClick = () => {
     axios({
       method: "post",
-      url: "https://node5.wookoo.shop/api/live",
+      url: `${serverURL}/live`,
       headers: {
         Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MX0.miJGqRO1oHnRY5NQq_Oo3uTU9mzZ9-aedSstOQkMF1U'
       },

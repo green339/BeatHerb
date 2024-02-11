@@ -1,10 +1,11 @@
 // 상세페이지
 
 import NavBar from "../components/NavBar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ContentsItem from "../components/ContentsItem";
 import ShortsItem from "../components/ShortsItem";
+import axios from "axios";
 import LiveItem from "../components/LiveItem";
 
 const tabs = [
@@ -25,18 +26,20 @@ export default function ContentDetail() {
   const [category, setCategory] = useState("melody");
   const [comment, setComment] = useState("comment");
 
-  // useEffect(() => {
-  //   axios({
-  //     method: "",
-  //     url: ""
-  //   })
-  //   .then((response) => {
+  useEffect(() => {
+    const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
 
-  //   })
-  //   .catch((error) => {
-  //     alert("데이터를 받는 도중 문제가 발생했습니다.")
-  //   })
-  // }, [])
+    axios({
+      method: "get",
+      url: `${serverUrl}/content/${id}`,
+    })
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      alert("데이터를 받는 도중 문제가 발생했습니다.");
+    })
+  }, [])
 
   const tempArray = Array(20)
     .fill()

@@ -6,11 +6,28 @@ import LiveItem from "../components/LiveItem";
 import ContentsRanking from "../components/ContentsRanking";
 import SearchBar from "../components/SearchBar";
 import { useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
+import axios from "axios";
 
 export default function AllBoard() {
   const [searchParams] = useSearchParams();
   const queryParam = searchParams.get('query'); 
   const query = queryParam ? queryParam : ""; 
+
+  useEffect(() => {
+    const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
+
+    axios({
+      method: "get",
+      url: `${serverUrl}/content`
+    })
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.log(error.message);
+    })
+  }, [])
   
   return (
     <>

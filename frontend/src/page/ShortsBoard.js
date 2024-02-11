@@ -20,7 +20,7 @@ export default function ShortsBoard() {
     // })
 
     // 임시
-    //백엔드랑 연결 후 삭제 예정
+    // 백엔드랑 연결 후 삭제 예정
     const shortsNum = (sortOption === "recent" ? 100 : 5);
     const newShortsList = Array(shortsNum).fill().map((v,i)=>i+1)
     setShortsList(newShortsList);
