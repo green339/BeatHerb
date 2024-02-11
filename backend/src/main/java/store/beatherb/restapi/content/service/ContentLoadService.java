@@ -14,13 +14,12 @@ import store.beatherb.restapi.content.exception.ContentException;
 public class ContentLoadService {
 
     private final ResourceLoader resourceLoader;
-    @Getter
     private final String fileExtension;
     private final String RESOURCE_DIRECTORY_MUSIC;
 
     // id를 넘겨받으면 리소스 폴더에서 음원 파일을 찾아 response로 넘겨준다.
     // fileExtension은 .mp3로 고정
-    public ContentLoadService(ResourceLoader resourceLoader, @Value("${resource.directory.music}") String RESOURCE_DIRECTORY_MUSIC) {
+    public ContentLoadService(ResourceLoader resourceLoader, @Value("${resource.directory.music.convert}") String RESOURCE_DIRECTORY_MUSIC) {
         this.resourceLoader = resourceLoader;
         this.fileExtension = ".mp3";
         this.RESOURCE_DIRECTORY_MUSIC = RESOURCE_DIRECTORY_MUSIC;
