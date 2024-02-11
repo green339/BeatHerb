@@ -11,10 +11,10 @@ const MusicWave = forwardRef(({}, ref) => {
   // var $audioStart = $container.find('.audio-start');
   // var $audioEnd = $container.find('.audio-end');
   // var $time = $container.find('.audio-pos');
-
+  const [cnt, setCnt] = useState(0);
   const loadMusicModalRef = useRef();
   const uploadMusicModalRef = useRef();
-
+  const [rootContentIdList,setRootContentIdList]=useState([])
   const playlistRef = useRef();
   const eeRef = useRef(null);
   const audios = [];
@@ -48,12 +48,14 @@ const MusicWave = forwardRef(({}, ref) => {
     //   const url = URL.createObjectURL(file);
     //   console.log(audioData)
     eeRef.current.emit("newtrack", file);
+    setCnt(cnt+1)
   };
   const handleRecordingUpload = (url) => {
     //악기랑 음성녹음 업로드
     // setAudioData((prevAudios) => [...prevAudios, { id: cnt, src: url, x: 1,y:0 }]);
     // setCnt((cnt) => cnt + 1);
     eeRef.current.emit("newtrack", url);
+    setCnt(cnt+1)
     console.log("handle", url);
   };
 
@@ -175,6 +177,12 @@ const MusicWave = forwardRef(({}, ref) => {
       console.log("Mute button pressed for " + track.name);
     });
   }
+  if (eeRef.current) {
+    eeRef.current.on("removeTrack", function (track) {
+      setCnt(cnt-1)
+      console.log("Remove button pressed for " + track.name);
+    });
+  }
   const playBtn = () => {
     eeRef.current.emit("play");
   };
@@ -212,6 +220,7 @@ const MusicWave = forwardRef(({}, ref) => {
   };
 
   const openUploadMusicModal = async () => {
+    if(cnt===0) return
     await eeRef.current.emit("startaudiorendering", "wav");
     await eeRef.current.on("audiorenderingfinished", audiorenderingfinished);
     await uploadMusicModalRef.current.showModal();
@@ -348,7 +357,7 @@ const MusicWave = forwardRef(({}, ref) => {
           </button>
           <dialog ref={uploadMusicModalRef} className="modal">
             <div className="modal-box w-11/12 max-w-5xl">
-              <UploadMusic music={downloadData} />
+              <UploadMusic music={downloadData} rootContentIdList={rootContentIdList}/>
             </div>
           </dialog>
         </div>

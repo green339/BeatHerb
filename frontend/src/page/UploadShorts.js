@@ -1,72 +1,47 @@
 import { Link } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { uploadMusic } from "../api/upload.js";
-import { FFmpeg } from "@ffmpeg/ffmpeg";
 // 음원 업로드 모달
 // 향후 DaisyUI 이용해서 모달로 구현 필요
 // 제목, 앨범 표지, 가사, 해시태그, 상세 정보
 // 향후 해시태그 및 파일 첨부, 버튼 누르면 다른 페이지로 이동 구현 필요
 
-export default function UploadMusic({ music, rootContentIdList }) {
+export default function UploadMusic({ shorts }) {
   const [image, setImage] = useState(null);
-  const [lyrics, setLyrics] = useState(null);
-  const [hashTagIdList, setHashTagIdList] = useState(["0"]);
   const [creatorIdList, setCreatorIdList] = useState([]);
   const titleRef = useRef(null);
-  const describeRef = useRef(null);
-  const [type, setType] = useState("VOCAL");
-  console.log(music);
+  const videoRef = useRef(null);
+  useEffect(() => {
+    if (videoRef.current && shorts) {
+      const videoUrl = URL.createObjectURL(shorts);
+      videoRef.current.src = videoUrl;
+    }
+  }, [shorts]);
 
-  const convertMedia = async (blob) => {
-    const ffmpeg = new FFmpeg();
-    await ffmpeg.load();
-    const arrayBuffer = await blob.arrayBuffer();
-    await ffmpeg.writeFile("input", new Uint8Array(arrayBuffer));
-
-    await ffmpeg.exec(["-i", "input", "output.mp3"]);
-    const data = await ffmpeg.readFile("output.mp3");
-    const wavBlob = new Blob([data.buffer], { type: "audio/mp3" });
-    console.log(wavBlob);
-    return wavBlob;
-  };
   const onSubmit = async () => {
     const formData = new FormData();
     formData.append("title", titleRef.current.value);
-    formData.append("lyrics", lyrics);
-    formData.append("describe", describeRef.current.value);
-    formData.append("hashTagIdList", hashTagIdList);
     formData.append("creatorIdList", creatorIdList);
-    formData.append("rootContentIdList", rootContentIdList);
-    if (image) {
-      formData.append("image", image);
-    }
-    formData.append("music", music, titleRef.current.value + ".wav");
-    formData.append("type", type);
-    console.log(formData);
+    formData.append("image", image);
+    formData.append("shorts", shorts, titleRef.current.value + ".mp4");
     await uploadMusic(formData).then();
   };
   const clear = async () => {
     setImage(null);
-    setLyrics(null);
-    setHashTagIdList([]);
     setCreatorIdList([]);
-    describeRef.current.value = "";
     titleRef.current.value = "";
+    videoRef.current.pause();
   };
   const fileImgInputRef = useRef(null);
-  const fileLyricsInputRef = useRef(null);
   const onChangeImg = (event) => {
     setImage(event.target.files[0]);
   };
-  const onChangeLyrics = (event) => {
-    console.log(event.target.files[0]);
-    setLyrics(event.target.files[0]);
-  };
+
   return (
-    <div className="w-full h-full">
-      <div className="flex flex-col w-full items-center justify-center">
+    <div className="w-full h-full flex">
+      <div className="flex flex-col w-3/6 items-center justify-center">
         <div className="text-base-content pt-5 pb-50 w-full">
-          <div className="text-4xl pb-10">음원 등록하기</div>
+          <div className="text-4xl pb-10">쇼츠 등록하기</div>
           <div className="flex items-center pb-10 mx-6">
             <div className="text-left whitespace-nowrap pr-10">제목</div>
             <input
@@ -84,12 +59,11 @@ export default function UploadMusic({ music, rootContentIdList }) {
           </div>
 
           <div className="flex pb-10 justify-between mx-6">
-            <div className="text-left whitespace-nowrap pr-10">타입</div>
+            <div className="text-left whitespace-nowrap pr-10">해시태그</div>
             <div className="btn btn-primary btn-xs">+ 추가하기</div>
           </div>
 
           <div className="flex pb-10 justify-between mx-6">
-            {/* 파일 첨부 구현 필요*/}
             <input
               type="file"
               style={{ display: "none" }}
@@ -98,7 +72,7 @@ export default function UploadMusic({ music, rootContentIdList }) {
               onChange={onChangeImg}
               ref={fileImgInputRef}
             />
-            <div className="text-left whitespace-nowrap pr-10">앨범표지</div>
+            <div className="text-left whitespace-nowrap pr-10">썸네일</div>
             <button
               className="btn btn-primary btn-xs"
               onClick={() => {
@@ -106,41 +80,6 @@ export default function UploadMusic({ music, rootContentIdList }) {
               }}>
               첨부하기
             </button>
-          </div>
-
-          <div className="flex pb-10 justify-between mx-6">
-            {/* 파일 첨부 구현 필요*/}
-            <input
-              type="file"
-              style={{ display: "none" }}
-              accept=".lrc"
-              name="lyrics"
-              onChange={onChangeLyrics}
-              ref={fileLyricsInputRef}
-            />
-            <div className="text-left whitespace-nowrap pr-10">가사</div>
-            <button
-              className="btn btn-primary btn-xs"
-              onClick={() => {
-                fileLyricsInputRef.current.click();
-              }}>
-              첨부하기
-            </button>
-          </div>
-
-          <div className="flex pb-10 justify-between mx-6">
-            <div className="text-left whitespace-nowrap pr-10">해시태그</div>
-            <div className="btn btn-primary btn-xs">+ 추가하기</div>
-          </div>
-
-          <div className="flex pb-10 mx-6">
-            <div className="text-left whitespace-nowrap pr-7">상세 내용</div>
-            <textarea
-              id="describe"
-              ref={describeRef}
-              placeholder="설명을 입력해주세요"
-              className="textarea textarea-bordered w-full"
-            />
           </div>
 
           <div className="flex justify-center">
@@ -162,6 +101,9 @@ export default function UploadMusic({ music, rootContentIdList }) {
             </div>
           </div>
         </div>
+      </div>
+      <div className="flex flex-col w-3/6 items-center justify-center">
+        <video ref={videoRef} controls></video>
       </div>
     </div>
   );
