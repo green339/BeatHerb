@@ -16,7 +16,6 @@ public class ContentDetailResponse {
 
     List<ContentDetailResponseMember> creatorList;
     String title;
-    //    ContentDetailResponseMember writer;
     List<ContentDetailResponseHashTag> hashTagList;
     String lyrics;
     String describe;
@@ -24,15 +23,13 @@ public class ContentDetailResponse {
     boolean processed;
     String contentType;
     List<ContentDetailResponseOrder> inOrderList;
-    //    List<ContentDetailResponseOrder> outOrderList;
     OutOrder outOrder;
-
     String image;
+    List<ContentDetailResponseComment> commentList;
 
 
     public static ContentDetailResponse toDto(Content entity) {
         String title = entity.getTitle();
-//        Member writer = entity.getWriter();
         List<Creator> creatorList = entity.getCreatorList();
         List<ContentHashTag> contentHashTagList = entity.getContentHashTagList();
         String lyrics = entity.getLyrics();
@@ -70,19 +67,17 @@ public class ContentDetailResponse {
         }
         OutOrder outOrder = OutOrder.toDto(outOrderList);
 
+        List<Comment> commentEntityList = entity.getCommentList();
+        List<ContentDetailResponseComment> commentList = new ArrayList<>();
+        for(Comment c: commentEntityList){
+            commentList.add(ContentDetailResponseComment.toDto(c));
+        }
 
-//        List<ContentDetailResponseOrder> contentDetailResponseOutOrderList = new ArrayList<>();
-//        for(InOrder outOrder: outOrderList){
-//            contentDetailResponseOutOrderList.add(
-//
-//                    ContentDetailResponseOrder.toOutOrderDto(outOrder)
-//            );
-//        }
+
 
 
         return ContentDetailResponse.builder()
                 .title(title)
-//                .writer(ContentDetailResponseMember.toDto(writer))
                 .creatorList(creatorDtoList)
                 .hashTagList(hashTagDtoList)
                 .lyrics(lyrics)
@@ -93,7 +88,7 @@ public class ContentDetailResponse {
                 .image("/api/content/image/" + entity.getId())
                 .inOrderList(contentDetailResponseInorderList)
                 .outOrder(outOrder)
-//                .outOrderList(contentDetailResponseOutOrderList)
+                .commentList(commentList)
                 .build();
 
     }
@@ -219,6 +214,54 @@ public class ContentDetailResponse {
                     .soundTrackList(soundTrackList)
                     .build();
 
+        }
+    }
+
+    @Getter
+    public static class ContentDetailResponseComment{
+        Long id;
+        String body;
+        ContentDetailResponseCommentMember member;
+        @Builder
+        public ContentDetailResponseComment(Long id, String body, ContentDetailResponseCommentMember member) {
+            this.id = id;
+            this.body = body;
+            this.member = member;
+        }
+
+        public static ContentDetailResponseComment toDto(Comment comment){
+            Long id = comment.getId();
+            String body = comment.getBody();
+            ContentDetailResponseCommentMember contentDetailResponseCommentMember = ContentDetailResponseCommentMember.toDto(comment.getMember());
+            return ContentDetailResponseComment.builder()
+                    .id(id)
+                    .body(body)
+                    .member(contentDetailResponseCommentMember)
+                    .build();
+
+        }
+    }
+
+
+    @Getter
+    public static class ContentDetailResponseCommentMember {
+        Long id;
+        String nickname;
+        String image;
+
+        @Builder
+        public ContentDetailResponseCommentMember(Long id, String nickname, String image) {
+            this.id = id;
+            this.nickname = nickname;
+            this.image = image;
+        }
+
+        public static ContentDetailResponseCommentMember toDto(Member member) {
+            return ContentDetailResponseCommentMember.builder()
+                    .id(member.getId())
+                    .image("/api/member/image/" + member.getId())
+                    .nickname(member.getNickname())
+                    .build();
         }
     }
 }

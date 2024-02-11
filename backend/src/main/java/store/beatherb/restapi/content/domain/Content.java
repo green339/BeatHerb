@@ -77,9 +77,12 @@ public class Content {
 
     private String image;
 
+    @OneToMany(mappedBy = "content",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
+    List<Comment> commentList;
+
 
     @Builder
-    public Content(String title, Member writer, ContentType contentType,List<InOrder> outOrderList, List<InOrder> inOrderList, List<Creator> creatorList, String lyrics, String describe,List<ContentHashTag> contentHashTagList, int hit, LocalDateTime createdAt,String image) {
+    public Content(String title, Member writer, ContentType contentType,List<InOrder> outOrderList, List<InOrder> inOrderList, List<Creator> creatorList, String lyrics, String describe,List<ContentHashTag> contentHashTagList, int hit, LocalDateTime createdAt,String image,List<Comment> commentList) {
         this.title = title;
         this.writer = writer;
         this.contentType = contentType;
@@ -93,6 +96,7 @@ public class Content {
         this.contentHashTagList = contentHashTagList;
         this.image = image;
         this.outOrderList = outOrderList;
+        this.commentList = commentList;
 
         if(this.creatorList !=null){
             for (Creator c: this.creatorList){

@@ -31,26 +31,25 @@ public class CommentService {
     private final ContentRepository contentRepository;
     private final MemberRepository memberRepository;
 
-    public Comment registerComment(@LoginUser MemberDTO memberDto, RegistCommentRequest registCommentRequest){
+    public void registerComment(@LoginUser MemberDTO memberDto, RegistCommentRequest registCommentRequest) {
         //contentId에 해당하는 Content를 찾는다
         Content content = contentRepository.findById(registCommentRequest.getContentId())
                 .orElseThrow(() -> new ContentException(CONTENT_NOT_FOUND));
         //memberId에 해당하는 Member를 찾는다.
         Member member = memberRepository.findById(memberDto.getId())
-                .orElseThrow(()->new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
 
-        Comment comment =Comment.builder()
-                                .member(member)
-                                .content(content)
-                                .body(registCommentRequest.getComment().getBody())
-                                .build();
+        Comment comment = Comment.builder()
+                .member(member)
+                .content(content)
+                .body(registCommentRequest.getBody())
+                .build();
 
         commentRepository.save(comment);
 
-        return comment;
     }
 
-    public List<Comment> getComments(Long contentId){
+    public List<Comment> getComments(Long contentId) {
         Content content = contentRepository.findById(contentId)
                 .orElseThrow(() -> new ContentException(CONTENT_NOT_FOUND));
 
