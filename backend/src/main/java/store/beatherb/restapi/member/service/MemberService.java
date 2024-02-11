@@ -128,6 +128,7 @@ public class MemberService {
                     return new MemberException(MemberErrorCode.TOKEN_IS_NOT_VALID);
                 }
         );
+        verifyRepository.delete(verify);
 
         return authService.generateVerifyTokenResponse(member.getId());
     }
