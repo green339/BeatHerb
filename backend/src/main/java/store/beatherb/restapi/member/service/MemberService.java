@@ -25,6 +25,7 @@ import store.beatherb.restapi.member.domain.MemberRepository;
 import store.beatherb.restapi.member.dto.request.SignInRequest;
 import store.beatherb.restapi.member.dto.request.SignUpRequest;
 import store.beatherb.restapi.member.dto.response.MemberDetailResponse;
+import store.beatherb.restapi.member.dto.response.MemberSearchResponse;
 import store.beatherb.restapi.member.exception.MemberErrorCode;
 import store.beatherb.restapi.member.exception.MemberException;
 import store.beatherb.restapi.oauth.dto.Provider;
@@ -32,6 +33,8 @@ import store.beatherb.restapi.oauth.dto.request.OAuthRequest;
 import store.beatherb.restapi.oauth.service.OAuthService;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -184,5 +187,15 @@ public class MemberService {
 
         return MemberDetailResponse.toDto(member);
 
+    }
+
+    public List<MemberSearchResponse> findByNickName(String nickname) {
+        List<Member> memberList = memberRepository.findByNicknameContains(nickname);
+
+        List<MemberSearchResponse> memberSearchResponseList = new ArrayList<>();
+        for(Member member:memberList){
+            memberSearchResponseList.add(MemberSearchResponse.toDto(member));
+        }
+        return memberSearchResponseList;
     }
 }

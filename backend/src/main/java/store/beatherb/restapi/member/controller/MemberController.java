@@ -16,10 +16,13 @@ import store.beatherb.restapi.member.dto.request.EditRequest;
 import store.beatherb.restapi.member.dto.request.SignInRequest;
 import store.beatherb.restapi.member.dto.request.SignUpRequest;
 import store.beatherb.restapi.member.dto.response.MemberDetailResponse;
+import store.beatherb.restapi.member.dto.response.MemberSearchResponse;
 import store.beatherb.restapi.member.service.MemberInfoService;
 import store.beatherb.restapi.member.service.MemberService;
 import store.beatherb.restapi.oauth.dto.Provider;
 import store.beatherb.restapi.oauth.dto.request.OAuthRequest;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/member")
@@ -28,6 +31,15 @@ import store.beatherb.restapi.oauth.dto.request.OAuthRequest;
 public class MemberController {
     private final MemberService memberService;
     private final MemberInfoService memberInfoService;
+
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<List<MemberSearchResponse>>> searchMemberByNickName(@RequestParam String nickname){
+        log.info("call here = [{}]",nickname);
+        List<MemberSearchResponse> list =  memberService.findByNickName(nickname);
+        ApiResponse<List<MemberSearchResponse>> response = ApiResponse.successWithData(list);
+        return ResponseEntity.ok(response);
+    }
 
 
     @GetMapping("/{id}")
