@@ -15,6 +15,7 @@ import store.beatherb.restapi.member.dto.MemberDTO;
 import store.beatherb.restapi.member.dto.request.EditRequest;
 import store.beatherb.restapi.member.dto.request.SignInRequest;
 import store.beatherb.restapi.member.dto.request.SignUpRequest;
+import store.beatherb.restapi.member.dto.response.MemberDetailResponse;
 import store.beatherb.restapi.member.service.MemberInfoService;
 import store.beatherb.restapi.member.service.MemberService;
 import store.beatherb.restapi.oauth.dto.Provider;
@@ -28,6 +29,13 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberInfoService memberInfoService;
 
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<MemberDetailResponse>> detailMemberById(@PathVariable  Long id){
+        MemberDetailResponse memberDetailResponse = memberService.detailMemberById(id);
+        ApiResponse<MemberDetailResponse> response = ApiResponse.successWithData(memberDetailResponse);
+        return ResponseEntity.ok(response);
+    }
 
     @PutMapping
     public ApiResponse<?> edit(@LoginUser MemberDTO memberDTO, @ModelAttribute EditRequest editRequest){
