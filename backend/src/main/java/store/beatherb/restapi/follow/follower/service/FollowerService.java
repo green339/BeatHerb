@@ -57,12 +57,10 @@ public class FollowerService {
 
         List<FollowersResponse> listFollowers = new ArrayList<>();
         for(Follow follow : listFollow){
-            Member member = memberRepository.findById(follow.getFollowMember().getId())
-                    .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
+            Member member = follow.getFollowMember();
 
-            listFollowers.add(FollowersResponse.builder().name(member.getName()).image(member.getImage()).build());
+            listFollowers.add(FollowersResponse.builder().id(member.getId()).name(member.getName()).build());
         }
-
         return listFollowers;
     }
 
