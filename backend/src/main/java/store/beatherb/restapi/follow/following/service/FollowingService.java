@@ -27,16 +27,15 @@ public class FollowingService {
     private final FollowRepository followRepository;
     private final MemberRepository memberRepository;
 
-    public List<FollowingResponse> getFollowingList(MemberDTO memberDTO){
+    public List<FollowingResponse> getFollowingList(MemberDTO memberDTO) {
         List<Follow> list = followRepository.findByFollowMemberId(memberDTO.getId())
                 .orElseThrow(() -> new FollowingException(FollowingErrorCode.FOLLOWING_NOT_FOUND));
 
         List<FollowingResponse> followingList = new ArrayList<>();
-        for(Follow follow : list){
-            Member member = memberRepository.findById(follow.getMember().getId())
-                    .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
+        for (Follow follow : list) {
+            Member member = follow.getMember();
 
-            followingList.add(FollowingResponse.builder().name(member.getName()).build());
+            followingList.add(FollowingResponse.builder().id(member.getId()).name(member.getName()).build());
         }
 
         return followingList;
