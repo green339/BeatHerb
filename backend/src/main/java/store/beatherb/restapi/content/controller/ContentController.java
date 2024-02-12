@@ -111,6 +111,12 @@ public class ContentController {
 //
 //        return ResponseEntity.ok("good");
 //    }
+    @GetMapping("/popularity")
+    public ResponseEntity<ApiResponse<List<List<ContentResponse>>>> getPopularity(){
+        List<List<ContentResponse>> response = contentService.getPopularity();
+        ApiResponse<List<List<ContentResponse>>> apiResponse = ApiResponse.successWithData(response);
+        return ResponseEntity.status(apiResponse.getCode()).body(apiResponse);
+    }
 
     @GetMapping("/daily/vocal")
     public ResponseEntity<ApiResponse<List<ContentResponse>>> getPopularityDailyVocal(){
