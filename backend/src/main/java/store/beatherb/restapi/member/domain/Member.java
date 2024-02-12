@@ -49,7 +49,7 @@ public class Member {
 
     @Setter
     @Column(name="img")
-    private String img;
+    private String image;
 
     @Column(name="naver")
     private String naver;
@@ -68,7 +68,7 @@ public class Member {
     }
 
     @Builder
-    public Member(String email, String name, String nickname, Boolean advertise, boolean dmAgree, String naver, String kakao, String google, String img, Verify verify) {
+    public Member(String email, String name, String nickname, Boolean advertise, boolean dmAgree, String naver, String kakao, String google, Verify verify) {
         this.email = email;
         this.name = name;
         this.nickname = nickname;
@@ -77,7 +77,7 @@ public class Member {
         this.naver = naver;
         this.kakao = kakao;
         this.google = google;
-        this.img = img;
+        this.image = "noimage.jpeg";
         this.verify = verify;
     }
 }

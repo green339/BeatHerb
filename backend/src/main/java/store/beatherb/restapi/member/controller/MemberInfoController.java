@@ -18,18 +18,14 @@ import store.beatherb.restapi.oauth.dto.request.OAuthRequest;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/member/info")
+@RequestMapping("/member/info")
 @Slf4j
 @RequiredArgsConstructor
 public class MemberInfoController {
     private final MemberInfoService memberInfoService;
 
     // 회원 정보 수정
-    @PutMapping("/")
-    public ApiResponse<?> edit(@LoginUser MemberDTO memberDTO, @ModelAttribute EditRequest editRequest){
-        memberInfoService.edit(memberDTO, editRequest);
-        return ApiResponse.successWithoutData();
-    }
+
 
     // 회원 정보 수정 - 소셜 로그인 연동
     @PostMapping("/linkage/kakao")
