@@ -60,7 +60,7 @@ public class FollowerService {
             Member member = memberRepository.findById(follow.getFollowMember().getId())
                     .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
 
-            listFollowers.add(FollowersResponse.builder().name(member.getName()).build());
+            listFollowers.add(FollowersResponse.builder().name(member.getName()).image(member.getImage()).build());
         }
 
         return listFollowers;

@@ -8,4 +8,5 @@ import store.beatherb.restapi.member.domain.Member;
 @Builder
 public class FollowersResponse {
     private String name;
+    private String image;
 }

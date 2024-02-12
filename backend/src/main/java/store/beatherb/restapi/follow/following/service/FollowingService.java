@@ -36,7 +36,7 @@ public class FollowingService {
             Member member = memberRepository.findById(follow.getMember().getId())
                     .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
 
-            followingList.add(FollowingResponse.builder().name(member.getName()).build());
+            followingList.add(FollowingResponse.builder().name(member.getName()).image(member.getImage()).build());
         }
 
         return followingList;
