@@ -147,33 +147,68 @@ public class ContentDetailResponse {
         String title;
         String image;
         String type;
+        List<ContentDetailResponseOrderCreator> creatorList;
 
         @Builder
-        public ContentDetailResponseOrder(Long id, String title, String image, String type) {
+        public ContentDetailResponseOrder(Long id, String title, String type,List<ContentDetailResponseOrderCreator> creatorList) {
             this.id = id;
             this.title = title;
-            this.image = image;
+            this.image = "/api/content/image/" + this.id;
             this.type = type;
+            this.creatorList = creatorList;
         }
 
         public static ContentDetailResponseOrder toInOrderDto(InOrder inOrder) {
             Content content = inOrder.getRootContent();
+            List<ContentDetailResponseOrderCreator> creatorList = new ArrayList<>();
+            for(Creator creator : content.getCreatorList()){
+                creatorList.add(
+                        ContentDetailResponseOrderCreator.toDto(creator.getCreator())
+                );
+            }
             return ContentDetailResponseOrder.builder()
                     .id(content.getId())
                     .title(content.getTitle())
                     .type(content.getContentType().getType().name())
-                    .image("/api/content/image/" + content.getId())
+                    .creatorList(creatorList)
                     .build();
         }
 
         public static ContentDetailResponseOrder toOutOrderDto(InOrder inOrder) {
             Content content = inOrder.getChildContent();
+            List<ContentDetailResponseOrderCreator> creatorList = new ArrayList<>();
+            for(Creator creator : content.getCreatorList()){
+                creatorList.add(
+                        ContentDetailResponseOrderCreator.toDto(creator.getCreator())
+                );
+            }
             return ContentDetailResponseOrder.builder()
                     .id(content.getId())
                     .title(content.getTitle())
-                    .image("/api/content/image/" + content.getId())
                     .type(content.getContentType().getType().name())
+                    .creatorList(creatorList)
                     .build();
+        }
+
+        @Getter
+        public static class ContentDetailResponseOrderCreator{
+            Long id;
+            String nickname;
+
+            @Builder
+            public ContentDetailResponseOrderCreator(Long id, String nickname) {
+                this.id = id;
+                this.nickname = nickname;
+            }
+            public static ContentDetailResponseOrderCreator toDto(Member member){
+                Long id = member.getId();
+                String nickname = member.getNickname();
+                return ContentDetailResponseOrderCreator.builder()
+                        .id(id)
+                        .nickname(nickname)
+                        .build();
+            }
+
         }
     }
 
@@ -250,16 +285,15 @@ public class ContentDetailResponse {
         String image;
 
         @Builder
-        public ContentDetailResponseCommentMember(Long id, String nickname, String image) {
+        public ContentDetailResponseCommentMember(Long id, String nickname) {
             this.id = id;
             this.nickname = nickname;
-            this.image = image;
+            this.image = "/api/member/image/" +id;
         }
 
         public static ContentDetailResponseCommentMember toDto(Member member) {
             return ContentDetailResponseCommentMember.builder()
                     .id(member.getId())
-                    .image("/api/member/image/" + member.getId())
                     .nickname(member.getNickname())
                     .build();
         }

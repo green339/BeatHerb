@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface ContentRepository extends JpaRepository<Content, Long> {
     Optional<List<Content>> findAllByOrderByHitDesc();
+    List<Content> findByTitleContains(String title);
 }

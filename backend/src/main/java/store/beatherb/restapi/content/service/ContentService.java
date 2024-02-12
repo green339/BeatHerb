@@ -14,10 +14,7 @@ import store.beatherb.restapi.content.domain.*;
 import store.beatherb.restapi.content.domain.embed.ContentTypeEnum;
 import store.beatherb.restapi.content.dto.request.CreatorAgreeRequest;
 import store.beatherb.restapi.content.dto.request.ContentUploadRequest;
-import store.beatherb.restapi.content.dto.response.ContentDetailResponse;
-import store.beatherb.restapi.content.dto.response.ContentUploadRespone;
-import store.beatherb.restapi.content.dto.response.ContentResponse;
-import store.beatherb.restapi.content.dto.response.ContentListInterface;
+import store.beatherb.restapi.content.dto.response.*;
 import store.beatherb.restapi.content.exception.*;
 import store.beatherb.restapi.global.auth.exception.AuthErrorCode;
 import store.beatherb.restapi.global.auth.exception.AuthException;
@@ -463,6 +460,14 @@ public class ContentService {
         } catch (Exception e) {
             throw new ContentException(ContentErrorCode.CONTENT_IMAGE_NOT_VALID);
         }
+
+
+    }
+
+    public ContentTitleSearchResponse searchByTitle(String title) {
+        List<Content> contentList = contentRepository.findByTitleContains(title);
+
+        return ContentTitleSearchResponse.toDto(contentList);
 
 
     }

@@ -12,6 +12,7 @@ import store.beatherb.restapi.content.domain.Content;
 import store.beatherb.restapi.content.domain.embed.ContentTypeEnum;
 import store.beatherb.restapi.content.dto.request.CreatorAgreeRequest;
 import store.beatherb.restapi.content.dto.request.ContentUploadRequest;
+import store.beatherb.restapi.content.dto.response.ContentTitleSearchResponse;
 import store.beatherb.restapi.content.dto.response.ContentUploadRespone;
 import store.beatherb.restapi.content.dto.response.ContentResponse;
 import store.beatherb.restapi.content.service.ContentService;
@@ -28,6 +29,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ContentController {
     private final ContentService contentService;
+
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<ContentTitleSearchResponse>> searchByTitle(@RequestParam String title){
+        ContentTitleSearchResponse contentTitleSearchResponse = contentService.searchByTitle(title);
+        return ResponseEntity.ok(ApiResponse.successWithData(contentTitleSearchResponse));
+
+    }
 
     @GetMapping("/image/{id}")
     public ResponseEntity<?> getImage(@PathVariable Long id){
