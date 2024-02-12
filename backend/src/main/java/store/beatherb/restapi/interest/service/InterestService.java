@@ -32,12 +32,16 @@ public class InterestService {
 
 
     @Transactional
-    public RegistInterestResponse registInterest(@LoginUser MemberDTO memberDto, RegistInterestRequest registInterestRequest){
+    public void registInterest(@LoginUser MemberDTO memberDto, RegistInterestRequest registInterestRequest){
         HashTag hashTag = hashTagRepository.findById(registInterestRequest.getHashTagId())
                 .orElseThrow(() -> new HashTagException(HashTagErrorCode.HASHTAG_IS_NOT_EXIST));
 
         Member member = memberRepository.findById(memberDto.getId())
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
+        //이미 좋아요했으면 throw
+        interestRepository.findByMemberAndHashTag(member,hashTag).ifPresent(interest -> {
+            throw new InterestException(InterestErrorCode.ALREADY_INTEREST);
+        });
 
         Interest interest = Interest.builder()
                 .hashTag(hashTag)
@@ -45,8 +49,6 @@ public class InterestService {
                 .build();
 
         interestRepository.save(interest);
-
-        return RegistInterestResponse.toDTO(interest);
     }
 
     @Transactional

@@ -24,6 +24,7 @@ import store.beatherb.restapi.member.domain.MemberRepository;
 
 import store.beatherb.restapi.member.dto.request.SignInRequest;
 import store.beatherb.restapi.member.dto.request.SignUpRequest;
+import store.beatherb.restapi.member.dto.response.MemberDetailResponse;
 import store.beatherb.restapi.member.exception.MemberErrorCode;
 import store.beatherb.restapi.member.exception.MemberException;
 import store.beatherb.restapi.oauth.dto.Provider;
@@ -44,7 +45,7 @@ public class MemberService {
 
     private final String IMAGE_DIRECTORY;
 
-    public MemberService(MemberRepository memberRepository, OAuthService oauthService, MailService mailService, AuthService authService, VerifyRepository verifyRepository,@Value("${resource.directory.profile.image}") String IMAGE_DIRECTORY) {
+    public MemberService(MemberRepository memberRepository, OAuthService oauthService, MailService mailService, AuthService authService, VerifyRepository verifyRepository, @Value("${resource.directory.profile.image}") String IMAGE_DIRECTORY) {
         this.memberRepository = memberRepository;
         this.oauthService = oauthService;
         this.mailService = mailService;
@@ -89,12 +90,12 @@ public class MemberService {
     public void signIn(SignInRequest signInRequest) {
         Member member = memberRepository.findByEmail(signInRequest.getEmail())
                 .orElseThrow(
-                () -> {
-                    return new MemberException(MemberErrorCode.MEMBER_FIND_ERROR);
-                }
-        );
+                        () -> {
+                            return new MemberException(MemberErrorCode.MEMBER_FIND_ERROR);
+                        }
+                );
         Verify verify = member.getVerify().orElseGet( //token 이 없다면 생성 후 반환
-                ()->{
+                () -> {
                     Verify a = Verify.builder().member(member).build();
                     verifyRepository.save(a);
                     return a;
@@ -159,7 +160,7 @@ public class MemberService {
             fileName = "noimage.jpeg";
         }
         String filePath = IMAGE_DIRECTORY + "/" + fileName;
-        log.info("FILE NAME = [{}]",filePath);
+        log.info("FILE NAME = [{}]", filePath);
 
         File file = new File(filePath);
         if (!file.exists()) {
@@ -172,5 +173,16 @@ public class MemberService {
         } catch (Exception e) {
             throw new MemberException(MemberErrorCode.IMAGE_PROCESSING_ERROR);
         }
+    }
+
+    public MemberDetailResponse detailMemberById(Long id) {
+        Member member = memberRepository.findById(id).orElseThrow(
+                () -> {
+                    return new MemberException(MemberErrorCode.MEMBER_FIND_ERROR);
+                }
+        );
+
+        return MemberDetailResponse.toDto(member);
+
     }
 }

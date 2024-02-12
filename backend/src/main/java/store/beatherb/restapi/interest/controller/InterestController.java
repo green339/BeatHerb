@@ -23,9 +23,9 @@ public class InterestController {
     private final InterestService interestService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<RegistInterestResponse>> registInterest(@LoginUser MemberDTO memberDto, @Valid @RequestBody RegistInterestRequest registInterestRequest){
-        RegistInterestResponse response = interestService.registInterest(memberDto, registInterestRequest);
-        ApiResponse<RegistInterestResponse> apiResponse = ApiResponse.successWithData(response);
+    public ResponseEntity<ApiResponse<?>> registInterest(@LoginUser MemberDTO memberDto, @Valid @RequestBody RegistInterestRequest registInterestRequest){
+        interestService.registInterest(memberDto, registInterestRequest);
+        ApiResponse<?> apiResponse = ApiResponse.successWithoutData();
         return ResponseEntity.status(apiResponse.getCode()).body(apiResponse);
     }
 
