@@ -16,7 +16,8 @@ public enum MemberErrorCode implements ErrorCode {
     MEMBER_FIND_ERROR(400, "MEM_06", "해당 회원을 찾을수 없습니다."),
     NICKNAME_IS_NOT_EXIST(400,"MEM_07","설정된 닉네임이 없습니다."),
     PROFILE_IMAGE_NOT_VALID(404, "MEM_08", "프로필 이미지 형식이 올바르지 않습니다."),
-    TOKEN_IS_NOT_VALID(404,"MEM_09", "유효하지 않은 토큰입니다.");
+    TOKEN_IS_NOT_VALID(404,"MEM_09", "유효하지 않은 토큰입니다."),
+    IMAGE_PROCESSING_ERROR(500,"MEM_10", "이미지를 처리하는데 문제가 발생했습니다.");
     private final int statusCode;
     private final String errorCode;
     private final String message;

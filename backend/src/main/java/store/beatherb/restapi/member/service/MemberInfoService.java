@@ -26,6 +26,7 @@ import store.beatherb.restapi.oauth.service.OAuthService;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -38,7 +39,7 @@ public class MemberInfoService {
 
     public MemberInfoService(MemberRepository memberRepository,
                              OAuthService oauthService,
-                             @Value("${resource.directory.img}") String IMG_DIRECTORY) {
+                             @Value("${resource.directory.profile.image}") String IMG_DIRECTORY) {
         this.memberRepository = memberRepository;
         this.oauthService = oauthService;
         this.IMG_DIRECTORY = IMG_DIRECTORY;
@@ -74,13 +75,15 @@ public class MemberInfoService {
             String fileName = picture.getOriginalFilename();
             String format = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
 
-            String saveFileName = member.getId() + format;
+            String uuid = UUID.randomUUID().toString();
+
+            String saveFileName = uuid + format;
 
             File file = new File(IMG_DIRECTORY + File.separator + saveFileName);
 
             try {
                 FileCopyUtils.copy(picture.getBytes(), file);
-                member.setImg(saveFileName);
+                member.setImage(saveFileName);
             } catch (IOException e) {
                 throw new BeatHerbException(BeatHerbErrorCode.INTERNAL_SERVER_ERROR);
             }

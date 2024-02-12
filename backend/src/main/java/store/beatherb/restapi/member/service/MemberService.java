@@ -3,7 +3,13 @@ package store.beatherb.restapi.member.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import store.beatherb.restapi.content.domain.Content;
+import store.beatherb.restapi.content.exception.ContentErrorCode;
+import store.beatherb.restapi.content.exception.ContentException;
 import store.beatherb.restapi.global.auth.exception.AuthErrorCode;
 import store.beatherb.restapi.global.auth.exception.AuthException;
 import store.beatherb.restapi.member.domain.Verify;
@@ -24,10 +30,11 @@ import store.beatherb.restapi.oauth.dto.Provider;
 import store.beatherb.restapi.oauth.dto.request.OAuthRequest;
 import store.beatherb.restapi.oauth.service.OAuthService;
 
+import java.io.File;
+
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
     private final OAuthService oauthService;
@@ -35,7 +42,16 @@ public class MemberService {
     private final AuthService authService;
     private final VerifyRepository verifyRepository;
 
+    private final String IMAGE_DIRECTORY;
 
+    public MemberService(MemberRepository memberRepository, OAuthService oauthService, MailService mailService, AuthService authService, VerifyRepository verifyRepository,@Value("${resource.directory.profile.image}") String IMAGE_DIRECTORY) {
+        this.memberRepository = memberRepository;
+        this.oauthService = oauthService;
+        this.mailService = mailService;
+        this.authService = authService;
+        this.verifyRepository = verifyRepository;
+        this.IMAGE_DIRECTORY = IMAGE_DIRECTORY;
+    }
 
     @Transactional
     public void signUp(SignUpRequest signUpRequest) {
@@ -51,7 +67,6 @@ public class MemberService {
 
         Member member = Member.builder()
                 .email(signUpRequest.getEmail())
-                .img("blank.jpg")
                 .build();
         memberRepository.save(
                 member
@@ -133,4 +148,29 @@ public class MemberService {
         return authService.generateVerifyTokenResponse(member.getId());
     }
 
+    public Resource getImage(Long id) {
+        Member member = memberRepository.findById(id).orElseThrow(
+                () -> {
+                    return new MemberException(MemberErrorCode.MEMBER_FIND_ERROR);
+                }
+        );
+        String fileName = member.getImage();
+        if (fileName == null) {
+            fileName = "noimage.jpeg";
+        }
+        String filePath = IMAGE_DIRECTORY + "/" + fileName;
+        log.info("FILE NAME = [{}]",filePath);
+
+        File file = new File(filePath);
+        if (!file.exists()) {
+            file = new File(IMAGE_DIRECTORY + "/noimage.jpeg");
+        }
+
+        try {
+            Resource resource = new FileSystemResource(file);
+            return resource;
+        } catch (Exception e) {
+            throw new MemberException(MemberErrorCode.IMAGE_PROCESSING_ERROR);
+        }
+    }
 }
