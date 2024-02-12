@@ -343,29 +343,29 @@ public class ContentService {
         for(int idx = 0; idx < 9; idx++)
             list.add(new ArrayList<>());
 
-        //vocal daily
-        List<ContentResponse> vocalDailyTopFive = getPopularityDailyFive(ContentTypeEnum.VOCAL);
-        for(ContentResponse response : vocalDailyTopFive)
-            list.get(0).add(response);
-        //vocal weekly
-        List<ContentResponse> vocalWeeklyTopFive = getPopularityWeeklyFive(ContentTypeEnum.VOCAL);
-        for(ContentResponse response : vocalWeeklyTopFive)
-            list.get(1).add(response);
-        //vocal monthly
-        List<ContentResponse> vocalMonthlyTopFive = getPopularityMonthlyFive(ContentTypeEnum.VOCAL);
-        for(ContentResponse response : vocalMonthlyTopFive)
-            list.get(2).add(response);
         //melody daily
         List<ContentResponse> melodyDailyTopFive = getPopularityDailyFive(ContentTypeEnum.MELODY);
         for(ContentResponse response : melodyDailyTopFive)
-            list.get(3).add(response);
+            list.get(0).add(response);
         //melody weekly
         List<ContentResponse> melodyWeeklyTopFive = getPopularityWeeklyFive(ContentTypeEnum.MELODY);
         for(ContentResponse response : melodyWeeklyTopFive)
-            list.get(4).add(response);
+            list.get(1).add(response);
         //melody monthly
         List<ContentResponse> melodyMonthlyTopFive = getPopularityMonthlyFive(ContentTypeEnum.MELODY);
         for(ContentResponse response : melodyMonthlyTopFive)
+            list.get(2).add(response);
+        //vocal daily
+        List<ContentResponse> vocalDailyTopFive = getPopularityDailyFive(ContentTypeEnum.VOCAL);
+        for(ContentResponse response : vocalDailyTopFive)
+            list.get(3).add(response);
+        //vocal weekly
+        List<ContentResponse> vocalWeeklyTopFive = getPopularityWeeklyFive(ContentTypeEnum.VOCAL);
+        for(ContentResponse response : vocalWeeklyTopFive)
+            list.get(4).add(response);
+        //vocal monthly
+        List<ContentResponse> vocalMonthlyTopFive = getPopularityMonthlyFive(ContentTypeEnum.VOCAL);
+        for(ContentResponse response : vocalMonthlyTopFive)
             list.get(5).add(response);
         //soundtrack daily
         List<ContentResponse> soundtrackDailyTopFive = getPopularityDailyFive(ContentTypeEnum.SOUNDTRACK);
