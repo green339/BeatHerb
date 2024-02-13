@@ -26,9 +26,10 @@ public class ContentDetailResponse {
     OutOrder outOrder;
     String image;
     List<ContentDetailResponseComment> commentList;
+    boolean star;
 
 
-    public static ContentDetailResponse toDto(Content entity) {
+    public static ContentDetailResponse toDto(Content entity,boolean star) {
         String title = entity.getTitle();
         List<Creator> creatorList = entity.getCreatorList();
         List<ContentHashTag> contentHashTagList = entity.getContentHashTagList();
@@ -89,6 +90,7 @@ public class ContentDetailResponse {
                 .inOrderList(contentDetailResponseInorderList)
                 .outOrder(outOrder)
                 .commentList(commentList)
+                .star(star)
                 .build();
 
     }

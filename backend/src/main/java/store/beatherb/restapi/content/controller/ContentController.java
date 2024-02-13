@@ -65,9 +65,9 @@ public class ContentController {
     }
 
     @GetMapping("/{contentId}")
-    public ResponseEntity<?> showDetail(@PathVariable Long contentId){
+    public ResponseEntity<?> showDetail(@LoginUser(required = false) MemberDTO memberDTO, @PathVariable Long contentId){
 
-        return ResponseEntity.ok(ApiResponse.successWithData(contentService.showDetailByContentId(contentId)));
+        return ResponseEntity.ok(ApiResponse.successWithData(contentService.showDetailByContentId(memberDTO,contentId)));
     }
 
     @GetMapping("/play/{contentNumber}")
