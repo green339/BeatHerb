@@ -20,7 +20,7 @@ export default function WaveSurferPlayer({ url }) {
   return(
     <>
       <div ref={recordedRef}></div>
-      <button className="btn btn-primary" onClick={onPlayPause}>
+      <button onClick={onPlayPause}>
         {isPlaying ? 'Pause' : 'Play'}
       </button>
     </>

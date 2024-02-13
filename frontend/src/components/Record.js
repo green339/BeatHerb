@@ -1,18 +1,20 @@
-import { useRef, useState, useEffect, useCallback } from 'react';
-import WaveSurfer from 'wavesurfer.js';
-import RecordPlugin from 'wavesurfer.js/dist/plugins/record.js';
-import WaveSurferPlayer from './WaveSurferPlayer';
+import { useRef, useState, useEffect, useCallback } from "react";
+import WaveSurfer from "wavesurfer.js";
+import RecordPlugin from "wavesurfer.js/dist/plugins/record.js";
+import WaveSurferPlayer from "./WaveSurferPlayer";
 
 export default function AudioRecorder({ getRecordResult }) {
   const wavesurfer = useRef(null);
-  const [recordedUrl,setRecordedUrl] = useState(null);
+  const [recordedUrl, setRecordedUrl] = useState(null);
   const record = useRef(null);
   const [devices, setDevices] = useState([]);
-  const [selectedDevice, setSelectedDevice] = useState('');
+  const [selectedDevice, setSelectedDevice] = useState("");
   const micRef = useRef(null);
   const progressRef = useRef(null);
   const pauseButtonRef = useRef(null);
   const recordButtonRef = useRef(null);
+  const resultRef = useRef(null);
+  const [playStatus,setPlayStatus]=useState(false)
 
   useEffect(() => {
     createWaveSurfer();
@@ -21,9 +23,9 @@ export default function AudioRecorder({ getRecordResult }) {
 
   useEffect(() => {
     if (!record.current) return;
-    record.current.on('record-progress', updateProgress);
+    record.current.on("record-progress", updateProgress);
     return () => {
-      record.current.un('record-progress', updateProgress);
+      record.current.un("record-progress", updateProgress);
     };
   }, []);
 
@@ -32,20 +34,22 @@ export default function AudioRecorder({ getRecordResult }) {
     // 이미 만들어진 WaveSurfer가 있다면 제거
     if (wavesurfer.current) {
       wavesurfer.current.destroy();
-      wavesurfer.current = null
+      wavesurfer.current = null;
     }
-    
+
     // 새로운 WaveSurfer 생성
     const ws = WaveSurfer.create({
       container: micRef.current,
-      waveColor: 'rgb(200, 0, 200)',
-      progressColor: 'rgb(100, 0, 100)',
+      waveColor: "rgb(200, 0, 200)",
+      progressColor: "rgb(100, 0, 100)",
       minPxPerSec: 10,
     });
 
     // record plugin 설정
-    const rec = ws.registerPlugin(RecordPlugin.create({ scrollingWaveform: true, renderRecordedAudio: false }));
-    rec.on('record-end', renderRecordedAudio);
+    const rec = ws.registerPlugin(
+      RecordPlugin.create({ scrollingWaveform: true, renderRecordedAudio: false })
+    );
+    rec.on("record-end", renderRecordedAudio);
 
     // 새로만든 wavesurfer와 record 추가
     wavesurfer.current = ws;
@@ -57,7 +61,9 @@ export default function AudioRecorder({ getRecordResult }) {
     const formattedTime = [
       Math.floor((time % 3600000) / 60000), // minutes
       Math.floor((time % 60000) / 1000), // seconds
-    ].map((v) => (v < 10 ? '0' + v : v)).join(':');
+    ]
+      .map((v) => (v < 10 ? "0" + v : v))
+      .join(":");
 
     progressRef.current.textContent = formattedTime;
   };
@@ -65,6 +71,7 @@ export default function AudioRecorder({ getRecordResult }) {
   // 녹음된 오디오를 렌더링
   const renderRecordedAudio = (webmBlob) => {
     const recordedUrl = URL.createObjectURL(webmBlob);
+    console.log(webmBlob);
     setRecordedUrl(recordedUrl);
   };
 
@@ -72,60 +79,76 @@ export default function AudioRecorder({ getRecordResult }) {
   const handlePauseClick = () => {
     if (record.current.isPaused()) {
       record.current.resumeRecording();
-      pauseButtonRef.current.textContent = 'Pause';
+      pauseButtonRef.current.textContent = "Pause";
       return;
     }
 
     record.current.pauseRecording();
-    pauseButtonRef.current.textContent = 'Resume';
+    pauseButtonRef.current.textContent = "Resume";
   };
 
   // 녹음 버튼 클릭 시
   const handleRecordClick = () => {
-    if (record.current.isRecording() || record.current.isPaused()) {
+    if (record.current.isRecording() || record.current.isPaused()) { //녹음 종료
       record.current.stopRecording();
-      recordButtonRef.current.textContent = 'Record';
-      pauseButtonRef.current.style.display = 'none';
-      progressRef.current.style.display = 'none';
+      recordButtonRef.current.textContent = "Record";
+      pauseButtonRef.current.style.display = "none";
+      progressRef.current.style.display = "none";
+      resultRef.current.style.display = "inline"
+      pauseButtonRef.current.textContent = "Pause";
+      micRef.current.style.display="none"
       return;
     }
 
     recordButtonRef.current.disabled = true;
 
-    record.current.startRecording({ deviceId: selectedDevice }).then(() => {
-      recordButtonRef.current.textContent = 'Stop';
+    record.current.startRecording({ deviceId: selectedDevice }).then(() => { //녹음시작
+      recordButtonRef.current.textContent = "Stop";
       recordButtonRef.current.disabled = false;
-      pauseButtonRef.current.style.display = 'inline';
-      progressRef.current.style.display = 'inline';
+      pauseButtonRef.current.style.display = "inline";
+      progressRef.current.style.display = "inline";
+      resultRef.current.style.display = "none"
+      micRef.current.style.display="inline"
     });
   };
   const uploadRecording = () => {
-    getRecordResult(recordedUrl)
-    console.log("upload")
-  }
+    getRecordResult(recordedUrl);
+    console.log("upload");
+  };
 
   return (
-    <div>
+    <div className="p-5">
       <div id="mic" ref={micRef}></div>
-      { recordedUrl && <WaveSurferPlayer url={recordedUrl} /> }
-      <div id="progress" ref={progressRef}></div>
-      <div className="flex place-content-center gap-4">
-        <button id="pause" className="btn btn-primary hidden" ref={pauseButtonRef} onClick={handlePauseClick}>Pause</button>
-        <button id="record" className="btn btn-primary" ref={recordButtonRef} onClick={handleRecordClick}>Record</button>
-        <select 
-          id="mic-select"
-          className="select select-ghost w-full max-w-xs text-base-content"
-          value={selectedDevice}
-          onChange={(e) => setSelectedDevice(e.target.value)}
-        >
-          {devices.map((device) => (
-            <option key={device.deviceId} value={device.deviceId}>
-              {device.label || device.deviceId}
-            </option>
-          ))}
-        </select>
+      <div>
+        <div ref={resultRef} style={{ display: "none" }}>
+
+        {recordedUrl && <WaveSurferPlayer url={recordedUrl} />}
+        <button onClick={uploadRecording}>올리기</button>
+        </div>
       </div>
-      <button className="btn btn-primary" onClick={uploadRecording}>Go!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</button>
+
+      <div>
+        <div id="progress" ref={progressRef}></div>
+        <div className="flex place-content-center gap-4">
+         
+          <button id="record" ref={recordButtonRef} onClick={handleRecordClick}>
+            Record
+          </button>
+          <button id="pause" ref={pauseButtonRef} onClick={handlePauseClick} style={{ display:"none" }}>
+                Pause </button>
+          <select
+            id="mic-select"
+            className="select select-ghost w-full max-w-xs text-base-content"
+            value={selectedDevice}
+            onChange={(e) => setSelectedDevice(e.target.value)}>
+            {devices.map((device) => (
+              <option key={device.deviceId} value={device.deviceId}>
+                {device.label || device.deviceId}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
     </div>
   );
 }
