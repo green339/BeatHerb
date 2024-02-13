@@ -33,10 +33,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 
-        LoginUser annotation = parameter.getParameterAnnotation(LoginUser.class);
-        if (annotation != null && !annotation.required()) {
-            return null;
-        }
+
 
         HttpServletRequest httpServletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
 
@@ -57,6 +54,11 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
 
                 }
             }
+        }
+
+        LoginUser annotation = parameter.getParameterAnnotation(LoginUser.class);
+        if (annotation != null && !annotation.required()) {
+            return null;
         }
 
         throw new JWTException(JWTErrorCode.INVALID_TOKEN);

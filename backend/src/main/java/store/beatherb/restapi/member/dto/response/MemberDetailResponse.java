@@ -34,9 +34,11 @@ public class MemberDetailResponse {
     List<FollowerDTO> followerList;
     List<FollowingDTO> followingList;
     String image;
+    boolean follow;
 
     @Builder
-    private MemberDetailResponse(Long id, String nickname, LiveDTO live, List<LiveDTO> guestList, List<ContentDTO> vocalList, List<ContentDTO> melodyList, List<ContentDTO> soundTrackList, List<HashTagDTO> hashTagList, List<FollowerDTO> followerList, List<FollowingDTO> followingList) {
+    private MemberDetailResponse(Long id, String nickname, LiveDTO live, List<LiveDTO> guestList, List<ContentDTO> vocalList, List<ContentDTO> melodyList, List<ContentDTO> soundTrackList, List<HashTagDTO> hashTagList, List<FollowerDTO> followerList, List<FollowingDTO> followingList,
+                                 boolean follow) {
         this.id = id;
         this.nickname = nickname;
         this.live = live;
@@ -44,12 +46,13 @@ public class MemberDetailResponse {
         this.vocalList = vocalList;
         this.melodyList = melodyList;
         this.soundTrackList = soundTrackList;
-        this.image = "/api/member/profile/"+id;
+        this.image = "/api/member/image/"+id;
         this.hashTagList = hashTagList;
         this.followerList = followerList;
         this.followingList = followingList;
+        this.follow = follow;
     }
-    public static MemberDetailResponse toDto(Member entity){
+    public static MemberDetailResponse toDto(Member entity,boolean follow){
         Long id = entity.getId();
         String nickname = entity.getNickname();
         Live live = entity.getLive();
@@ -114,6 +117,7 @@ public class MemberDetailResponse {
                 .soundTrackList(soundTrackList)
                 .followerList(followerDTOList)
                 .followingList(followingDTOlist)
+                .follow(follow)
                 .build();
 
     }

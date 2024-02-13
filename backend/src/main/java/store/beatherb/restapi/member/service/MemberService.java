@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import store.beatherb.restapi.content.domain.Content;
 import store.beatherb.restapi.content.exception.ContentErrorCode;
 import store.beatherb.restapi.content.exception.ContentException;
+import store.beatherb.restapi.follow.domain.FollowRepository;
 import store.beatherb.restapi.global.auth.exception.AuthErrorCode;
 import store.beatherb.restapi.global.auth.exception.AuthException;
 import store.beatherb.restapi.member.domain.Verify;
@@ -22,6 +23,7 @@ import store.beatherb.restapi.global.validate.Email;
 import store.beatherb.restapi.member.domain.Member;
 import store.beatherb.restapi.member.domain.MemberRepository;
 
+import store.beatherb.restapi.member.dto.MemberDTO;
 import store.beatherb.restapi.member.dto.request.SignInRequest;
 import store.beatherb.restapi.member.dto.request.SignUpRequest;
 import store.beatherb.restapi.member.dto.response.MemberDetailResponse;
@@ -45,13 +47,22 @@ public class MemberService {
 
     private final String IMAGE_DIRECTORY;
 
-    public MemberService(MemberRepository memberRepository, OAuthService oauthService, MailService mailService, AuthService authService, VerifyRepository verifyRepository, @Value("${resource.directory.profile.image}") String IMAGE_DIRECTORY) {
+    private final FollowRepository followRepository;
+
+    public MemberService(MemberRepository memberRepository,
+                         OAuthService oauthService,
+                         MailService mailService,
+                         AuthService authService,
+                         VerifyRepository verifyRepository,
+                         @Value("${resource.directory.profile.image}") String IMAGE_DIRECTORY,
+                         FollowRepository followRepository) {
         this.memberRepository = memberRepository;
         this.oauthService = oauthService;
         this.mailService = mailService;
         this.authService = authService;
         this.verifyRepository = verifyRepository;
         this.IMAGE_DIRECTORY = IMAGE_DIRECTORY;
+        this.followRepository = followRepository;
     }
 
     @Transactional
@@ -175,14 +186,20 @@ public class MemberService {
         }
     }
 
-    public MemberDetailResponse detailMemberById(Long id) {
+    @Transactional
+    public MemberDetailResponse detailMemberById(MemberDTO memberDTO,Long id) {
+        log.info("Member DTO = [{}] ", memberDTO);
         Member member = memberRepository.findById(id).orElseThrow(
                 () -> {
                     return new MemberException(MemberErrorCode.MEMBER_FIND_ERROR);
                 }
         );
 
-        return MemberDetailResponse.toDto(member);
+        boolean follow = false;
+        if(memberDTO == null){
+            follow = followRepository.findByMemberIdAndFollowMemberId(member.getId(),id).isPresent();
+        }
+        return MemberDetailResponse.toDto(member,follow);
 
     }
 }
