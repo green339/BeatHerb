@@ -84,6 +84,7 @@ public class AuthServiceImpl implements AuthService {
                 .refreshToken(refreshToken.getToken())
                 .refreshTokenExpiresIn(refreshToken.getExpired())
                 .nickname(nickname)
+                .id(id)
                 .build();
     }
 }
