@@ -11,7 +11,7 @@ import AuthRedirection from './page/AuthRedirection.js';
 import Board from './page/Board.js';
 import Test from './page/Test.js';
 import MyPage from './page/MyPage.js';
-import WorkPlace from './page/WorkPlace.js';
+import WorkPlace from './page/WorkPlaceV2.js';
 import ContentDetail from './page/ContentDetail.js';
 import UploadMusic from './page/UploadMusic.js';
 import TestModal from './page/TestModal.js';

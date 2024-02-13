@@ -5,8 +5,7 @@ import Drum from "../components/Drum";
 import MusicWave from "../components/MusicWave";
 import { useState, useRef } from "react"
 import { useLocation } from "react-router-dom";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import NavBar from "../components/NavBar";
 
 export default function WorkPlace() {
   const location = useLocation();
@@ -50,8 +49,10 @@ export default function WorkPlace() {
 
   return (
     <div>
-      <p className="text-primary text-3xl font-semibold">작업실 화면이에요~~~~~~~~</p>
-      <div className="h-screen">
+      <div className="fixed top-0 w-full z-20">
+        <NavBar />
+      </div>
+      <div className="h-screen mt-[64px]">
         <div className="flex w-full h-4/6">
           <MusicWave ref={(el) => (childMusicWaveRef.current = el)}></MusicWave>
         </div>
