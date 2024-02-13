@@ -36,7 +36,7 @@ public class Live {
     @Column(name="describe")
     private String describe;
 
-    @OneToMany(mappedBy = "live", cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "live", cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
     private List<Guest> guestList;
 
     @OneToMany(mappedBy = "live", cascade =  CascadeType.ALL,orphanRemoval = true)

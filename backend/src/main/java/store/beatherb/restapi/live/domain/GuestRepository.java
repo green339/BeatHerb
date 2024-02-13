@@ -6,5 +6,5 @@ import store.beatherb.restapi.member.domain.Member;
 import java.util.Optional;
 
 public interface GuestRepository extends JpaRepository<Guest, Long> {
-    Optional<Guest> findByMember(Member member);
+    Optional<Guest> findByMemberAndLive(Member member,Live live);
 }

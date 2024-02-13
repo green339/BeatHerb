@@ -14,6 +14,7 @@ import org.springframework.web.util.UriBuilder;
 import store.beatherb.restapi.live.domain.dto.response.LiveJoinResponse;
 import store.beatherb.restapi.live.exception.LiveErrorCode;
 import store.beatherb.restapi.live.exception.LiveException;
+import store.beatherb.restapi.openvidu.dto.response.OpenViduJoinSessionResponse;
 import store.beatherb.restapi.openvidu.property.OpenviduSessionProperties;
 
 @Service
@@ -43,10 +44,10 @@ public class OpenviduService {
         }
 
     }
-    public LiveJoinResponse joinSessionByIdAndRole(Long id, String role){
+    public OpenViduJoinSessionResponse joinSessionByIdAndRole(Long id, String role){
         try {
 
-        return openviduWebClient
+            return openviduWebClient
                 .method(HttpMethod.POST)
                 .uri(builder -> builder
                         .path(openviduSessionProperties.getOpenviduSessionPath() + "/" + id + "/connection")
@@ -54,8 +55,9 @@ public class OpenviduService {
                 .bodyValue(JoinSessionRequest.builder().role(role).build())
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(LiveJoinResponse.class)
+                .bodyToMono(OpenViduJoinSessionResponse.class)
                 .block();
+
         }catch (WebClientException e){
             throw new LiveException(LiveErrorCode.LIVE_IS_NOT_EXIST);
         }
