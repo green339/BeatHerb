@@ -43,8 +43,8 @@ public class MemberController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<MemberDetailResponse>> detailMemberById(@PathVariable  Long id){
-        MemberDetailResponse memberDetailResponse = memberService.detailMemberById(id);
+    public ResponseEntity<ApiResponse<MemberDetailResponse>> detailMemberById(@LoginUser(required = false) MemberDTO memberDTO,@PathVariable  Long id){
+        MemberDetailResponse memberDetailResponse = memberService.detailMemberById(memberDTO,id);
         ApiResponse<MemberDetailResponse> response = ApiResponse.successWithData(memberDetailResponse);
         return ResponseEntity.ok(response);
     }

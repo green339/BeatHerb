@@ -8,6 +8,7 @@ import store.beatherb.restapi.content.domain.Creator;
 import store.beatherb.restapi.content.domain.HashTag;
 import store.beatherb.restapi.content.domain.embed.ContentTypeEnum;
 import store.beatherb.restapi.content.dto.HashTagDTO;
+import store.beatherb.restapi.follow.domain.Follow;
 import store.beatherb.restapi.interest.domain.Interest;
 import store.beatherb.restapi.live.domain.Guest;
 import store.beatherb.restapi.live.domain.Live;
@@ -30,10 +31,14 @@ public class MemberDetailResponse {
     List<ContentDTO> melodyList;
     List<ContentDTO> soundTrackList;
     List<HashTagDTO> hashTagList;
+    List<FollowerDTO> followerList;
+    List<FollowingDTO> followingList;
     String image;
+    boolean follow;
 
     @Builder
-    private MemberDetailResponse(Long id, String nickname, LiveDTO live, List<LiveDTO> guestList, List<ContentDTO> vocalList, List<ContentDTO> melodyList, List<ContentDTO> soundTrackList, List<HashTagDTO> hashTagList) {
+    private MemberDetailResponse(Long id, String nickname, LiveDTO live, List<LiveDTO> guestList, List<ContentDTO> vocalList, List<ContentDTO> melodyList, List<ContentDTO> soundTrackList, List<HashTagDTO> hashTagList, List<FollowerDTO> followerList, List<FollowingDTO> followingList,
+                                 boolean follow) {
         this.id = id;
         this.nickname = nickname;
         this.live = live;
@@ -41,10 +46,13 @@ public class MemberDetailResponse {
         this.vocalList = vocalList;
         this.melodyList = melodyList;
         this.soundTrackList = soundTrackList;
-        this.image = "/api/member/profile/"+id;
+        this.image = "/api/member/image/"+id;
         this.hashTagList = hashTagList;
+        this.followerList = followerList;
+        this.followingList = followingList;
+        this.follow = follow;
     }
-    public static MemberDetailResponse toDto(Member entity){
+    public static MemberDetailResponse toDto(Member entity,boolean follow){
         Long id = entity.getId();
         String nickname = entity.getNickname();
         Live live = entity.getLive();
@@ -53,6 +61,9 @@ public class MemberDetailResponse {
 
 
         List<Interest> interestList = entity.getInterestList();
+
+        List<Follow> followerList = entity.getFollowerList();
+        List<Follow> followingList = entity.getFollowingList();
 
         List<ContentDTO> vocalList = new ArrayList<>();
         List<ContentDTO> melodyList = new ArrayList<>();
@@ -79,6 +90,16 @@ public class MemberDetailResponse {
             guestList.add(LiveDTO.toDto(l));
         }
 
+        List<FollowerDTO> followerDTOList = new ArrayList<>();
+        for(Follow follower : followerList){
+            followerDTOList.add(FollowerDTO.toDto(follower));
+        }
+
+        List<FollowingDTO> followingDTOlist = new ArrayList<>();
+        for(Follow following : followingList){
+            followingDTOlist.add(FollowingDTO.toDto(following));
+        }
+
         List<HashTagDTO> hashTagList = new ArrayList<>();
         for(Interest interest : interestList){
             HashTag hashTag = interest.getHashTag();
@@ -94,6 +115,9 @@ public class MemberDetailResponse {
                 .vocalList(vocalList)
                 .melodyList(melodyList)
                 .soundTrackList(soundTrackList)
+                .followerList(followerDTOList)
+                .followingList(followingDTOlist)
+                .follow(follow)
                 .build();
 
     }
@@ -191,7 +215,59 @@ public class MemberDetailResponse {
         }
     }
 
+    @Getter
+    private static class FollowerDTO {
+        Long id;
+        String name;
+        String image;
 
+        @Builder
+        private FollowerDTO(Long id, String name) {
+            this.id = id;
+            this.name = name;
+            this.image = "/api/member/image/"+id;
+        }
 
+        public static FollowerDTO toDto(Follow entity){
+            if(entity == null){
+                return null;
+            }
 
+            Long id = entity.getFollowMember().getId();
+            String name = entity.getFollowMember().getName();
+
+            return FollowerDTO.builder()
+                    .id(id)
+                    .name(name)
+                    .build();
+        }
+    }
+
+    @Getter
+    private static class FollowingDTO {
+        Long id;
+        String name;
+        String image;
+
+        @Builder
+        private FollowingDTO(Long id, String name) {
+            this.id = id;
+            this.name = name;
+            this.image = "/api/member/image/"+id;
+        }
+
+        public static FollowingDTO toDto(Follow entity){
+            if(entity == null){
+                return null;
+            }
+
+            Long id = entity.getMember().getId();
+            String name = entity.getMember().getName();
+
+            return FollowingDTO.builder()
+                    .id(id)
+                    .name(name)
+                    .build();
+        }
+    }
 }

@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import store.beatherb.restapi.content.domain.Creator;
+import store.beatherb.restapi.follow.domain.Follow;
 import store.beatherb.restapi.interest.domain.Interest;
 import store.beatherb.restapi.live.domain.Guest;
 import store.beatherb.restapi.live.domain.Live;
@@ -77,6 +78,11 @@ public class Member {
     private List<Guest> liveGuestList;
     @OneToOne(mappedBy = "member" ,fetch = FetchType.LAZY,orphanRemoval = true)
     private Live live;
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Follow> followerList;
+    @OneToMany(mappedBy = "followMember", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Follow> followingList;
 
     public Optional<Verify> getVerify() {
         return Optional.ofNullable(verify);
