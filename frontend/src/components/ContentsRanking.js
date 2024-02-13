@@ -2,25 +2,37 @@
 
 import { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
+import defaultContent from "../assets/default_content.jpeg"
 
-export default function ContentsRanking({ title, link, data }) {
+export default function ContentsRanking({ title, link, data, contentList = [] }) {
   const navigate = useNavigate();
   
-  const itemList = [1, 2, 3, 4, 5].map((value) => {
+  const itemList = contentList.map((content, index) => {
     return (
-      <Fragment key={value}>
+      <Fragment key={"Rank" + (index + 1)}>
         <div className="divider my-1" />
-        <div key={value} className="flex place-content-between items-center">
+        <div className="flex place-content-between items-center h-14">
           <div className="flex gap-2 items-center">
-            <p className="text-base-content m-0">{value}. </p>
-            <img className="w-12 rounded-md" src="https://img.freepik.com/free-vector/background-colorful-musical-notes_23-2147633120.jpg?w=740&t=st=1705448093~exp=1705448693~hmac=00f2208917eeabe7c5309cb7efc90defc713277bede12138776ae696c5456d04" alt=""/>
-            <p className="text-base-content m-0">title</p>
+            <p className="text-base-content m-0">{index + 1}. </p>
+            <img className="w-12 rounded-md" src={content.image ? content.image : defaultContent} alt=""/>
+            <p className="text-base-content m-0">{content.title}</p>
           </div>
           <p className="text-base-content m-0">Artist</p>
         </div>
       </Fragment>
     )
   })
+
+  while(itemList.length < 5) {
+    itemList.push(
+      <Fragment key={"Rank" + (itemList.length + 1)}>
+        <div className="divider my-1" />
+        <div className="flex place-content-between items-center h-14">
+          <div className="flex gap-2 items-center" />
+        </div>
+      </Fragment>
+    )
+  }
 
   const handleOnClick = () => {
     navigate(link, { state: { ...data } });

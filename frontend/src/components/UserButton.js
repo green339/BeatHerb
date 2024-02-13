@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
 import { useRef } from "react";
-import Dm from "./Dm";
-import { useAuthStore } from "../store/AuthStore";
-import { removeRefreshToken } from "../store/cookie";
+import Dm from "./Dm.js";
+import { useAuthStore } from "../store/AuthStore.js";
+import { removeRefreshToken } from "../store/cookie.js";
+import Notify from "./Notify.js";
 
 export default function UserButton() {
-  const { accessToken } = useAuthStore();
+  const { accessToken, userId } = useAuthStore();
   const dmModalRef = useRef();
+  const notifyModalRef = useRef();
   const { removeAccessToken } = useAuthStore();
 
   const logout = () => {
@@ -18,7 +20,7 @@ export default function UserButton() {
     return (
       <>
         <div className="flex gap-1 items-center">
-          <p className="text-base-content m-0">BeatHerb님 환영 안 합니다</p>
+          <p className="text-base-content m-0">BeatHerb님 환영합니다.</p>
           <details className="dropdown dropdown-bottom dropdown-end">
             <summary className="btn btn-circle btn-ghost">
               <div className="avatar">
@@ -29,15 +31,24 @@ export default function UserButton() {
             </summary>
             
             <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-200 rounded-box w-52">
+              <li><button className="text-base-content" onClick={() => notifyModalRef.current?.showModal()}>알림</button></li>
               <li><button className="text-base-content" onClick={() => dmModalRef.current?.showModal()}>메시지</button></li>
-              <li><Link to="/mypage" className="text-base-content hover:text-base-content">마이페이지</Link></li>
-              <li><buttton className="text-base-content" onClick={logout}>로그아웃</buttton></li>
+              <li><Link to={`/mypage/${userId}`} className="text-base-content hover:text-base-content">마이페이지</Link></li>
+              <li><button className="text-base-content" onClick={logout}>로그아웃</button></li>
             </ul>
           </details>
         </div>
         <dialog className="modal" ref={dmModalRef}>
           <div className="modal-box w-11/12 max-w-5xl bg-base-200">
             <Dm />
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button>close</button>
+          </form>
+        </dialog>
+        <dialog className="modal" ref={notifyModalRef}>
+          <div className="modal-box w-11/12 max-w-5xl bg-base-200">
+            <Notify />
           </div>
           <form method="dialog" className="modal-backdrop">
             <button>close</button>

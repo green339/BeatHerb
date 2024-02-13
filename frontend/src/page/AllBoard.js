@@ -6,15 +6,35 @@ import LiveItem from "../components/LiveItem";
 import ContentsRanking from "../components/ContentsRanking";
 import SearchBar from "../components/SearchBar";
 import { useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
+import axios from "axios";
 
 export default function AllBoard() {
   const [searchParams] = useSearchParams();
-  const query = searchParams.get('query'); 
+  const queryParam = searchParams.get('query'); 
+  const hashtagListParam = searchParams.get('hashtagList');
+  const query = queryParam ? queryParam : ""; 
+  const hashtagListString = hashtagListParam ? hashtagListParam : "";
+
+  useEffect(() => {
+    const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
+
+    axios({
+      method: "get",
+      url: `${serverUrl}/content`
+    })
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.log(error.message);
+    })
+  }, [])
   
   return (
     <>
       <div className="my-16 w-full min-w-112 px-16">
-        <SearchBar initQuery={query} />
+        <SearchBar initQuery={query} initHashtagListString={hashtagListString} />
       </div>
 
       {query && <p className="text-primary text-3xl font-semibold">검색어는 {query}에요~~~~~~~~~~~~~~~</p>}

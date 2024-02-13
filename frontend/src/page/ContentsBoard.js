@@ -1,8 +1,9 @@
 // 컨텐츠 게시판 페이지 항목
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import ContentsItem from "../components/ContentsItem";
 import { useLocation } from "react-router-dom";
+import axios from "axios";
 
 // 탭 리스트
 const tabs = [
@@ -13,15 +14,36 @@ const tabs = [
 
 export default function ContentsBoard() {
   const location = useLocation();
-
   const [category, setCategory] = useState(location.state?.category || "melody");
   const [sortOption, setSortOption] = useState(location.state?.sortOption || "recent");
+  const [contentList, setContentList] = useState([]);
+
+  useEffect(() => {
+    const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
+
+    axios({
+      method: "get",
+      url: `${serverUrl}/content`
+    })
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.log(error.message);
+    })
+
+    // 임시
+    //백엔드랑 연결 후 삭제 예정
+    const contentsNum = (sortOption === "recent" ? 100 : 5);
+    const newContentList = Array(contentsNum).fill().map((v,i)=>i+1)
+    setContentList(newContentList);
+
+    return () => setContentList([]);
+  }, [category, sortOption])
 
   const handleSortOptionChange = (e) => {
     setSortOption(e.target.value);
   }
-
-  const contentsNum = (sortOption === "recent" ? 100 : 5);
 
   return (
     <div className="w-full h-full">
@@ -40,7 +62,7 @@ export default function ContentsBoard() {
         }
       </div>
 
-      <div className="w-full flex justify-end mb-8">
+      <div className="w-full flex justify-end mb-8 pr-8">
         <select 
           value={sortOption} 
           className="select select-ghost w-full max-w-xs text-base-content justify-self-end"
@@ -53,10 +75,15 @@ export default function ContentsBoard() {
 
       <div className="grid grid-cols-4 gap-4 items-center">
         {
-          Array(contentsNum).fill().map((v,i)=>i+1).map((value, index) => {
+          contentList.map((value, index) => {
+            const demoContent = {
+              albumArt: "https://img.freepik.com/free-vector/background-colorful-musical-notes_23-2147633120.jpg?w=740&t=st=1705448093~exp=1705448693~hmac=00f2208917eeabe7c5309cb7efc90defc713277bede12138776ae696c5456d04",
+              title: category,
+              artist: "Artist"
+            }
             return (
               <div key={value} className="flex justify-center">
-                <ContentsItem contentsId={value} size={150} title={category}/>
+                <ContentsItem contentsId={value} size={150} albumArt={demoContent.albumArt} title={demoContent.title} artist={demoContent.artist}/>
               </div>
             )
           })

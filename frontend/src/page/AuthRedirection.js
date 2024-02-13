@@ -3,13 +3,17 @@
 
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { setRefreshToken } from "../store/cookie";
+import { useAuthStore } from "../store/AuthStore";
 
 import axios from "axios";
 
 export default function AuthRedirection() {
   const navigate = useNavigate();
   const { provider } = useParams();
-  const serverURL = process.env.REACT_APP_SERVER_URL;
+  const { setAccessToken, setName } = useAuthStore();
+  const serverURL = process.env.REACT_APP_TEST_SERVER_BASE_URL + "/member";
+
   // 비동기 작업을 동기로 바꿔주기 위해, async await 적용 생각해 볼 수 있음
   useEffect(() => {
     // 인가 코드
@@ -19,17 +23,20 @@ export default function AuthRedirection() {
       // 서버로 요청을 보냄
       axios({
         method: 'post',
-        url: "/member/signin",
+        url: `${serverURL}/signin/kakao`,
         data: {
           code : code
         }
       })
       .then((response) => {
         console.log(response.data);
-        
+        const { accessToken, refreshToken, refreshTokenExpiresIn, name } = response.data.data;
+        setAccessToken(accessToken);
+        setRefreshToken(refreshToken, refreshTokenExpiresIn);
+        setName(name);
       })
       .catch((error) => {
-        console.log(error.data);
+        console.log(error.message);
       })
       .finally(() => {
         navigate("/");
@@ -44,7 +51,7 @@ export default function AuthRedirection() {
       axios({
         method: 'post',
         
-        url: `${serverURL}`,
+        url: `${serverURL}/signin/naver`,
         data: {
           code : code,
           state : state
@@ -52,9 +59,13 @@ export default function AuthRedirection() {
       })
       .then((response) => {
         console.log(response.data);
+        const { accessToken, refreshToken, refreshTokenExpiresIn, name } = response.data.data;
+        setAccessToken(accessToken);
+        setRefreshToken(refreshToken, refreshTokenExpiresIn);
+        setName(name);
       })
       .catch((error) => {
-        console.log(error.data);
+        console.log(error.message);
       })
       .finally(() => {
         navigate("/");
@@ -65,17 +76,20 @@ export default function AuthRedirection() {
       // 서버로 요청을 보냄
       axios({
         method: 'post',
-        
-        url: `${serverURL}`,
+        url: `${serverURL}/signin/google`,
         data: {
           code : code
         }
       })
       .then((response) => {
         console.log(response.data);
+        const { accessToken, refreshToken, refreshTokenExpiresIn, name } = response.data.data;
+        setAccessToken(accessToken);
+        setRefreshToken(refreshToken, refreshTokenExpiresIn);
+        setName(name);
       })
       .catch((error) => {
-        console.log(error.data);
+        console.log(error.message);
       })
       .finally(() => {
         navigate("/");
@@ -84,10 +98,11 @@ export default function AuthRedirection() {
     } else if (provider === "email") {
       const encoded_email = new URL(window.location.href).searchParams.get("encoded");
       const email = atob(encoded_email);
+      console.log(email)
       // 서버로 요청을 보냄
       axios({
         method: 'post',
-        url: "https://node5.wookoo.shop/api/api/member/signin",
+        url: `${serverURL}/signup`,
         data: {
           email : email
         },
@@ -97,9 +112,27 @@ export default function AuthRedirection() {
         navigate("/auth_email")
       })
       .catch((error) => {
-        alert("오류가 발생했습니다.");
         console.log(error);
-        navigate("/");
+        if(error.response.data.message[0] === "이미 가입한 이메일입니다.") {
+          axios({
+            method: 'post',
+            url: `${serverURL}/signin`,
+            data: {
+              email : email
+            },
+          })
+          .then((response) => {
+            console.log(response.data);
+            navigate("/auth_email");
+          })
+          .catch((error) => {
+            console.log(error.message);
+            navigate("/");
+          })
+        } else {
+          alert("로그인에 실패했습니다.")
+          navigate("/");
+        }
       })
     } else {
       alert("유효하지 않은 접근입니다.");
