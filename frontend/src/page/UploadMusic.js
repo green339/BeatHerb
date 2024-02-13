@@ -8,12 +8,12 @@ import { FFmpeg } from "@ffmpeg/ffmpeg";
 // 향후 해시태그 및 파일 첨부, 버튼 누르면 다른 페이지로 이동 구현 필요
 
 export default function UploadMusic({ music, rootContentIdList }) {
-  const [image, setImage] = useState(null);
-  const [lyrics, setLyrics] = useState(null);
-  const [hashTagIdList, setHashTagIdList] = useState(["0"]);
+  const [image, setImage] = useState();
+  const [lyrics, setLyrics] = useState();
+  const [hashTagIdList, setHashTagIdList] = useState([]);
   const [creatorIdList, setCreatorIdList] = useState([]);
-  const titleRef = useRef(null);
-  const describeRef = useRef(null);
+  const titleRef = useRef();
+  const describeRef = useRef();
   const [type, setType] = useState("VOCAL");
   console.log(music);
 
@@ -25,9 +25,9 @@ export default function UploadMusic({ music, rootContentIdList }) {
 
     await ffmpeg.exec(["-i", "input", "output.mp3"]);
     const data = await ffmpeg.readFile("output.mp3");
-    const wavBlob = new Blob([data.buffer], { type: "audio/mp3" });
-    console.log(wavBlob);
-    return wavBlob;
+    const mp3Blob = new Blob([data.buffer], { type: "audio/mp3" });
+    console.log("mp3", mp3Blob);
+    return mp3Blob;
   };
   const onSubmit = async () => {
     const formData = new FormData();
@@ -36,11 +36,12 @@ export default function UploadMusic({ music, rootContentIdList }) {
     formData.append("describe", describeRef.current.value);
     formData.append("hashTagIdList", hashTagIdList);
     formData.append("creatorIdList", creatorIdList);
-    formData.append("rootContentIdList", rootContentIdList);
+    formData.append("rootContentIdList", []);
     if (image) {
+      
       formData.append("image", image);
     }
-    formData.append("music", music, titleRef.current.value + ".wav");
+    formData.append("music", await(convertMedia(music)),titleRef.current.value+".mp3");
     formData.append("type", type);
     console.log(formData);
     await uploadMusic(formData).then();

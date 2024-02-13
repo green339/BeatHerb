@@ -39,6 +39,7 @@ const MusicWave = forwardRef(({}, ref) => {
   const getLoadMusic = (files) => {
     console.log(files);
     files.map((file) => {
+      console.log("file",file)
       handleFileUpload(file);
     });
   };
@@ -48,6 +49,7 @@ const MusicWave = forwardRef(({}, ref) => {
     //   const url = URL.createObjectURL(file);
     //   console.log(audioData)
     eeRef.current.emit("newtrack", file);
+    
     setCnt(cnt+1)
   };
   const handleRecordingUpload = (url) => {

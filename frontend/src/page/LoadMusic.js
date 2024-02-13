@@ -3,7 +3,8 @@
 // 향후 BeatHerb에서 가져오는 기능 및
 // 음원 불러오기 버튼 입력 시 브라우저에 저장 기능 구현 필요
 import { useState, useRef } from "react";
-
+// import { loadMusic } from "../api/upload.js";
+import axios from "axios";
 export default function LoadMusic({ getLoadMusic }) {
   const [files, setFiles] = useState([]);
   const fileInput = useRef(null);
@@ -11,10 +12,29 @@ export default function LoadMusic({ getLoadMusic }) {
     //여러 파일업로드
     setFiles((files) => [...files, ...Array.from(event.target.files)]);
     console.log(files);
+    beatherbMusic();
   };
   const loadMusic = () => {
     getLoadMusic(files);
     setFiles([]);
+  };
+  const beatherbMusic = async () => {
+    axios({
+      url: "http://localhost:8080/api/content/load/8",
+      method: "GET",
+      responseType: "arraybuffer",
+    })
+      .then((response) => {
+        const blob = new Blob([response.data], { type: "audio/mp3" }); // Blob 객체 생성
+        const url = window.URL.createObjectURL(blob);
+        setFiles((files) => [...files, url]);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    console.log(files);
+
+    // setFiles()
   };
   return (
     <div className="w-full h-full">
