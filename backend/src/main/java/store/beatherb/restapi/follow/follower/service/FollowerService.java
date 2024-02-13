@@ -64,9 +64,9 @@ public class FollowerService {
         return listFollowers;
     }
 
-    public void deleteFollower(DeleteFollowerRequest deleteFollowerRequest){
+    public void deleteFollower(MemberDTO memberDTO, DeleteFollowerRequest deleteFollowerRequest){
         followRepository.delete(
-                followRepository.findById(deleteFollowerRequest.getId())
+                followRepository.findByMemberIdAndFollowMemberId(memberDTO.getId(), deleteFollowerRequest.getId())
                         .orElseThrow(() -> new FollowerException(FollowerErrorCode.FOLLOWER_FIND_ERROR))
         );
     }

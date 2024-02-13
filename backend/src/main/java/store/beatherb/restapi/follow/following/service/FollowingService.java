@@ -28,8 +28,7 @@ public class FollowingService {
     private final MemberRepository memberRepository;
 
     public List<FollowingResponse> getFollowingList(MemberDTO memberDTO) {
-        List<Follow> list = followRepository.findByFollowMemberId(memberDTO.getId())
-                .orElseThrow(() -> new FollowingException(FollowingErrorCode.FOLLOWING_NOT_FOUND));
+        List<Follow> list = followRepository.findByFollowMemberId(memberDTO.getId()).orElseThrow();
 
         List<FollowingResponse> followingList = new ArrayList<>();
         for (Follow follow : list) {
