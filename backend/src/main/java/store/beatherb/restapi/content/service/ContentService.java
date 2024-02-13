@@ -338,49 +338,27 @@ public class ContentService {
 //
 //    }
     //vocal, melody, soundtrack에 대해서 daily, weekly, monthly 별로 5개씩 가져와서 넘겨준다
-    public List<List<ContentResponse>> getPopularity(){
-        List<List<ContentResponse>> list = new ArrayList<>();
-        for(int idx = 0; idx < 9; idx++)
-            list.add(new ArrayList<>());
+//    public ContentPopularityDTO getPopularity(){
+//
+//
+//        return list;
+//    }
 
-        //melody daily
-        List<ContentResponse> melodyDailyTopFive = getPopularityDailyFive(ContentTypeEnum.MELODY);
-        for(ContentResponse response : melodyDailyTopFive)
-            list.get(0).add(response);
-        //melody weekly
-        List<ContentResponse> melodyWeeklyTopFive = getPopularityWeeklyFive(ContentTypeEnum.MELODY);
-        for(ContentResponse response : melodyWeeklyTopFive)
-            list.get(1).add(response);
-        //melody monthly
-        List<ContentResponse> melodyMonthlyTopFive = getPopularityMonthlyFive(ContentTypeEnum.MELODY);
-        for(ContentResponse response : melodyMonthlyTopFive)
-            list.get(2).add(response);
-        //vocal daily
-        List<ContentResponse> vocalDailyTopFive = getPopularityDailyFive(ContentTypeEnum.VOCAL);
-        for(ContentResponse response : vocalDailyTopFive)
-            list.get(3).add(response);
-        //vocal weekly
-        List<ContentResponse> vocalWeeklyTopFive = getPopularityWeeklyFive(ContentTypeEnum.VOCAL);
-        for(ContentResponse response : vocalWeeklyTopFive)
-            list.get(4).add(response);
-        //vocal monthly
-        List<ContentResponse> vocalMonthlyTopFive = getPopularityMonthlyFive(ContentTypeEnum.VOCAL);
-        for(ContentResponse response : vocalMonthlyTopFive)
-            list.get(5).add(response);
-        //soundtrack daily
-        List<ContentResponse> soundtrackDailyTopFive = getPopularityDailyFive(ContentTypeEnum.SOUNDTRACK);
-        for(ContentResponse response : soundtrackDailyTopFive)
-            list.get(6).add(response);
-        //soundtrack weekly
-        List<ContentResponse> soundtrackWeeklyTopFive = getPopularityWeeklyFive(ContentTypeEnum.SOUNDTRACK);
-        for(ContentResponse response : soundtrackWeeklyTopFive)
-            list.get(7).add(response);
-        //soundtrack monthly
-        List<ContentResponse> soundtrackMonthlyTopFive = getPopularityMonthlyFive(ContentTypeEnum.SOUNDTRACK);
-        for(ContentResponse response : soundtrackMonthlyTopFive)
-            list.get(8).add(response);
+    public ContentPopularityResponse getPopularity(){
+        List<ContentResponse> dailyVocal = getPopularityDailyFive(ContentTypeEnum.VOCAL);
+        List<ContentResponse> weeklyVocal = getPopularityWeeklyFive(ContentTypeEnum.VOCAL);
+        List<ContentResponse> monthlyVocal = getPopularityMonthlyFive(ContentTypeEnum.VOCAL);
+        List<ContentResponse> dailyMelody = getPopularityDailyFive(ContentTypeEnum.MELODY);
+        List<ContentResponse> weeklyMelody = getPopularityWeeklyFive(ContentTypeEnum.MELODY);
+        List<ContentResponse> monthlyMelody = getPopularityMonthlyFive(ContentTypeEnum.MELODY);
+        List<ContentResponse> dailySoundtrack = getPopularityDailyFive(ContentTypeEnum.SOUNDTRACK);
+        List<ContentResponse> weeklySoundtrack = getPopularityWeeklyFive(ContentTypeEnum.SOUNDTRACK);
+        List<ContentResponse> monthlySoundtrack = getPopularityMonthlyFive(ContentTypeEnum.SOUNDTRACK);
 
-        return list;
+        return ContentPopularityResponse.builder().dailyVocal(dailyVocal).weeklyVocal(weeklyVocal).monthlyVocal(monthlyVocal)
+                .dailyMelody(dailyMelody).weeklyMelody(weeklyMelody).monthlyMelody(monthlyMelody)
+                .dailySoundtrack(dailySoundtrack).weeklySoundtrack(weeklySoundtrack).monthlySoundtrack(monthlySoundtrack)
+                .build();
     }
 
     //daily 인기 차트 5개만 가져오기
@@ -398,7 +376,7 @@ public class ContentService {
             Member findMember = memberRepository.findById(response.getContentWriterId())
                     .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
 
-            content.add(ContentResponse.builder().title(response.getTitle()).name(findMember.getName()).build());
+            content.add(ContentResponse.builder().id(response.getId()).title(response.getTitle()).name(findMember.getName()).build());
         }
 
         return content;
@@ -417,7 +395,7 @@ public class ContentService {
             Member findMember = memberRepository.findById(response.getContentWriterId())
                     .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
 
-            content.add(ContentResponse.builder().title(response.getTitle()).name(findMember.getName()).build());
+            content.add(ContentResponse.builder().id(response.getId()).title(response.getTitle()).name(findMember.getName()).build());
         }
 
         return content;
@@ -436,7 +414,7 @@ public class ContentService {
             Member findMember = memberRepository.findById(response.getContentWriterId())
                     .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
 
-            content.add(ContentResponse.builder().title(response.getTitle()).name(findMember.getName()).build());
+            content.add(ContentResponse.builder().id(response.getId()).title(response.getTitle()).name(findMember.getName()).build());
         }
 
         return content;
@@ -457,7 +435,7 @@ public class ContentService {
             Member findMember = memberRepository.findById(response.getContentWriterId())
                     .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
 
-            content.add(ContentResponse.builder().title(response.getTitle()).name(findMember.getName()).build());
+            content.add(ContentResponse.builder().id(response.getId()).title(response.getTitle()).name(findMember.getName()).build());
         }
 
         return content;
@@ -476,7 +454,7 @@ public class ContentService {
             Member findMember = memberRepository.findById(response.getContentWriterId())
                     .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
 
-            content.add(ContentResponse.builder().title(response.getTitle()).name(findMember.getName()).build());
+            content.add(ContentResponse.builder().id(response.getId()).title(response.getTitle()).name(findMember.getName()).build());
         }
 
         return content;
@@ -495,7 +473,7 @@ public class ContentService {
             Member findMember = memberRepository.findById(response.getContentWriterId())
                     .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
 
-            content.add(ContentResponse.builder().title(response.getTitle()).name(findMember.getName()).build());
+            content.add(ContentResponse.builder().id(response.getId()).title(response.getTitle()).name(findMember.getName()).build());
         }
 
         return content;
