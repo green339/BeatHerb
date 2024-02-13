@@ -55,10 +55,12 @@ public class ContentService {
     private final PlayRepository playRepository;
 
     private final ContentTypeRepository contentTypeRepository;
+    private final StarRepository starRepository;
 
     private final String CROPPED_DIRECTORY;
     private final String REFERENCE_DIRECTORY;
     private final String IMAGE_DIRECTORY;
+
 
 
 //
@@ -73,6 +75,7 @@ public class ContentService {
                           CreatorRepository creatorRepository,
                           PlayRepository playRepository,
                           ContentTypeRepository contentTypeRepository,
+                          StarRepository starRepository,
                           @Value("${resource.directory.music.cropped}") String CROPPED_DIRECTORY,
                           @Value("${resource.directory.music.reference}") String REFERENCE_DIRECTORY,
                           @Value("${resource.directory.music.image}") String IMAGE_DIRECTORY
@@ -86,6 +89,7 @@ public class ContentService {
         this.kafkaProducerService = kafkaProducerService;
         this.playRepository = playRepository;
         this.contentTypeRepository = contentTypeRepository;
+        this.starRepository = starRepository;
         this.CROPPED_DIRECTORY = CROPPED_DIRECTORY;
         this.REFERENCE_DIRECTORY = REFERENCE_DIRECTORY;
         this.IMAGE_DIRECTORY = IMAGE_DIRECTORY;
@@ -425,7 +429,8 @@ public class ContentService {
         return month;
     }
 
-    public ContentDetailResponse showDetailByContentId(Long contentId) {
+    @Transactional
+    public ContentDetailResponse showDetailByContentId(MemberDTO memberDTO,Long contentId) {
         Content content = contentRepository.findById(contentId)
                 .orElseThrow(
                         () -> {
@@ -434,7 +439,17 @@ public class ContentService {
                 );
         content.setHit(content.getHit()+1);
         contentRepository.save(content);
-        return ContentDetailResponse.toDto(content);
+        if(memberDTO == null){
+            return ContentDetailResponse.toDto(content,false);
+        }
+        Member member = memberRepository.findById(memberDTO.getId()).orElseThrow(
+                () ->{
+                    return  new MemberException(MemberErrorCode.MEMBER_FIND_ERROR);
+                }
+        );
+
+        return ContentDetailResponse.toDto(content,starRepository.findByContentAndMember(content,member).isPresent());
+
     }
 
     public Resource getImage(Long id) {
