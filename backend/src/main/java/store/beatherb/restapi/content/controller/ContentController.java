@@ -12,6 +12,7 @@ import store.beatherb.restapi.content.domain.Content;
 import store.beatherb.restapi.content.domain.embed.ContentTypeEnum;
 import store.beatherb.restapi.content.dto.request.CreatorAgreeRequest;
 import store.beatherb.restapi.content.dto.request.ContentUploadRequest;
+import store.beatherb.restapi.content.dto.response.ContentPopularityResponse;
 import store.beatherb.restapi.content.dto.response.ContentTitleSearchResponse;
 import store.beatherb.restapi.content.dto.response.ContentUploadRespone;
 import store.beatherb.restapi.content.dto.response.ContentResponse;
@@ -111,6 +112,13 @@ public class ContentController {
 //
 //        return ResponseEntity.ok("good");
 //    }
+
+    @GetMapping("/popularity")
+    public ResponseEntity<ApiResponse<ContentPopularityResponse>> getPopularity(){
+        ContentPopularityResponse response = contentService.getPopularity();
+        ApiResponse<ContentPopularityResponse> apiResponse = ApiResponse.successWithData(response);
+        return ResponseEntity.status(apiResponse.getCode()).body(apiResponse);
+    }
 
     @GetMapping("/daily/vocal")
     public ResponseEntity<ApiResponse<List<ContentResponse>>> getPopularityDailyVocal(){

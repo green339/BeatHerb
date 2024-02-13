@@ -341,9 +341,32 @@ public class ContentService {
 //        }
 //
 //    }
+    //vocal, melody, soundtrack에 대해서 daily, weekly, monthly 별로 5개씩 가져와서 넘겨준다
+//    public ContentPopularityDTO getPopularity(){
+//
+//
+//        return list;
+//    }
 
-    //daily 인기 차트 가져오기
-    public List<ContentResponse> getPopularityDaily(ContentTypeEnum contentTypeEnum) {
+    public ContentPopularityResponse getPopularity(){
+        List<ContentResponse> dailyVocal = getPopularityDailyFive(ContentTypeEnum.VOCAL);
+        List<ContentResponse> weeklyVocal = getPopularityWeeklyFive(ContentTypeEnum.VOCAL);
+        List<ContentResponse> monthlyVocal = getPopularityMonthlyFive(ContentTypeEnum.VOCAL);
+        List<ContentResponse> dailyMelody = getPopularityDailyFive(ContentTypeEnum.MELODY);
+        List<ContentResponse> weeklyMelody = getPopularityWeeklyFive(ContentTypeEnum.MELODY);
+        List<ContentResponse> monthlyMelody = getPopularityMonthlyFive(ContentTypeEnum.MELODY);
+        List<ContentResponse> dailySoundtrack = getPopularityDailyFive(ContentTypeEnum.SOUNDTRACK);
+        List<ContentResponse> weeklySoundtrack = getPopularityWeeklyFive(ContentTypeEnum.SOUNDTRACK);
+        List<ContentResponse> monthlySoundtrack = getPopularityMonthlyFive(ContentTypeEnum.SOUNDTRACK);
+
+        return ContentPopularityResponse.builder().dailyVocal(dailyVocal).weeklyVocal(weeklyVocal).monthlyVocal(monthlyVocal)
+                .dailyMelody(dailyMelody).weeklyMelody(weeklyMelody).monthlyMelody(monthlyMelody)
+                .dailySoundtrack(dailySoundtrack).weeklySoundtrack(weeklySoundtrack).monthlySoundtrack(monthlySoundtrack)
+                .build();
+    }
+
+    //daily 인기 차트 5개만 가져오기
+    public List<ContentResponse> getPopularityDailyFive(ContentTypeEnum contentTypeEnum) {
         ContentType contentType = contentTypeRepository.findByType(contentTypeEnum)
                 .orElseThrow(() -> new ContentTypeException(ContentTypeErrorCode.CONTENT_TYPE_NOT_FOUND));
 
@@ -357,14 +380,14 @@ public class ContentService {
             Member findMember = memberRepository.findById(response.getContentWriterId())
                     .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
 
-            content.add(ContentResponse.builder().title(response.getTitle()).name(findMember.getName()).build());
+            content.add(ContentResponse.builder().id(response.getId()).title(response.getTitle()).name(findMember.getName()).build());
         }
 
         return content;
     }
 
-    //weekly 인기 차트 가져오기
-    public List<ContentResponse> getPopularityWeekly(ContentTypeEnum contentTypeEnum) {
+    //weekly 인기 차트 5개만 가져오기
+    public List<ContentResponse> getPopularityWeeklyFive(ContentTypeEnum contentTypeEnum) {
         ContentType contentType = contentTypeRepository.findByType(contentTypeEnum)
                 .orElseThrow(() -> new ContentTypeException(ContentTypeErrorCode.CONTENT_TYPE_NOT_FOUND));
 
@@ -376,14 +399,14 @@ public class ContentService {
             Member findMember = memberRepository.findById(response.getContentWriterId())
                     .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
 
-            content.add(ContentResponse.builder().title(response.getTitle()).name(findMember.getName()).build());
+            content.add(ContentResponse.builder().id(response.getId()).title(response.getTitle()).name(findMember.getName()).build());
         }
 
         return content;
     }
 
-    //monthly 인기 차트 가져오기
-    public List<ContentResponse> getPopularityMonthly(ContentTypeEnum contentTypeEnum) {
+    //monthly 인기 차트 5개만 가져오기
+    public List<ContentResponse> getPopularityMonthlyFive(ContentTypeEnum contentTypeEnum) {
         ContentType contentType = contentTypeRepository.findByType(contentTypeEnum)
                 .orElseThrow(() -> new ContentTypeException(ContentTypeErrorCode.CONTENT_TYPE_NOT_FOUND));
 
@@ -395,7 +418,66 @@ public class ContentService {
             Member findMember = memberRepository.findById(response.getContentWriterId())
                     .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
 
-            content.add(ContentResponse.builder().title(response.getTitle()).name(findMember.getName()).build());
+            content.add(ContentResponse.builder().id(response.getId()).title(response.getTitle()).name(findMember.getName()).build());
+        }
+
+        return content;
+    }
+
+    //daily 인기 차트 전체 가져오기
+    public List<ContentResponse> getPopularityDaily(ContentTypeEnum contentTypeEnum) {
+        ContentType contentType = contentTypeRepository.findByType(contentTypeEnum)
+                .orElseThrow(() -> new ContentTypeException(ContentTypeErrorCode.CONTENT_TYPE_NOT_FOUND));
+
+        Date nowDate = new Date();
+        SimpleDateFormat todayDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String strNowDate = todayDateFormat.format(nowDate);
+        List<ContentListInterface> contentList = playRepository.findByTotalCreatedAtDate(strNowDate, contentType.getId());
+
+        List<ContentResponse> content = new ArrayList<>();
+        for (ContentListInterface response : contentList) {
+            Member findMember = memberRepository.findById(response.getContentWriterId())
+                    .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
+
+            content.add(ContentResponse.builder().id(response.getId()).title(response.getTitle()).name(findMember.getName()).build());
+        }
+
+        return content;
+    }
+
+    //weekly 인기 차트 전체 가져오기
+    public List<ContentResponse> getPopularityWeekly(ContentTypeEnum contentTypeEnum) {
+        ContentType contentType = contentTypeRepository.findByType(contentTypeEnum)
+                .orElseThrow(() -> new ContentTypeException(ContentTypeErrorCode.CONTENT_TYPE_NOT_FOUND));
+
+        String[] week = whatWeekPeriod();
+        List<ContentListInterface> contentList = playRepository.findByTotalCreatedAtPeriod(contentType.getId(), week[0], week[1]);
+
+        List<ContentResponse> content = new ArrayList<>();
+        for (ContentListInterface response : contentList) {
+            Member findMember = memberRepository.findById(response.getContentWriterId())
+                    .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
+
+            content.add(ContentResponse.builder().id(response.getId()).title(response.getTitle()).name(findMember.getName()).build());
+        }
+
+        return content;
+    }
+
+    //monthly 인기 차트 전체 가져오기
+    public List<ContentResponse> getPopularityMonthly(ContentTypeEnum contentTypeEnum) {
+        ContentType contentType = contentTypeRepository.findByType(contentTypeEnum)
+                .orElseThrow(() -> new ContentTypeException(ContentTypeErrorCode.CONTENT_TYPE_NOT_FOUND));
+
+        String[] month = whatMonthPeriod();
+        List<ContentListInterface> contentList = playRepository.findByTotalCreatedAtPeriod(contentType.getId(), month[0], month[1]);
+
+        List<ContentResponse> content = new ArrayList<>();
+        for (ContentListInterface response : contentList) {
+            Member findMember = memberRepository.findById(response.getContentWriterId())
+                    .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
+
+            content.add(ContentResponse.builder().id(response.getId()).title(response.getTitle()).name(findMember.getName()).build());
         }
 
         return content;
