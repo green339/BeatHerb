@@ -221,7 +221,7 @@ public class MemberDetailResponse {
         private FollowerDTO(Long id, String name) {
             this.id = id;
             this.name = name;
-            this.image = "/api/member/profile/"+id;
+            this.image = "/api/member/image/"+id;
         }
 
         public static FollowerDTO toDto(Follow entity){
@@ -249,7 +249,7 @@ public class MemberDetailResponse {
         private FollowingDTO(Long id, String name) {
             this.id = id;
             this.name = name;
-            this.image = "/api/member/profile/"+id;
+            this.image = "/api/member/image/"+id;
         }
 
         public static FollowingDTO toDto(Follow entity){
