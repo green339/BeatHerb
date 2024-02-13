@@ -19,6 +19,7 @@ import store.beatherb.restapi.member.domain.MemberRepository;
 import store.beatherb.restapi.member.dto.MemberDTO;
 import store.beatherb.restapi.member.exception.MemberErrorCode;
 import store.beatherb.restapi.member.exception.MemberException;
+import store.beatherb.restapi.openvidu.dto.response.OpenViduJoinSessionResponse;
 import store.beatherb.restapi.openvidu.service.OpenviduService;
 
 import java.util.ArrayList;
@@ -35,6 +36,8 @@ public class LiveService {
     private final OpenviduService openviduService;
     private final ContentRepository contentRepository;
     private final LiveContentRepository liveContentRepository;
+
+    private final GuestRepository guestRepository;
 
 
     @Transactional
@@ -65,12 +68,13 @@ public class LiveService {
             );
             Guest guest = Guest.builder()
                     .member(guestMember)
+                    .agree(false)
                     .build();
 
             guestList.add(guest);
         }
         List<LiveContent> liveContentList = new ArrayList<>();
-        for(Long contentId : liveCreateRequest.getContentIdList()){
+        for (Long contentId : liveCreateRequest.getContentIdList()) {
             Content content = contentRepository.findById(contentId).orElseThrow(
                     () -> {
                         return new ContentException(ContentErrorCode.CONTENT_NOT_FOUND);
@@ -91,7 +95,10 @@ public class LiveService {
 
         openviduService.createSessionById(live.getId());
 
-        return openviduService.joinSessionByIdAndRole(live.getId(), "PUBLISHER");
+        OpenViduJoinSessionResponse openViduJoinSessionResponse = openviduService.joinSessionByIdAndRole(live.getId(), "PUBLISHER");
+
+        return LiveJoinResponse.toDto(live,openViduJoinSessionResponse,"OWNER");
+
         //TODO : httpRequest 날려서 가져오기.
         //https://openvidu.beatherb.store/openvidu/api/sessions
 
@@ -110,17 +117,21 @@ public class LiveService {
                     return new LiveException(LiveErrorCode.LIVE_IS_NOT_EXIST);
                 }
         );
+        //TODO 리팩토링 필요. for 문 돌지 말고
+        String OpenVidurole = "SUBSCRIBER";
         String role = "SUBSCRIBER";
         if (live.getMember() == member) {
-            role = "PUBLISHER";
+            OpenVidurole = "PUBLISHER";
+            role = "OWNER";
+        } else if(guestRepository.findByMemberAndLive(member, live).isPresent()){
+                OpenVidurole = "PUBLISHER";
+                role = "GUEST";
+
         }
-        for (Guest g : live.getGuestList()) {
-            if (g.getMember() == member) {
-                role = "PUBLISHER";
-                break;
-            }
-        }
-        return openviduService.joinSessionByIdAndRole(live.getId(), role);
+        OpenViduJoinSessionResponse openViduJoinSessionResponse = openviduService.joinSessionByIdAndRole(live.getId(), OpenVidurole);
+
+        return LiveJoinResponse.toDto(live,openViduJoinSessionResponse,role);
+
     }
 
 
