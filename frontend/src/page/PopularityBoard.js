@@ -5,8 +5,6 @@ import ContentsRanking from "../components/ContentsRanking";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const periodList = ["daily", "weekly", "monthly"];
-
 export default function PopularityBoard() {
   const [dailyMelodyList, setDailyMelodyList] = useState([]);
   const [weeklyMelodyList, setWeklyMelodyList] = useState([]);
@@ -15,24 +13,25 @@ export default function PopularityBoard() {
   const [weeklyVocalList, setWeklyVocalList] = useState([]);
   const [monthlyVocalList, SetMonthlyVocalList] = useState([]);
   const [dailyMusicList, setDailyMusicList] = useState([]);
-  const [weeklyMMusicList, setWeklyMusicList] = useState([]);
+  const [weeklyMusicList, setWeklyMusicList] = useState([]);
   const [monthlyMusicList, SetMonthlyMusicList] = useState([]);
 
-  const serverURL = process.env.REACT_APP_TEST_SERVER_BASE_URL + "/content";
-
   useEffect(() => {
+    const serverURL = process.env.REACT_APP_TEST_SERVER_BASE_URL + "/content";
+
     const endPoint = [
       "/daily/melody", "/weekly/melody", "/monthly/melody",
       "/daily/vocal", "/weekly/vocal", "/monthly/vocal",
       "/daily/soundtrack", "/weekly/soundtrack", "/monthly/soundtrack",
     ]
+    
     const stateSetter = [
       setDailyMelodyList, setWeklyMelodyList, SetMonthlyMelodyList,
       setDailyVocalList, setWeklyVocalList, SetMonthlyVocalList,
       setDailyMusicList, setWeklyMusicList, SetMonthlyMusicList
     ]
 
-    Array(9).fill().map((v,i)=>i).map((value) => {
+    Array(9).fill().map((v,i)=>i).forEach((value) => {
       axios({
         method: "get",
         url: `${serverURL}${endPoint[value]}`
@@ -50,40 +49,64 @@ export default function PopularityBoard() {
   return (
     <>
       <ItemContainerWithTitle title="멜로디" link="/board/contents" data={{ category: "melody", sortOption: "popularity" }} >
-        {
-          periodList.map((period) => (
-            <ContentsRanking
-              key={"melody " + period}
-              title={period} 
-              link="/board/contents" 
-              data={{ category: "melody", sortOption: "popularity" }} 
-            />
-          ))
-        }
+        <ContentsRanking
+          title="daily" 
+          link="/board/contents" 
+          data={{ category: "melody", sortOption: "popularity" }}
+          contentList={dailyMelodyList}
+        />
+        <ContentsRanking
+          title="weekly" 
+          link="/board/contents" 
+          data={{ category: "melody", sortOption: "popularity" }}
+          contentList={weeklyMelodyList}
+        />
+        <ContentsRanking
+          title="monthly" 
+          link="/board/contents" 
+          data={{ category: "melody", sortOption: "popularity" }}
+          contentList={monthlyMelodyList}
+        />
       </ItemContainerWithTitle>
       <ItemContainerWithTitle title="보컬" link="/board/contents" data={{ category: "vocal", sortOption: "popularity" }} >
-        {
-          periodList.map((period) => (
-            <ContentsRanking 
-              key={"vocal " + period}
-              title={period} 
-              link="/board/contents" 
-              data={{ category: "vocal", sortOption: "popularity" }} 
-            />
-          ))
-        } 
+      <ContentsRanking
+          title="daily" 
+          link="/board/contents" 
+          data={{ category: "vocal", sortOption: "popularity" }}
+          contentList={dailyVocalList}
+        />
+        <ContentsRanking
+          title="weekly" 
+          link="/board/contents" 
+          data={{ category: "vocal", sortOption: "popularity" }}
+          contentList={weeklyVocalList}
+        />
+        <ContentsRanking
+          title="monthly" 
+          link="/board/contents" 
+          data={{ category: "vocal", sortOption: "popularity" }}
+          contentList={monthlyVocalList}
+        />
       </ItemContainerWithTitle>
       <ItemContainerWithTitle title="음원" link="/board/contents" data={{ category: "music", sortOption: "popularity" }} >
-        {
-          periodList.map((period) => (
-            <ContentsRanking 
-              key={"music " + period}
-              title={period} 
-              link="/board/contents" 
-              data={{ category: "music", sortOption: "popularity" }} 
-            />
-          ))
-        } 
+      <ContentsRanking
+          title="daily" 
+          link="/board/contents" 
+          data={{ category: "music", sortOption: "popularity" }}
+          contentList={dailyMusicList}
+        />
+        <ContentsRanking
+          title="weekly" 
+          link="/board/contents" 
+          data={{ category: "music", sortOption: "popularity" }}
+          contentList={weeklyMusicList}
+        />
+        <ContentsRanking
+          title="monthly" 
+          link="/board/contents" 
+          data={{ category: "music", sortOption: "popularity" }}
+          contentList={monthlyMusicList}
+        />
       </ItemContainerWithTitle>
     </>
   );

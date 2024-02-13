@@ -9,9 +9,9 @@ export default function Admin() {
   const [addModalInput, setAddModalInput] = useState("");
   const [selectedHashtagId, setSelectedHashtagId] = useState(null);
 
-  const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
-
   useEffect(() => {
+    const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
+
     axios({
       method: "get",
       url: `${serverUrl}/content/hashtag`
@@ -29,6 +29,8 @@ export default function Admin() {
   // 해시태그 추가
   // 추후 백엔드랑 연동해야 함
   const addHashtag = () => {
+    const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
+
     axios({
       method: "post",
       url: `${serverUrl}/content/hashtag`,
@@ -54,6 +56,8 @@ export default function Admin() {
   // 해시태그 삭제
   // 추후 백엔드랑 연동해야 함
   const deleteHashtag = () => {
+    const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
+
     axios({
       method: "delete",
       url: `${serverUrl}/content/hashtag`,
@@ -78,9 +82,6 @@ export default function Admin() {
 
   // 해시태그 추가 버튼을 클릭하면 해시태그 추가 모달이 뜬다
   const handleOnClickAddHashtag = (e) => {
-    // const buttonId = e.target.id;
-    // const categoryId = Number(buttonId.slice(8));
-    // setSelectedCategoryId(categoryId);
     addModalRef.current?.showModal();
   }
 

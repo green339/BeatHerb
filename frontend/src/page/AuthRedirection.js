@@ -113,7 +113,7 @@ export default function AuthRedirection() {
       })
       .catch((error) => {
         console.log(error);
-        if(error.response.data.message[0] == "이미 가입한 이메일입니다.") {
+        if(error.response.data.message[0] === "이미 가입한 이메일입니다.") {
           axios({
             method: 'post',
             url: `${serverURL}/signin`,

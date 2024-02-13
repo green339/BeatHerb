@@ -5,15 +5,19 @@ export const useAuthStore = create(
   persist(
     (set, get) => ({
       accessToken: null,
-      name: "",
+      nickname: "",
+      userId: null,
       setAccessToken: (token) => {
         set((prev) => ({accessToken: token}))
       },
       removeAccessToken: () => {
         set((prev) => ({accessToken: null}))
       },
-      setName: (name) => {
-        set((prev) => ({name: name}))
+      setNickname: (nickname) => {
+        set((prev) => ({name: nickname}))
+      },
+      setUserId: (id) => {
+        set((prev) => ({userId: id}))
       },
     }),
     {

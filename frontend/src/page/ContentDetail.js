@@ -26,6 +26,17 @@ export default function ContentDetail() {
   const [category, setCategory] = useState("melody");
   const [comment, setComment] = useState("comment");
 
+  // 컨텐츠 관련 정보
+  const [imageSrc, setImageSrc] = useState("");
+  const [title, setTitle] = useState("");
+  const [describe, setDescribe] = useState("");
+  const [creatorList, setCreatorList] = useState([]);
+  const [hashtagList, setHashtagList] = useState([]);
+  const [inOrderList, setInOrderList] = useState([]);
+  const [outOrderList, setOutOrderList] = useState({});
+  const [commentList, setCommentList] = useState([]);
+  const [lyrics, setLyrics] = useState("");
+
   useEffect(() => {
     const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
 
@@ -35,57 +46,93 @@ export default function ContentDetail() {
     })
     .then((response) => {
       console.log(response.data);
+      const data = response.data.data;
+
+      setImageSrc(data.image);
+      setTitle(data.title);
+      setDescribe(data.describe);
+      setCreatorList(data.creatorList);
+      setHashtagList(data.hashtagList);
+      setInOrderList(data.inOrderList); 
+      setOutOrderList(data.outOrderList);
+      setCommentList(data.commentList);
+      setLyrics(data.lyrics);
     })
     .catch((error) => {
       alert("데이터를 받는 도중 문제가 발생했습니다.");
     })
-  }, [])
+  }, [id]);
 
-  const tempArray = Array(20)
-    .fill()
-    .map((v, i) => i + 1);
-
-  let itemList = null;
-  let commentList = null;
-
-  if (category === "melody" || category === "vocal" || category === "music") {
-    itemList = tempArray.map((value, index) => {
-      const demoContent = {
-        albumArt: "https://img.freepik.com/free-vector/background-colorful-musical-notes_23-2147633120.jpg?w=740&t=st=1705448093~exp=1705448693~hmac=00f2208917eeabe7c5309cb7efc90defc713277bede12138776ae696c5456d04",
-        title: category,
-        artist: "Artist"
+  const creatorListFormat = (creatorList) => {
+    let creatorText = "";
+    creatorList.forEach((creator, index) => {
+      if (creatorText !== "") {
+        creatorText += ", ";
       }
-      return (
-        <div key={value} className="flex justify-center">
-          <ContentsItem contentsId={value} size={150} albumArt={demoContent.albumArt} title={demoContent.title} artist={demoContent.artist} showFavorite={false} />
+      creatorText += creator.nickname;
+    })
+
+    return (creatorText !== "" ? creatorText : "creator");
+  }
+
+  const inOrderListFormat = (inOrderList) => {
+    let inOrderText = "";
+    inOrderList.forEach((inOrder, index) => {
+      if (inOrderText !== "") {
+        inOrderText += " ";
+      }
+      inOrderText += "@" + inOrder.title;
+    })
+
+    return (inOrderText !== "" ? inOrderText : "없음");
+  }
+
+  let itemView = null;
+  let commentView = null;
+
+  // out order
+  if (category === "melody" || category === "vocal" || category === "music") {
+    let contentList;
+
+    if(category === "melody") {
+      contentList = outOrderList.melodyList;
+    } else if (category === "vocal") {
+      contentList = outOrderList.vocalList;
+    } else {
+      contentList = outOrderList.soundTrackList;
+    }
+
+    itemView = contentList?.map((content, index) => (
+        <div key={"content" + content.id} className="flex justify-center">
+          <ContentsItem contentsId={content.id} size={150} albumArt={content.image} title={content.title} artist={creatorListFormat(content.creatorList)} showFavorite={false} />
         </div>
       )
-    });
+    );
   } else if (category === "shorts") {
-    itemList = tempArray.map((value, index) => (
-      <div key={index} className="flex justify-center">
-        <ShortsItem title={category} />
+    itemView = outOrderList.shortsList?.map((shorts, index) => (
+      <div key={"shorts" + shorts.id} className="flex justify-center">
+        <ShortsItem title={shorts.title} />
       </div>
     ));
   } else if (category === "live") {
-    itemList = tempArray.map((value, index) => (
-      <div key={index} className="flex justify-center">
-        <LiveItem title={category} />
+    itemView = outOrderList.liveList?.map((live, index) => (
+      <div key={"live" + live.id} className="flex justify-center">
+        <LiveItem title={live.title} />
       </div>
     ));
   }
 
   if (comment === "comment") {
-    commentList = tempArray.map((value, index) => (
-      <div key={index} className="flex justify-center m-10">
+    commentView = commentList.map((comment, index) => (
+      <div key={"comment" + comment.id} className="flex justify-center m-10">
         <div className="flex w-full mt-2 space-x-3">
           <div>
             <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
-            <div className="text-xs text-gray-500 leading-none">Alex</div>
+            <div className="text-xs text-gray-500 leading-none">{comment.member.nickname}</div>
           </div>
           <div>
             <div className="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
-              <p className="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+              <p className="text-sm">{comment.body}</p>
             </div>
             <div className="text-right">
               <div className="text-xs text-gray-500 leading-none">2 min ago</div>
@@ -95,7 +142,7 @@ export default function ContentDetail() {
       </div>
     ));
   } else if (comment === "lyrics") {
-    commentList = <div className="flex justify-center">나는 나비 날개를 활짝 펴고</div>;
+    commentView = <div className="flex justify-center">{lyrics}</div>;
   }
 
   return (
@@ -110,8 +157,8 @@ export default function ContentDetail() {
               <div className="w-52 h-52 rounded-md">
                 <img
                   className="w-full rounded-md"
-                  src="https://img.freepik.com/free-vector/background-colorful-musical-notes_23-2147633120.jpg?w=740&t=st=1705448093~exp=1705448693~hmac=00f2208917eeabe7c5309cb7efc90defc713277bede12138776ae696c5456d04"
-                  alt=""
+                  src={imageSrc}
+                  alt="Album Art"
                 />
               </div>
               <div className="flex items-center justify-center w-52 h-16 rounded-md">
@@ -139,25 +186,27 @@ export default function ContentDetail() {
             </div>
             <div className="flex flex-col h-52 place-content-center place-content-evenly">
               <div className="space-y-2">
-                <p className="text-base-content text-left text-3xl font-semibold">{id}번 음원 상세 페이지</p>
-                <p className="text-base-content text-left">가수</p>
+                <p className="text-base-content text-left text-3xl font-semibold">{title ? title : "Title"}</p>
+                <p className="text-base-content text-left">
+                  {creatorListFormat(creatorList)}
+                </p>
               </div>
               <div className="space-y-2">
                 <div className="flex gap-1 flex-wrap">
-                  <div className="badge badge-lg badge-primary text-primary-content">primary</div>
-                  <div className="badge badge-lg badge-primary text-primary-content">primary</div>
-                  <div className="badge badge-lg badge-primary text-primary-content">primary</div>
-                  <div className="badge badge-lg badge-primary text-primary-content">primary</div>
-                  <div className="badge badge-lg badge-primary text-primary-content">primary</div>
+                  {
+                    hashtagList.map((hashtag, index) => (
+                      <div className="badge badge-lg badge-primary text-primary-content">
+                        {hashtag.name}
+                      </div>
+                    ))
+                  }
                 </div>
-                <div className="text-left">진입차수 : </div>
+                <div className="text-left">진입차수 : {inOrderListFormat(inOrderList)}</div>
               </div>
             </div>
           </div>
           <div className="flex w-5/12 h-auto rounded-md bg-base-200 px-4 py-8 items-center text-left m-auto">
-            이 노래는 영국에서 최초로 시작되어 일년에 한바퀴를 돌면서 듣는 사람에게 행운을
-            주었고지금은 당신에게로 옮겨진 이 노래는 4일 안에 당신 곁을 떠나야 합니다. 이 노래를
-            포함해서7곡을 행운이 필요한 사람에게 보내 주셔야 합니다. 복사를 해도 ...더보기
+            {describe}
           </div>
         </div>
         <div className="flex">
@@ -188,7 +237,7 @@ export default function ContentDetail() {
                   : "grid-cols-4"
               }`}
             >
-              {itemList}
+              {itemView}
             </div>
           </div>
           <div className="w-5/12 rounded-md bg-primary">
@@ -207,7 +256,7 @@ export default function ContentDetail() {
                 </button>
               ))}
             </div>
-            <div className="bg-base-200 rounded-md m-4 h-[33rem] overflow-auto">{commentList}</div>
+            <div className="bg-base-200 rounded-md m-4 h-[33rem] overflow-auto">{commentView}</div>
           </div>
         </div>
       </div>

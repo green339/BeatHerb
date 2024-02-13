@@ -55,33 +55,13 @@ export default function LiveBoard() {
     })
     .then((response) => {
       console.log(response);
-      const id = response.data.id;
+      const id = response.data.id || 1;
       const token = response.data.data.token;
       const role = response.data.data.role;
+      const title = response.data.data.title;
+      const describe = response.data.data.describe;
 
-      console.log(id);
-      navigate(`/live/1`, {state: {token, role}});
-    })
-    .catch((error) => {
-      console.log(error);
-      alert(error.message);
-    })
-  }
-
-  const handleLiveDeleteClick = () => {
-    axios({
-      method: "delete",
-      url: `${serverURL}/live`,
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      },
-      data: {
-        "title" : liveTitle,
-        "describe" : liveDescription
-      }
-    })
-    .then((response) => {
-      console.log(response);
+      navigate(`/live/${id}`, {state: {token, role, title, describe}});
     })
     .catch((error) => {
       console.log(error);
@@ -104,7 +84,6 @@ export default function LiveBoard() {
         <div className="w-full flex justify-start my-8 ps-12 gap-12">
           <h1 className="text-primary text-3xl font-semibold">라이브</h1>
           <button className="btn btn-ghost btn-sm text-base-content" onClick={openLiveCreateModal}>+ 라이브 생성</button>
-          <button className="btn btn-ghost btn-sm text-base-content" onClick={handleLiveDeleteClick}>- 라이브 종료</button>
         </div>
 
         <div className="w-full flex justify-end mb-8 pr-8">

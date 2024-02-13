@@ -36,8 +36,18 @@ export default function SearchBar({ initQuery = "", initHashtagListString = "" }
       alert("오류가 발생했습니다.")
     })
 
-    // 검색 조건에 해당하는 콘텐츠 가져오기
-    // 조건이 없으면 전부 들고오기
+    // axios({
+    //   method: "get",
+    //   url: `${serverUrl}/content/search?query=&hashtag=`
+    // })
+    // .then((response) => {
+    //   console.log(response.data.data);
+      
+    // })
+    // .catch((error) => {
+    //   console.log(error.message);
+    //   alert("검색에 실패했습니다.")
+    // })
   }, []);
 
   const handleSearchChange = (e) => {
@@ -107,7 +117,7 @@ export default function SearchBar({ initQuery = "", initHashtagListString = "" }
               {
                 hashtagList.map(hashtag => {
                   return hashtag.isSelected ? 
-                    <div key={hashtag.name} className="badge badge-lg badge-primary text-primary-content">{hashtag.name}</div> : null;
+                    <div key={"selectedHashtag" + hashtag.id} className="badge badge-lg badge-primary text-primary-content">{hashtag.name}</div> : null;
                 })
               }
             </div>

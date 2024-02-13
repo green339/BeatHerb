@@ -3,7 +3,8 @@ import { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { OpenVidu } from "openvidu-browser";
 import { useStateCallback } from "../hook/useStateCallback";
-import NavBar from "../components/NavBar";
+import axios from "axios";
+import { useAuthStore } from "../store/AuthStore";
 
 function OpenViduVideoComponent({ streamManager, width, height }) {
   const videoRef = useRef();
@@ -20,7 +21,7 @@ function OpenViduVideoComponent({ streamManager, width, height }) {
     }
   })
 
-  return <video autoPlay={true} ref={videoRef} width height className="object-fill" />;
+  return <video autoPlay={true} ref={videoRef} width={width} height={height} className="object-fill" />;
 }
 
 function UserVideoComponent({ streamManager, width, height, mainVideo = false }) {
@@ -33,7 +34,7 @@ function UserVideoComponent({ streamManager, width, height, mainVideo = false })
     <div>
       {streamManager !== undefined ? (
         <div className="relative" style={{ width, height }}>
-          <OpenViduVideoComponent streamManager={streamManager} width height />
+          <OpenViduVideoComponent streamManager={streamManager} width={width} height={height} />
           {mainVideo ? (
             <div className="absolute top-[20px] left-[20px]">
               <svg width="100" height="35" viewBox="0 0 100 35" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -55,8 +56,12 @@ export default function Live() {
   const location = useLocation();
   const token = location.state?.token || undefined;
   const role = location.state?.role || undefined;
+  const title = location.state?.title || "No title";
+  const describe = location.state?.describe || "";
 
   const navigate = useNavigate();
+
+  const { accessToken } = useAuthStore();
 
   // OpenVidu 관련 상태 값
   const ov = useRef(null); 
@@ -70,10 +75,14 @@ export default function Live() {
 
   useEffect(() => {
     window.addEventListener('beforeunload', onbeforeunload);
-    return () => window.removeEventListener('beforeunload', onbeforeunload);
-  }, [])
+    window.onpopstate = (event) => leaveSession();
+    return () =>{
+      window.removeEventListener('beforeunload', onbeforeunload);
+    } 
+  }, [session])
 
-  const onbeforeunload = (event) => {
+  const onbeforeunload = (e) => {
+    e.preventDefault();
     leaveSession();
   }
 
@@ -101,7 +110,7 @@ export default function Live() {
   }
 
   const leaveSession = () => {
-    session.disconnect();
+    session?.disconnect();
 
     // 모든 상태 값 해제
     ov.current = null;
@@ -112,8 +121,23 @@ export default function Live() {
     setMainStreamManager(undefined);
     setPublisher(undefined);
 
-    // 다른 페이지로 이동
-    navigate("/board/live");
+    // 세션을 끊는 사람이 Owner이면 해당 라이브는 파기
+    if (role === "OWNER") {
+      const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
+      axios({
+        method: "delete",
+        url: `${serverUrl}/live`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      })
+    }
   }
 
   const joinSession = () => {
@@ -152,8 +176,8 @@ export default function Live() {
       // 세션에 연결
       mySession.connect(token, { clientData: myUserName })
         .then(async () => {
-          // 세션에 연결하는 클라이언트의 역할이 Publisher이면 if문 안의 작업을 수행
-          if (role === "PUBLISHER") {
+          // 세션에 연결하는 클라이언트의 역할이 Publisher 또는 Owner이면 if문 안의 작업을 수행
+          if (role === "GUEST" || role === "OWNER") {
             // 퍼블리셔 생성
             let publisher = await ov.current.initPublisherAsync(undefined, {
               audioSource: undefined, // 오디오 소스
@@ -183,21 +207,20 @@ export default function Live() {
         })
         .catch((error) => {
           console.log(error);
-          alert(error.message);
+          alert("세션이 만료되었습니다.");
           navigate("/board/live"); 
         });
       });
   }
 
   useEffect(() => {
-    joinSession();
-  }, []);
+    if(!session) {
+      joinSession();
+    }
+  }, [session]);
 
   return (
     <>
-      <div className="fixed top-0 w-full z-10">
-        <NavBar />
-      </div>
       <div className="pt-16 grid grid-cols-10">
         <div className="col-span-7">
           <div className="mt-6 mb-4 flex justify-center items-center">
@@ -205,24 +228,15 @@ export default function Live() {
               <UserVideoComponent streamManager={mainStreamManager} width={640} height={480} mainVideo />
             ) : null}
           </div>
-          {publisher !== undefined ? (
-            <div key="main" className="inline-block mr-4 relavive">
-              <UserVideoComponent streamManager={mainStreamManager} width={160} height={120} />
-            </div>
-          ) : null}
-          {publisher !== undefined ? (
-            <div key="main2" className="inline-block mr-4 relavive">
-              <UserVideoComponent streamManager={mainStreamManager} width={160} height={120} />
-            </div>
-          ) : null}
           {subscribers.map((sub, i) => (
             <div key={"sub"+i} className="inline-block mr-4 relavive">
               <UserVideoComponent streamManager={mainStreamManager} width={160} height={120} />
             </div>
           ))}
           <div style={{ paddingLeft: '180px' }}>
-            <p className="text-white font-bold text-2xl text-left">Google이 심심해서 하는 라이브</p>
-            <p className="text-white text-left">@구글 자작곡, @구글 자작 곡곡, @애국가</p>
+            <p className="text-white font-bold text-2xl text-left">{title}</p>
+            <p className="text-white text-semibold text-left">@구글 자작곡, @구글 자작 곡곡, @애국가</p>
+            <p className="text-white text-left">{describe}</p>
           </div>
         </div>
         <div className="col-span-3 flex justify-center items-center">

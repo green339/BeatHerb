@@ -2,12 +2,14 @@
 
 import NavBar from "../components/NavBar";
 import ContentsItem from "../components/ContentsItem";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import ShortsItem from "../components/ShortsItem";
 import LiveItem from "../components/LiveItem";
 import Dm from "../components/Dm";
 import Follow from "../components/Follow";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { useAuthStore } from "../store/AuthStore";
+import axios from "axios";
 
 // 탭 리스트
 const tabs = [
@@ -19,22 +21,72 @@ const tabs = [
 ];
 
 export default function MyPage() {
+  const params = useParams();
   const [category, setCategory] = useState("melody");
   const [followType, setFollowType] = useState("follower");
   const followModalRef = useRef();
+  const { userId, accessToken } = useAuthStore();
+  const [isFollow, setIsFollow] = useState(false);
 
-  // useEffect(() => {
-  //   axios({
-  //     method: "",
-  //     url: ""
-  //   })
-  //   .then((response) => {
+  // 해당 유저가 업로드한 콘텐츠 목록
+  const [melodyList, setMelodyList] = useState([]);
+  const [vocalList, setVocalList] = useState([]);
+  const [musicList, setMusicList] = useState([]);
+  const [shortsList, setShortsList] = useState([]);
+  const [liveList, setLiveList] = useState([]);
 
-  //   })
-  //   .catch((error) => {
-  //     alert("데이터를 받는 도중 문제가 발생했습니다.")
-  //   })
-  // }, [])
+  // 유저 정보
+  const [nickname, setNickname] = useState(null);
+  const [hashtagList, setHashtagList] = useState([]);
+
+  const id = Number(params.id);
+
+  useEffect(() => {
+    const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
+
+    axios({
+      method: "get",
+      url: `${serverUrl}/member/${id}`
+    })
+    .then((response) => {
+      const data = response.data.data;
+      console.log(data);
+
+      setNickname(data.nickname);
+      setHashtagList((data.hashtagList ? data.hashtagList : []))
+
+      setMelodyList((data.melodyList ? data.melodyList : []));
+      setVocalList((data.vocalList ? data.vocalList : []));
+      setMusicList((data.soundTrackList ? data.soundTrackList : []));
+      setShortsList((data.shortsList ? data.shortsList : []));
+      setLiveList((data.liveList ? data.liveList : []));
+    })
+    .catch((error) => {
+      alert("유저 정보가 존재하지 않습니다.");
+    })
+  }, [id])
+
+  const toggleFollow = () => {
+    const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
+    const method = (isFollow ? "delete" : "post")
+
+    axios({
+      method,
+      url: `${serverUrl}/follower`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      data: {
+        id
+      }
+    })
+    .then((response) => {
+      window.location.reload();
+    })
+    .catch((error) => {
+      alert("오류가 발생했습니다.")
+    })
+  }
 
   const handleClickFollower = () => {
     setFollowType("follower");
@@ -46,36 +98,56 @@ export default function MyPage() {
     followModalRef.current?.showModal();
   };
 
+  const creatorListFormat = (creatorList) => {
+    let creatorText = "";
+    creatorList.forEach((creator, index) => {
+      if (creatorText !== "") {
+        creatorText += ", ";
+      }
+      creatorText += creator.nickname;
+    })
+
+    return (creatorText !== "" ? creatorText : "creator");
+  }
+
   const dmModalRef = useRef();
-  const tempArray = Array(20)
-    .fill()
-    .map((v, i) => i + 1);
 
   let itemList = null;
 
   if (category === "melody" || category === "vocal" || category === "music") {
-    itemList = tempArray.map((value, index) => {
-      const demoContent = {
-        albumArt: "https://img.freepik.com/free-vector/background-colorful-musical-notes_23-2147633120.jpg?w=740&t=st=1705448093~exp=1705448693~hmac=00f2208917eeabe7c5309cb7efc90defc713277bede12138776ae696c5456d04",
-        title: category,
-        artist: "Artist"
-      }
+    let contentList = [];
+    if (category === "melody") {
+      contentList = melodyList;
+    } else if (category === "vocal") {
+      contentList = vocalList;
+    } else {
+      contentList = musicList;
+    }
+    
+    itemList = contentList.map((content, index) => {
       return (
-        <div key={value} className="flex justify-center">
-          <ContentsItem contentsId={value} size={150} albumArt={demoContent.albumArt} title={demoContent.title} artist={demoContent.artist} showFavorite={false} />
+        <div key={"content" + content.id} className="flex justify-center">
+          <ContentsItem
+            contentsId={content.id}
+            size={150}
+            albumArt={content.image}
+            title={content.title}
+            artist={creatorListFormat(content.creatorList)}
+            showFavorite={content.creatorList.findIndex((creator) => creator.id === userId) === -1}
+          />
         </div>
       )
     });
   } else if (category === "shorts") {
-    itemList = tempArray.map((value, index) => (
-      <div key={index} className="flex justify-center">
-        <ShortsItem title={category} />
+    itemList = shortsList.map((shorts, index) => (
+      <div key={"shorts" + shorts.id} className="flex justify-center">
+        <ShortsItem title={shorts.title} />
       </div>
     ));
   } else if (category === "live") {
-    itemList = tempArray.map((value, index) => (
-      <div key={index} className="flex justify-center">
-        <LiveItem title={category} />
+    itemList = liveList.map((live, index) => (
+      <div key={"live" + live.id} className="flex justify-center">
+        <LiveItem title={live.title} />
       </div>
     ));
   }
@@ -100,27 +172,21 @@ export default function MyPage() {
               </div>
               <div className="flex flex-col justify-center space-y-2">
                 <p className="text-base-content text-left text-3xl font-semibold">
-                  BeatHerb
+                  {(nickname ? nickname : "No Name")}
                 </p>
                 <p className="text-base-content text-left">
                   총 좋아요 수: 123456789
                 </p>
                 <div className="flex gap-1 flex-wrap">
-                  <div className="badge badge-lg badge-primary text-primary-content">
-                    primary
-                  </div>
-                  <div className="badge badge-lg badge-primary text-primary-content">
-                    primary
-                  </div>
-                  <div className="badge badge-lg badge-primary text-primary-content">
-                    primary
-                  </div>
-                  <div className="badge badge-lg badge-primary text-primary-content">
-                    primary
-                  </div>
-                  <div className="badge badge-lg badge-primary text-primary-content">
-                    primary
-                  </div>
+                  {
+                    hashtagList.length
+                      ? hashtagList.map((hashtag) => (
+                          <div key={"hashtag" + hashtag.id} className="badge badge-lg badge-primary text-primary-content">
+                            {hashtag.name}
+                          </div>
+                        ))
+                      : <p className="text-base-content">지정된 관심사가 없습니다.</p>
+                  }
                 </div>
               </div>
             </div>
@@ -128,7 +194,7 @@ export default function MyPage() {
               <div className="stats shadow">
                 <div
                   className="stat place-items-center cursor-pointer hover:bg-base-200"
-                  onClick={handleClickFollower}
+                  onClick={(userId === id ? handleClickFollower : () => {})}
                 >
                   <div className="stat-title">팔로워</div>
                   <div className="stat-value font-semibold text-3xl">
@@ -137,7 +203,7 @@ export default function MyPage() {
                 </div>
                 <div
                   className="stat place-items-center cursor-pointer hover:bg-base-200"
-                  onClick={handleClickFollowing}
+                  onClick={(userId === id ? handleClickFollowing : () => {})}
                 >
                   <div className="stat-title">팔로잉</div>
                   <div className="stat-value text-secondary font-semibold text-3xl">
@@ -145,22 +211,8 @@ export default function MyPage() {
                   </div>
                 </div>
               </div>
-              <div className="flex place-items-center">
-                <button
-                  className="btn btn-ghost"
-                  onClick={() => dmModalRef.current?.showModal()}
-                >
-                  <svg
-                    className="fill-primary"
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="32"
-                    viewBox="0 -960 960 960"
-                    width="32"
-                  >
-                    <path d="M240-400h320v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z" />
-                  </svg>
-                </button>
-                <Link to="/useredit" className="fill-primary hover:fill-primary">
+              { userId === id ? (
+                <div className="flex place-items-center">
                   <button
                     className="btn btn-ghost"
                     onClick={() => dmModalRef.current?.showModal()}
@@ -172,11 +224,35 @@ export default function MyPage() {
                       viewBox="0 -960 960 960"
                       width="32"
                     >
-                      <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
+                      <path d="M240-400h320v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z" />
                     </svg>
                   </button>
-                </Link>
-              </div>
+                  <Link to="/useredit" className="fill-primary hover:fill-primary">
+                    <button
+                      className="btn btn-ghost"
+                      onClick={() => dmModalRef.current?.showModal()}
+                    >
+                      <svg
+                        className="fill-primary"
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="32"
+                        viewBox="0 -960 960 960"
+                        width="32"
+                      >
+                        <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/>
+                      </svg>
+                    </button>
+                  </Link>
+                </div>) : null}
+              { userId && userId !== id ? (
+                <div className="flex place-items-center">
+                  <button
+                    className="btn btn-ghost text-primary hover:text-primary"
+                    onClick={toggleFollow}
+                  >
+                    {isFollow ? "UnFollow" : "Follow"}
+                  </button>
+                </div>) : null}
             </div>
           </div>
           <div role="tablist" className="tabs tabs-bordered my-8 tabs-lg">
