@@ -2,11 +2,12 @@
 
 import NavBar from "../components/NavBar";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import ContentsItem from "../components/ContentsItem";
-import ShortsItem from "../components/ShortsItem";
+import { useParams, useNavigate } from "react-router-dom";
+import ContentsItem from "../components/ContentsItem.js";
+import ShortsItem from "../components/ShortsItem.js";
 import axios from "axios";
-import LiveItem from "../components/LiveItem";
+import LiveItem from "../components/LiveItem.js";
+import MusicPlayer from "../components/MusicPlayer.js";
 
 const tabs = [
   { value: "melody", title: "멜로디" },
@@ -22,6 +23,7 @@ const commenttabs = [
 ];
 
 export default function ContentDetail() {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [category, setCategory] = useState("melody");
   const [comment, setComment] = useState("comment");
@@ -36,6 +38,8 @@ export default function ContentDetail() {
   const [outOrderList, setOutOrderList] = useState({});
   const [commentList, setCommentList] = useState([]);
   const [lyrics, setLyrics] = useState("");
+
+  const [showPlayer, setShowPlayer] = useState(false);
 
   useEffect(() => {
     const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
@@ -60,8 +64,13 @@ export default function ContentDetail() {
     })
     .catch((error) => {
       alert("데이터를 받는 도중 문제가 발생했습니다.");
+      navigate(-1);
     })
   }, [id]);
+
+  const initPlay = () => {
+    setShowPlayer(true);
+  }
 
   const creatorListFormat = (creatorList) => {
     let creatorText = "";
@@ -146,120 +155,128 @@ export default function ContentDetail() {
   }
 
   return (
-    <div className="h-full">
-      <div className="fixed top-0 w-full z-10">
-        <NavBar />
-      </div>
-      <div className="pt-[76px] mx-8">
-        <div className="mx-3 flex place-content-between">
-          <div className="flex gap-4 w-7/12">
-            <div className="flex flex-col">
-              <div className="w-52 h-52 rounded-md">
-                <img
-                  className="w-full rounded-md"
-                  src={imageSrc}
-                  alt="Album Art"
-                />
-              </div>
-              <div className="flex items-center justify-center w-52 h-16 rounded-md">
-                <button className="flex px-3 md:px-4 py-1 bg-base-100 text-white rounded-lg hover:bg-base-200">
-                  <div className="flex place-items-center gap-1">
-                    <p className="text text-2xl text-semibold">Play</p>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      width="28"
-                      hleight="28"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z"
-                      />
-                    </svg>
-                  </div>
-                </button>
-              </div>
-            </div>
-            <div className="flex flex-col h-52 place-content-center place-content-evenly">
-              <div className="space-y-2">
-                <p className="text-base-content text-left text-3xl font-semibold">{title ? title : "Title"}</p>
-                <p className="text-base-content text-left">
-                  {creatorListFormat(creatorList)}
-                </p>
-              </div>
-              <div className="space-y-2">
-                <div className="flex gap-1 flex-wrap">
-                  {
-                    hashtagList.map((hashtag, index) => (
-                      <div className="badge badge-lg badge-primary text-primary-content">
-                        {hashtag.name}
-                      </div>
-                    ))
-                  }
+    <>
+      <div className="h-full">
+        <div className="fixed top-0 w-full z-10">
+          <NavBar />
+        </div>
+        <div className="pt-[76px] mx-8">
+          <div className="mx-3 flex place-content-between">
+            <div className="flex gap-4 w-7/12">
+              <div className="flex flex-col">
+                <div className="w-52 h-52 rounded-md">
+                  <img
+                    className="w-full rounded-md"
+                    src={imageSrc}
+                    alt="Album Art"
+                  />
                 </div>
-                <div className="text-left">진입차수 : {inOrderListFormat(inOrderList)}</div>
+                <div className="flex items-center justify-center w-52 h-16 rounded-md">
+                  { !showPlayer && (
+                    <button 
+                      className="flex px-3 md:px-4 py-1 bg-base-100 text-white rounded-lg hover:bg-base-200"
+                      onClick={initPlay}
+                    >
+                      <div className="flex place-items-center gap-1">
+                        <p className="text text-2xl text-semibold">Play</p>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
+                          stroke="currentColor"
+                          width="28"
+                          hleight="28"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z"
+                          />
+                        </svg>
+                      </div>
+                    </button>
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-col h-52 place-content-center place-content-evenly">
+                <div className="space-y-2">
+                  <p className="text-base-content text-left text-3xl font-semibold">{title ? title : "Title"}</p>
+                  <p className="text-base-content text-left">
+                    {creatorListFormat(creatorList)}
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex gap-1 flex-wrap">
+                    {
+                      hashtagList.map((hashtag, index) => (
+                        <div className="badge badge-lg badge-primary text-primary-content">
+                          {hashtag.name}
+                        </div>
+                      ))
+                    }
+                  </div>
+                  <div className="text-left">진입차수 : {inOrderListFormat(inOrderList)}</div>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="flex w-5/12 h-auto rounded-md bg-base-200 px-4 py-8 items-center text-left m-auto">
-            {describe}
-          </div>
-        </div>
-        <div className="flex">
-          <div className="w-7/12 bg-base-200 rounded-md">
-            <div className="flex h-12 items-bottom justify-center items-end text-xl">
-              이 허브에 사용된
-            </div>
-            <div role="tablist" className="tabs tabs-bordered mb-8 mt-4">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.value}
-                  role="tab"
-                  className={
-                    "tab w-1/2 translate-x-1/2" + (category === tab.value ? " tab-active" : "")
-                  }
-                  onClick={() => setCategory(tab.value)}
-                >
-                  {tab.title}
-                </button>
-              ))}
-            </div>
-            <div
-              className={`grid gap-4 items-center scrollbar scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-base-200 hover:scrollbar-thumb-primary overflow-y-scroll  h-[32rem] overflow-auto ${
-                category === "live"
-                  ? "grid-cols-2"
-                  : category === "shorts"
-                  ? "grid-cols-3"
-                  : "grid-cols-4"
-              }`}
-            >
-              {itemView}
+            <div className="flex w-5/12 h-auto rounded-md bg-base-200 px-4 py-8 items-center text-left m-auto">
+              {describe}
             </div>
           </div>
-          <div className="w-5/12 rounded-md bg-primary">
-            <div role="tablist" className="tabs tabs-bordered my-8 tabs-lg">
-              {commenttabs.map((tab2) => (
-                <button
-                  key={tab2.value}
-                  role="tab"
-                  className={
-                    "tab w-1/2 translate-x-1/2 text-primary-content" + (comment === tab2.value ? " tab-active" : "")
-                  }
-                  style={comment === tab2.value ? { borderBottom: "2px solid #070707" } : {}}
-                  onClick={() => setComment(tab2.value)}
-                >
-                  {tab2.title}
-                </button>
-              ))}
+          <div className="flex">
+            <div className="w-7/12 bg-base-200 rounded-md">
+              <div className="flex h-12 items-bottom justify-center items-end text-xl">
+                이 허브에 사용된
+              </div>
+              <div role="tablist" className="tabs tabs-bordered mb-8 mt-4">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.value}
+                    role="tab"
+                    className={
+                      "tab w-1/2 translate-x-1/2" + (category === tab.value ? " tab-active" : "")
+                    }
+                    onClick={() => setCategory(tab.value)}
+                  >
+                    {tab.title}
+                  </button>
+                ))}
+              </div>
+              <div
+                className={`grid gap-4 items-center scrollbar scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-base-200 hover:scrollbar-thumb-primary overflow-y-scroll  h-[32rem] overflow-auto ${
+                  category === "live"
+                    ? "grid-cols-2"
+                    : category === "shorts"
+                    ? "grid-cols-3"
+                    : "grid-cols-4"
+                }`}
+              >
+                {itemView}
+              </div>
             </div>
-            <div className="bg-base-200 rounded-md m-4 h-[33rem] overflow-auto">{commentView}</div>
+            <div className="w-5/12 rounded-md bg-primary">
+              <div role="tablist" className="tabs tabs-bordered my-8 tabs-lg">
+                {commenttabs.map((tab2) => (
+                  <button
+                    key={tab2.value}
+                    role="tab"
+                    className={
+                      "tab w-1/2 translate-x-1/2 text-primary-content" + (comment === tab2.value ? " tab-active" : "")
+                    }
+                    style={comment === tab2.value ? { borderBottom: "2px solid #070707" } : {}}
+                    onClick={() => setComment(tab2.value)}
+                  >
+                    {tab2.title}
+                  </button>
+                ))}
+              </div>
+              <div className="bg-base-200 rounded-md m-4 h-[33rem] overflow-auto">{commentView}</div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      { showPlayer && <MusicPlayer music={{id, title, creator: creatorListFormat(creatorList), imageSrc}} /> }
+    </>
   );
 }

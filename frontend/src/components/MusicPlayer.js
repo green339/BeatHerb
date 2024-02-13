@@ -1,16 +1,19 @@
 import { useRef, useState, useEffect } from "react";
 import Hls from 'hls.js';
-export default function MusicPlayer() {
+export default function MusicPlayer({ music }) {
   const videoRef = useRef(null);
-  const [music,setMusic] = useState({
-    "title": "Title",
-    "creator": "Artist",
-    "src_link": "https://node5.wookoo.shop/api/content/play/0",
-  })
+  // const [music,setMusic] = useState(props.music ? props.music : {
+  //   "title": "Title",
+  //   "creator": "Artist",
+  //   "src_link": "https://node5.wookoo.shop/api/content/play/0",
+  // })
 
   const [duration, setDuration] = useState(0);
   const [percentage,setPercentage] = useState(0);
   const [play, setPlay] = useState(false);
+
+  const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
+  const src_link = `${serverUrl}/content/plat/${music.id}`;
   
   const backward = () => {
     console.log("이전 곡으로 이동")
@@ -32,7 +35,6 @@ export default function MusicPlayer() {
   const current = duration * (percentage / 100)
 
   const buttonClick = () => {
-    console.log(music.src_link)
     play ? videoRef.current.pause():videoRef.current.play()
     setPlay((prev) => !prev)
   }
@@ -41,13 +43,13 @@ export default function MusicPlayer() {
     seconds = Math.floor(seconds / 1);
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return minutes+(minutes==0?'0':'') + ":" + (remainingSeconds < 10 ? '0' : '') + remainingSeconds;
+    return minutes+(minutes===0?'0':'') + ":" + (remainingSeconds < 10 ? '0' : '') + remainingSeconds;
   }
 
   useEffect(() => {
     if (Hls.isSupported()) {
       const hls = new Hls();
-      hls.loadSource(music.src_link);
+      hls.loadSource(src_link);
       hls.attachMedia(videoRef.current);
     }
 
@@ -94,17 +96,17 @@ export default function MusicPlayer() {
         videoRef.current.removeEventListener('ended', endMusic)
       }
     };
-  }, [videoRef]);
+  }, [videoRef.current]);
 
 
   return (
     <div className="bg-base-content bg-opacity-50 rounded-t-xl text-base-100 pt-1 pb-1 fixed bottom-0 w-full">
       <div className="grid grid-cols-9">
         <div className="col-span-1 flex justify-end">
-          <video ref={videoRef} visibility="hidden" src={music.src_link} className="w-1">
+          <video ref={videoRef} visibility="hidden" src={src_link} className="w-1">
           </video>
           <div className="pe-3">
-            <img className="h-20 w-15"src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" alt="" />
+            <img className="h-20 w-15" src={music.imageSrc} alt="" />
           </div>
         </div>
         <div className="col-span-3 pe-4">

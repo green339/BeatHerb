@@ -29,12 +29,11 @@ export default function AuthEmailRedirection() {
       setRefreshToken(refreshToken, refreshTokenExpiresIn);
       setNickname(nickname);
       setUserId((id ? id : 1));
+      navigate(`/mypage/${(id ? id : 1)}`);
     })
     .catch((error) => {
-      console.log(error.message);
-    })
-    .finally(() => {
-      navigate("/");
+      console.log("로그인에 실패했습니다");
+      navigate("/login");
     })
   }, []);
 
