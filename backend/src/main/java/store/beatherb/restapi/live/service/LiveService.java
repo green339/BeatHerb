@@ -12,6 +12,7 @@ import store.beatherb.restapi.live.domain.*;
 import store.beatherb.restapi.live.domain.dto.request.LiveCreateRequest;
 import store.beatherb.restapi.live.domain.dto.request.LiveJoinRequest;
 import store.beatherb.restapi.live.domain.dto.response.LiveJoinResponse;
+import store.beatherb.restapi.live.dto.response.LiveDetailResponse;
 import store.beatherb.restapi.live.exception.LiveErrorCode;
 import store.beatherb.restapi.live.exception.LiveException;
 import store.beatherb.restapi.member.domain.Member;
@@ -151,5 +152,28 @@ public class LiveService {
         liveRepository.delete(live);
 
 
+    }
+
+    public List<LiveDetailResponse> liveList(){
+        List<Live> liveList = liveRepository.findAll();
+        List<LiveDetailResponse> response = new ArrayList<>();
+
+        for(Live live : liveList){
+            Member member = live.getMember();
+            List<String> contentTitleList = new ArrayList<>();
+            for(LiveContent liveContent : live.getLiveContentList()){
+                contentTitleList.add(liveContent.getContent().getTitle());
+            }
+
+            response.add(LiveDetailResponse.builder()
+                    .liveId(live.getId())
+                    .memberId(member.getId())
+                    .liveTitle(live.getTitle())
+                    .contentTitleList(contentTitleList)
+                    .masterName(member.getName())
+                    .build());
+        }
+
+        return response;
     }
 }
