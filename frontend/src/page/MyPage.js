@@ -7,7 +7,7 @@ import ShortsItem from "../components/ShortsItem";
 import LiveItem from "../components/LiveItem";
 import Dm from "../components/Dm";
 import Follow from "../components/Follow";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/AuthStore";
 import axios from "axios";
 
@@ -22,11 +22,11 @@ const tabs = [
 
 export default function MyPage() {
   const params = useParams();
+  const navigate = useNavigate();
   const [category, setCategory] = useState("melody");
   const [followType, setFollowType] = useState("follower");
   const followModalRef = useRef();
   const { userId, accessToken } = useAuthStore();
-  const [isFollow, setIsFollow] = useState(false);
 
   // 해당 유저가 업로드한 콘텐츠 목록
   const [melodyList, setMelodyList] = useState([]);
@@ -38,6 +38,8 @@ export default function MyPage() {
   // 유저 정보
   const [nickname, setNickname] = useState(null);
   const [hashtagList, setHashtagList] = useState([]);
+  const [followerList, setFollowerList] = useState([]);
+  const [followingList, setFollowingList] = useState([]);
 
   const id = Number(params.id);
 
@@ -54,6 +56,8 @@ export default function MyPage() {
 
       setNickname(data.nickname);
       setHashtagList((data.hashtagList ? data.hashtagList : []))
+      setFollowingList((data.followerList ? data.followerList : []));
+      setFollowerList((data.followingList ? data.followingList : []));
 
       setMelodyList((data.melodyList ? data.melodyList : []));
       setVocalList((data.vocalList ? data.vocalList : []));
@@ -62,13 +66,14 @@ export default function MyPage() {
       setLiveList((data.liveList ? data.liveList : []));
     })
     .catch((error) => {
-      alert("유저 정보가 존재하지 않습니다.");
+      alert(error.response.data.message);
+      navigate(-1);
     })
   }, [id])
 
   const toggleFollow = () => {
     const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
-    const method = (isFollow ? "delete" : "post")
+    const method = (followerList.findIndex((follower) => follower.id === userId) !== -1 ? "delete" : "post")
 
     axios({
       method,
@@ -84,7 +89,8 @@ export default function MyPage() {
       window.location.reload();
     })
     .catch((error) => {
-      alert("오류가 발생했습니다.")
+      console.log(error)
+      alert(error.response.data.message);
     })
   }
 
@@ -128,7 +134,7 @@ export default function MyPage() {
       return (
         <div key={"content" + content.id} className="flex justify-center">
           <ContentsItem
-            contentsId={content.id}
+            contentId={content.id}
             size={150}
             albumArt={content.image}
             title={content.title}
@@ -198,7 +204,7 @@ export default function MyPage() {
                 >
                   <div className="stat-title">팔로워</div>
                   <div className="stat-value font-semibold text-3xl">
-                    998,244,353
+                    {followerList.length}
                   </div>
                 </div>
                 <div
@@ -207,7 +213,7 @@ export default function MyPage() {
                 >
                   <div className="stat-title">팔로잉</div>
                   <div className="stat-value text-secondary font-semibold text-3xl">
-                    1,000,000,007
+                    {followingList.length}
                   </div>
                 </div>
               </div>
@@ -250,7 +256,7 @@ export default function MyPage() {
                     className="btn btn-ghost text-primary hover:text-primary"
                     onClick={toggleFollow}
                   >
-                    {isFollow ? "UnFollow" : "Follow"}
+                    {followerList.findIndex(follower => follower.id === userId) === -1 ? "Follow" : "UnFollow"}
                   </button>
                 </div>) : null}
             </div>
@@ -285,7 +291,7 @@ export default function MyPage() {
       </dialog>
       <dialog className="modal" ref={followModalRef}>
         <div className="modal-box w-11/12 max-w-5xl bg-base-200">
-          <Follow followType={followType} />
+          <Follow followType={followType} followingList={followingList} followerList={followerList}/>
         </div>
         <form method="dialog" className="modal-backdrop">
           <button>close</button>

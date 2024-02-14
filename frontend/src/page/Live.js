@@ -194,8 +194,7 @@ export default function Live() {
           }
         })
         .catch((error) => {
-          console.log(error);
-          alert("세션이 만료되었습니다.");
+          alert(error.response.data.message);
           navigate(-1); 
         });
       });

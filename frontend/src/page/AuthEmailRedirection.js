@@ -24,7 +24,6 @@ export default function AuthEmailRedirection() {
     })
     .then((response) => {
       const { accessToken, refreshToken, refreshTokenExpiresIn, nickname, id } = response.data;
-      console.log(accessToken);
       setAccessToken(accessToken);
       setRefreshToken(refreshToken, refreshTokenExpiresIn);
       setNickname(nickname);

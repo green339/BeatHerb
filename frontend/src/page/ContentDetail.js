@@ -8,6 +8,7 @@ import ShortsItem from "../components/ShortsItem.js";
 import axios from "axios";
 import LiveItem from "../components/LiveItem.js";
 import MusicPlayer from "../components/MusicPlayer.js";
+import { creatorListFormat } from "../common/creatorListFormat.js";
 
 const tabs = [
   { value: "melody", title: "멜로디" },
@@ -72,18 +73,6 @@ export default function ContentDetail() {
     setShowPlayer(true);
   }
 
-  const creatorListFormat = (creatorList) => {
-    let creatorText = "";
-    creatorList.forEach((creator, index) => {
-      if (creatorText !== "") {
-        creatorText += ", ";
-      }
-      creatorText += creator.nickname;
-    })
-
-    return (creatorText !== "" ? creatorText : "creator");
-  }
-
   const inOrderListFormat = (inOrderList) => {
     let inOrderText = "";
     inOrderList.forEach((inOrder, index) => {
@@ -113,7 +102,7 @@ export default function ContentDetail() {
 
     itemView = contentList?.map((content, index) => (
         <div key={"content" + content.id} className="flex justify-center">
-          <ContentsItem contentsId={content.id} size={150} albumArt={content.image} title={content.title} artist={creatorListFormat(content.creatorList)} showFavorite={false} />
+          <ContentsItem contentId={content.id} size={150} albumArt={content.image} title={content.title} artist={creatorListFormat(content.creatorList)} showFavorite={false} />
         </div>
       )
     );
