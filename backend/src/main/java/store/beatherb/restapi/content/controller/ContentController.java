@@ -34,7 +34,7 @@ public class ContentController {
 
 
     @GetMapping("/search")
-    public ResponseEntity<ApiResponse<ContentTitleSearchResponse>> searchByTitle(@RequestParam String title, @RequestParam List<Long> hashTagIds){
+    public ResponseEntity<ApiResponse<ContentTitleSearchResponse>> searchByTitle(@RequestParam(required = false) String title, @RequestParam(name="id", required = false) List<Long> hashTagIds){
         ContentTitleSearchResponse contentTitleSearchResponse = contentService.searchByTitle(title, hashTagIds);
         return ResponseEntity.ok(ApiResponse.successWithData(contentTitleSearchResponse));
     }

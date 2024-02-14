@@ -57,8 +57,6 @@ public class ContentService {
 
     private final ContentTypeRepository contentTypeRepository;
 
-    private final ContentHashTagRepository contentHashTagRepository;
-
     private final String CROPPED_DIRECTORY;
     private final String REFERENCE_DIRECTORY;
     private final String IMAGE_DIRECTORY;
@@ -470,11 +468,13 @@ public class ContentService {
     public ContentTitleSearchResponse searchByTitle(String title, List<Long> hashTagIds) {
 
         List<Content> contentList = new ArrayList<>();
-        if (title != null && hashTagIds.isEmpty()){
+        System.out.println(title);
+        System.out.println(hashTagIds);
+        if (title != null && hashTagIds != null) {
             contentList = contentRepository.findByTitleAndHashtags(title, hashTagIds);
         } else if (title != null) {
             contentList = contentRepository.findByTitleContains(title);
-        } else if (hashTagIds.isEmpty()) {
+        } else if (hashTagIds != null) {
             contentList = contentRepository.findByHashtags(hashTagIds);
         }
 

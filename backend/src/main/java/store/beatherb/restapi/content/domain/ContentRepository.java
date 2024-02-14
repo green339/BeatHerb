@@ -12,9 +12,9 @@ public interface ContentRepository extends JpaRepository<Content, Long> {
     List<Content> findByTitleContains(String title);
 //    List<Content> findByContentHashTagList(List<ContentHashTag> contentHashTags);
 
-    @Query("select distinct c from Content c left join ContentHashTag h where c = h.content and h.hashTag.id in :hashTagIds")
+    @Query("select distinct c from Content c left join c.contentHashTagList h where c = h.content and h.hashTag.id in :hashTagIds")
     List<Content> findByHashtags(@Param("hashTagIds") List<Long> hashTagIds);
 
-    @Query("select distinct c from Content c left join ContentHashTag h where c = h.content and h.hashTag.id in :hashTagIds and c.title = :title")
+    @Query("select distinct c from Content c left join c.contentHashTagList h where c = h.content and h.hashTag.id in :hashTagIds and c.title = :title")
     List<Content> findByTitleAndHashtags(@Param("title") String title, @Param("hashTagIds") List<Long> hashTagIds);
 }
