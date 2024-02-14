@@ -22,6 +22,6 @@ public class VerifyTokenResponse {
         this.refreshTokenExpiresIn = refreshTokenExpiresIn;
         this.nickname = nickname;
         this.id = id;
-        this.socket = "wss://socket.beatherb.store?token="+socket;
+        this.socket = "wss://socket.beatherb.store/socket?token="+socket;
     }
 }
