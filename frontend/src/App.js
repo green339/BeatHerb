@@ -16,8 +16,8 @@ import ContentDetail from './page/ContentDetail.js';
 import UploadMusic from './page/UploadMusic.js';
 import TestModal from './page/TestModal.js';
 import UserEdit from './page/UserEdit.js';
-import Live from "./page/Live";
-import AuthEmailRedirection from "./page/AuthEmailRedirection";
+import Live from './page/Live.js';
+import AuthEmailRedirection from './page/AuthEmailRedirection.js'
 
 
 export default function App() {
@@ -44,7 +44,6 @@ export default function App() {
           <Route path="/*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
-      {/* <MusicPlayer /> */}
     </div>
   );
 }

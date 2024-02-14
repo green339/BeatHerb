@@ -10,15 +10,20 @@ export const useAuthStore = create(
       setAccessToken: (token) => {
         set((prev) => ({accessToken: token}))
       },
-      removeAccessToken: () => {
-        set((prev) => ({accessToken: null}))
-      },
       setNickname: (nickname) => {
-        set((prev) => ({name: nickname}))
+        set((prev) => ({nickname: nickname}))
       },
       setUserId: (id) => {
         set((prev) => ({userId: id}))
       },
+      removeUserStatus: () => {
+        set((prev) => ({
+          accessToken: null,
+          nickname: "",
+          userId: null,
+          profileImage: null,
+        }))
+      }
     }),
     {
       name: 'auth-store',

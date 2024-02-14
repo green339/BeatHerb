@@ -61,12 +61,10 @@ export default function Live() {
 
   const navigate = useNavigate();
 
-  const { accessToken } = useAuthStore();
+  const { accessToken, nickname } = useAuthStore();
 
   // OpenVidu 관련 상태 값
   const ov = useRef(null); 
-  const [mySessionId, setMySessionId] = useState('SessionA');
-  const [myUserName, setMyUserName] = useState("호스트");
   const [session, setSessionCallback] = useStateCallback();
   const [mainStreamManager, setMainStreamManager] = useState();  // Main video of the page. Will be the 'publisher' or one of the 'subscribers'
   const [publisher, setPublisher] = useState();
@@ -84,14 +82,6 @@ export default function Live() {
   const onbeforeunload = (e) => {
     e.preventDefault();
     leaveSession();
-  }
-
-  const handleChangeSessionId = (e) => {
-    setMySessionId(e.target.value);
-  }
-
-  const handleChangeUserName = (e) => {
-    setMyUserName(e.target.value);
   }
 
   const handleMainVideoStream = (stream) => {
@@ -116,8 +106,6 @@ export default function Live() {
     ov.current = null;
     setSessionCallback(undefined);
     setSubscribers([]);
-    setMySessionId('SessionA');
-    setMyUserName('Participant' + Math.floor(Math.random() * 100));
     setMainStreamManager(undefined);
     setPublisher(undefined);
 
@@ -174,7 +162,7 @@ export default function Live() {
       });
 
       // 세션에 연결
-      mySession.connect(token, { clientData: myUserName })
+      mySession.connect(token, { clientData: (nickname ? nickname : "No Name") })
         .then(async () => {
           // 세션에 연결하는 클라이언트의 역할이 Publisher 또는 Owner이면 if문 안의 작업을 수행
           if (role === "GUEST" || role === "OWNER") {
@@ -206,9 +194,8 @@ export default function Live() {
           }
         })
         .catch((error) => {
-          console.log(error);
-          alert("세션이 만료되었습니다.");
-          navigate("/board/live"); 
+          alert(error.response.data.message);
+          navigate(-1); 
         });
       });
   }
@@ -221,7 +208,7 @@ export default function Live() {
 
   return (
     <>
-      <div className="pt-16 grid grid-cols-10">
+      <div className="pt-4 grid grid-cols-10">
         <div className="col-span-7">
           <div className="mt-6 mb-4 flex justify-center items-center">
             {mainStreamManager !== undefined ? (

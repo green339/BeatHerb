@@ -21,13 +21,13 @@ export default function AllBoard() {
 
     axios({
       method: "get",
-      url: `${serverUrl}/content`
+      url: `${serverUrl}/content/search?title=${query}`
     })
     .then((response) => {
       console.log(response.data);
     })
     .catch((error) => {
-      console.log(error.message);
+      console.log(error.response.data.message);
     })
   }, [])
   
@@ -47,7 +47,7 @@ export default function AllBoard() {
       <ItemContainerWithTitle title="Shorts" link="/board/shorts" scrolled>
         {Array(10).fill().map((v,i)=>i+1).map((value, index) => {
           return (
-            <div key={index} className="flex justify-center">
+            <div key={"shorts" + index} className="flex justify-center">
               <div>
                 <ShortsItem title="Title"/>
               </div>
@@ -58,7 +58,7 @@ export default function AllBoard() {
       <ItemContainerWithTitle title="라이브" link="/board/live" scrolled>
         {Array(10).fill().map((v,i)=>i+1).map((value, index) => {
           return (
-            <div key={index} className="flex justify-center">
+            <div key={"live" + index} className="flex justify-center">
               <div>
                 <LiveItem title="Title"/>
               </div>

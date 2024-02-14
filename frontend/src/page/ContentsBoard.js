@@ -4,6 +4,8 @@ import { useState, useEffect } from "react"
 import ContentsItem from "../components/ContentsItem";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import { useAuthStore } from "../store/AuthStore";
+import { creatorListFormat } from "../common/creatorListFormat.js";
 
 // 탭 리스트
 const tabs = [
@@ -14,32 +16,56 @@ const tabs = [
 
 export default function ContentsBoard() {
   const location = useLocation();
+  const { accessToken } = useAuthStore();
   const [category, setCategory] = useState(location.state?.category || "melody");
   const [sortOption, setSortOption] = useState(location.state?.sortOption || "recent");
   const [contentList, setContentList] = useState([]);
+  const [favoriteList, setFavoriteList] = useState([]);
 
   useEffect(() => {
     const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
+    const endPoint = (sortOption === "recent" ? "/content/search?title=" : "/content/popularity")
 
     axios({
       method: "get",
-      url: `${serverUrl}/content`
+      url: `${serverUrl}${endPoint}`
     })
     .then((response) => {
-      console.log(response.data);
+
+      //새롭게 화면에 띄울 컨텐트 리스트
+      let newContentList = []
+
+      if (category === "melody") {
+        newContentList = response.data.data.melodyList;
+      } else if (category === "vocal") {
+        newContentList = response.data.data.vocalList;
+      } else {
+        newContentList = response.data.data.soundTrackList;
+      }
+
+      // 새롭게 띄울 컨텐트들의 아이디만 모아놓은 리스트
+      const contentIdList = newContentList.map((content, index) => content.id);
+
+      axios({
+        method: "get",
+        url: `${serverUrl}/content/star?contentId=${contentIdList}`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+      .then((response) => {
+        console.log(response.data);
+        setContentList(newContentList);
+        setFavoriteList(contentIdList);
+      })
+      .catch((error) => {
+        alert(error.response.data.message ? error.response.data.message : error.response.data.error)
+      })
     })
     .catch((error) => {
-      console.log(error.message);
+      alert(error.response.data.message);
     })
-
-    // 임시
-    //백엔드랑 연결 후 삭제 예정
-    const contentsNum = (sortOption === "recent" ? 100 : 5);
-    const newContentList = Array(contentsNum).fill().map((v,i)=>i+1)
-    setContentList(newContentList);
-
-    return () => setContentList([]);
-  }, [category, sortOption])
+  }, [accessToken, category, sortOption])
 
   const handleSortOptionChange = (e) => {
     setSortOption(e.target.value);
@@ -75,15 +101,18 @@ export default function ContentsBoard() {
 
       <div className="grid grid-cols-4 gap-4 items-center">
         {
-          contentList.map((value, index) => {
-            const demoContent = {
-              albumArt: "https://img.freepik.com/free-vector/background-colorful-musical-notes_23-2147633120.jpg?w=740&t=st=1705448093~exp=1705448693~hmac=00f2208917eeabe7c5309cb7efc90defc713277bede12138776ae696c5456d04",
-              title: category,
-              artist: "Artist"
-            }
+          contentList.map((content, index) => {
+            const isFavorite = favoriteList.find((favorite) => favorite.id === content.id);
             return (
-              <div key={value} className="flex justify-center">
-                <ContentsItem contentsId={value} size={150} albumArt={demoContent.albumArt} title={demoContent.title} artist={demoContent.artist}/>
+              <div key={"content" + content.id} className="flex justify-center">
+                <ContentsItem 
+                  contentsId={content.id} 
+                  size={150} 
+                  albumArt={content.image} 
+                  title={content.title} 
+                  artist={creatorListFormat(content.creatorList)}
+                  isFavorite={isFavorite}
+                />
               </div>
             )
           })

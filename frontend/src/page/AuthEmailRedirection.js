@@ -24,17 +24,16 @@ export default function AuthEmailRedirection() {
     })
     .then((response) => {
       const { accessToken, refreshToken, refreshTokenExpiresIn, nickname, id } = response.data;
-      console.log(accessToken);
       setAccessToken(accessToken);
       setRefreshToken(refreshToken, refreshTokenExpiresIn);
       setNickname(nickname);
-      setUserId((id ? id : 1));
+      setUserId((id));
+      navigate(`/mypage/${(id)}`);
+      
     })
     .catch((error) => {
-      console.log(error.message);
-    })
-    .finally(() => {
-      navigate("/");
+      console.log("로그인에 실패했습니다");
+      navigate("/login");
     })
   }, []);
 

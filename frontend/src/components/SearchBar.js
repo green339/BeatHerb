@@ -135,40 +135,30 @@ export default function SearchBar({ initQuery = "", initHashtagListString = "" }
           <p className="py-4">검색에 사용할 해시태그</p>
           <div className="flex flex-wrap m-4 gap-4">
             {
-              hashtagList.map((hashtag) => (
-                <>
-                  {
-                    hashtag.isSelected ? 
-                    <div 
-                      key={"hashtag" + hashtag.id} 
-                      className="badge badge-lg badge-primary text-primary-content cursor-pointer" 
-                      id={"hashtag" + hashtag.id}
-                      onClick={() => handleToggleHashtagSelected(hashtag.id)}
-                    >
-                      {hashtag.name}
-                    </div> : null
-                  }
-                </>
+              hashtagList.filter(hashtag => hashtag.isSelected).map((hashtag) => (
+                <div 
+                  key={"hashtag" + hashtag.id} 
+                  className="badge badge-lg badge-primary text-primary-content cursor-pointer" 
+                  id={"hashtag" + hashtag.id}
+                  onClick={() => handleToggleHashtagSelected(hashtag.id)}
+                >
+                  {hashtag.name}
+                </div>
               ))
             }
           </div>
           <p className="py-4">해시태그 목록</p>
           <div className="flex flex-wrap m-4 gap-4">
             {
-              hashtagList.map((hashtag) => (
-                <>
-                  {
-                    !hashtag.isSelected ? 
-                    <div 
-                      key={"hashtag" + hashtag.id} 
-                      className="badge badge-lg badge-primary text-primary-content cursor-pointer" 
-                      id={"hashtag" + hashtag.id}
-                      onClick={() => handleToggleHashtagSelected(hashtag.id)}
-                    >
-                      {hashtag.name}
-                    </div> : null
-                  }
-                </>
+              hashtagList.filter(hashtag => !hashtag.isSelected).map((hashtag) => (
+                <div 
+                  key={"hashtag" + hashtag.id} 
+                  className="badge badge-lg badge-primary text-primary-content cursor-pointer" 
+                  id={"hashtag" + hashtag.id}
+                  onClick={() => handleToggleHashtagSelected(hashtag.id)}
+                >
+                  {hashtag.name}
+                </div>
               ))
             }
           </div>
