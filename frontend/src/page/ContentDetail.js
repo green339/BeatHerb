@@ -2,13 +2,11 @@
 
 import NavBar from "../components/NavBar";
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import ContentsItem from "../components/ContentsItem.js";
-import ShortsItem from "../components/ShortsItem.js";
+import { useParams } from "react-router-dom";
+import ContentsItem from "../components/ContentsItem";
+import ShortsItem from "../components/ShortsItem";
 import axios from "axios";
-import LiveItem from "../components/LiveItem.js";
-import MusicPlayer from "../components/MusicPlayer.js";
-import { creatorListFormat } from "../common/creatorListFormat.js";
+import LiveItem from "../components/LiveItem";
 
 const tabs = [
   { value: "melody", title: "멜로디" },
@@ -24,7 +22,6 @@ const commenttabs = [
 ];
 
 export default function ContentDetail() {
-  const navigate = useNavigate();
   const { id } = useParams();
   const [category, setCategory] = useState("melody");
   const [comment, setComment] = useState("comment");
@@ -39,8 +36,6 @@ export default function ContentDetail() {
   const [outOrderList, setOutOrderList] = useState({});
   const [commentList, setCommentList] = useState([]);
   const [lyrics, setLyrics] = useState("");
-
-  const [showPlayer, setShowPlayer] = useState(false);
 
   useEffect(() => {
     const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
@@ -65,12 +60,19 @@ export default function ContentDetail() {
     })
     .catch((error) => {
       alert("데이터를 받는 도중 문제가 발생했습니다.");
-      navigate(-1);
     })
   }, [id]);
 
-  const initPlay = () => {
-    setShowPlayer(true);
+  const creatorListFormat = (creatorList) => {
+    let creatorText = "";
+    creatorList.forEach((creator, index) => {
+      if (creatorText !== "") {
+        creatorText += ", ";
+      }
+      creatorText += creator.nickname;
+    })
+
+    return (creatorText !== "" ? creatorText : "creator");
   }
 
   const inOrderListFormat = (inOrderList) => {
@@ -92,7 +94,7 @@ export default function ContentDetail() {
   if (category === "melody" || category === "vocal" || category === "music") {
     let contentList;
 
-    if(category === "melody") {
+    if (category === "melody") {
       contentList = outOrderList.melodyList;
     } else if (category === "vocal") {
       contentList = outOrderList.vocalList;
@@ -101,11 +103,17 @@ export default function ContentDetail() {
     }
 
     itemView = contentList?.map((content, index) => (
-        <div key={"content" + content.id} className="flex justify-center">
-          <ContentsItem contentId={content.id} size={150} albumArt={content.image} title={content.title} artist={creatorListFormat(content.creatorList)} showFavorite={false} />
-        </div>
-      )
-    );
+      <div key={"content" + content.id} className="flex justify-center">
+        <ContentsItem
+          contentsId={content.id}
+          size={150}
+          albumArt={content.image}
+          title={content.title}
+          artist={creatorListFormat(content.creatorList)}
+          showFavorite={false}
+        />
+      </div>
+    ));
   } else if (category === "shorts") {
     itemView = outOrderList.shortsList?.map((shorts, index) => (
       <div key={"shorts" + shorts.id} className="flex justify-center">
@@ -122,18 +130,23 @@ export default function ContentDetail() {
 
   if (comment === "comment") {
     commentView = commentList.map((comment, index) => (
-      <div key={"comment" + comment.id} className="flex justify-center m-10">
-        <div className="flex w-full mt-2 space-x-3">
-          <div>
-            <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
-            <div className="text-xs text-gray-500 leading-none">{comment.member.nickname}</div>
-          </div>
-          <div>
-            <div className="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
-              <p className="text-sm">{comment.body}</p>
+      <div>
+        <div
+          key={"comment" + comment.id}
+          className="flex justify-center m-10  flex-grow overflow-auto"
+        >
+          <div className="flex w-full mt-2 space-x-3">
+            <div>
+              <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
+              <div className="text-xs text-gray-500 leading-none">{comment.member.nickname}</div>
             </div>
-            <div className="text-right">
-              <div className="text-xs text-gray-500 leading-none">2 min ago</div>
+            <div>
+              <div className="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
+                <p className="text-sm">{comment.body}</p>
+              </div>
+              <div className="text-right">
+                <div className="text-xs text-gray-500 leading-none">2 min ago</div>
+              </div>
             </div>
           </div>
         </div>
@@ -162,7 +175,7 @@ export default function ContentDetail() {
                 </div>
                 <div className="flex items-center justify-center w-52 h-16 rounded-md">
                   { !showPlayer && (
-                    <button 
+                    <button
                       className="flex px-3 md:px-4 py-1 bg-base-100 text-white rounded-lg hover:bg-base-200"
                       onClick={initPlay}
                     >
