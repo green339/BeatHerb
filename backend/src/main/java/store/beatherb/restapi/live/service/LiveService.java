@@ -12,7 +12,9 @@ import store.beatherb.restapi.live.domain.*;
 import store.beatherb.restapi.live.domain.dto.request.LiveCreateRequest;
 import store.beatherb.restapi.live.domain.dto.request.LiveJoinRequest;
 import store.beatherb.restapi.live.domain.dto.response.LiveJoinResponse;
+import store.beatherb.restapi.live.dto.response.LiveContentResponse;
 import store.beatherb.restapi.live.dto.response.LiveDetailResponse;
+import store.beatherb.restapi.live.dto.response.MasterMemberResponse;
 import store.beatherb.restapi.live.exception.LiveErrorCode;
 import store.beatherb.restapi.live.exception.LiveException;
 import store.beatherb.restapi.member.domain.Member;
@@ -160,17 +162,24 @@ public class LiveService {
 
         for(Live live : liveList){
             Member member = live.getMember();
-            List<String> contentTitleList = new ArrayList<>();
+            List<LiveContentResponse> contentList = new ArrayList<>();
             for(LiveContent liveContent : live.getLiveContentList()){
-                contentTitleList.add(liveContent.getContent().getTitle());
+                Content content = liveContent.getContent();
+
+                contentList.add(LiveContentResponse.builder()
+                        .id(content.getId())
+                        .title(content.getTitle())
+                        .build());
             }
 
             response.add(LiveDetailResponse.builder()
-                    .liveId(live.getId())
-                    .memberId(member.getId())
-                    .liveTitle(live.getTitle())
-                    .contentTitleList(contentTitleList)
-                    .masterName(member.getName())
+                    .id(live.getId())
+                    .title(live.getTitle())
+                    .contentList(contentList)
+                    .member(MasterMemberResponse.builder()
+                                    .id(member.getId())
+                                    .name(member.getName())
+                                    .build())
                     .build());
         }
 
