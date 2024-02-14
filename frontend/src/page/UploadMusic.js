@@ -45,7 +45,7 @@ export default function UploadMusic({ music, rootContentIdList }) {
 
     // 컴포넌트가 마운트되었을 때 한 번만 데이터를 가져오도록 설정
     fetchData();
-  }, []);
+  }, [music]);
 
   const handleAddCategory = () => {
     setShowHashTag(!showHashTag);
@@ -77,9 +77,7 @@ export default function UploadMusic({ music, rootContentIdList }) {
   };
 
   const onSubmit = async () => {
-    const selectedHashTags = hashTagIdList
-      .filter((item) => item.selected)
-      .map((item) => item.id);
+    const selectedHashTags = hashTagIdList.filter((item) => item.selected).map((item) => item.id);
 
     if (
       !titleRef.current.value ||
@@ -103,11 +101,7 @@ export default function UploadMusic({ music, rootContentIdList }) {
     if (image) {
       formData.append("image", image);
     }
-    formData.append(
-      "music",
-      await convertMedia(music),
-      titleRef.current.value + ".mp3"
-    );
+    formData.append("music", await convertMedia(music), titleRef.current.value + ".mp3");
     formData.append("type", type);
     console.log(formData);
     await uploadMusic(formData).then(clear);
@@ -118,6 +112,7 @@ export default function UploadMusic({ music, rootContentIdList }) {
     setLyrics(null);
     selectImgFile.current.value = "";
     setHashTagIdList([]);
+    setShowHashTag(false);
     describeRef.current.value = "";
     titleRef.current.value = "";
     setType(null);
@@ -156,9 +151,7 @@ export default function UploadMusic({ music, rootContentIdList }) {
 
           <div className="flex pb-10 justify-between mx-6">
             <div className="text-left whitespace-nowrap pr-10">앨범표지</div>
-            {image && (
-              <div className="w-full h-full text-left">{image.name}</div>
-            )}
+            {image && <div className="w-full h-full text-left">{image.name}</div>}
             <input
               type="file"
               accept="image/*"
@@ -178,9 +171,7 @@ export default function UploadMusic({ music, rootContentIdList }) {
 
           <div className="flex pb-10 justify-between mx-6">
             <div className="text-left whitespace-nowrap pr-10">가사</div>
-            {lyrics && (
-              <div className="w-full h-full text-left pl-8">{lyrics.name}</div>
-            )}
+            {lyrics && <div className="w-full h-full text-left pl-8">{lyrics.name}</div>}
             <input
               type="file"
               style={{ display: "none" }}
@@ -204,10 +195,7 @@ export default function UploadMusic({ music, rootContentIdList }) {
                 hashTagIdList.map(
                   (item, index) =>
                     item.selected && (
-                      <div
-                        key={index}
-                        className="btn btn-xs btn-outline btn-primary mr-2"
-                      >
+                      <div key={index} className="btn btn-xs btn-outline btn-primary mr-2">
                         {item.name}
                       </div>
                     )
@@ -218,9 +206,7 @@ export default function UploadMusic({ music, rootContentIdList }) {
             </div>
           </div>
           <div className="ml-32 pb-8">
-            {showHashTag && (
-              <HashTagList data={hashTagIdList} setData={setHashTagIdList} />
-            )}
+            {showHashTag && <HashTagList data={hashTagIdList} setData={setHashTagIdList} />}
           </div>
 
           <div className="flex pb-10 justify-between mx-6 items-top">

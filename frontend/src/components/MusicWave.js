@@ -172,7 +172,11 @@ const MusicWave = forwardRef(({}, ref) => {
       //   navigator.getUserMedia(constraints, gotStream, logError);
       // }
     });
-    return () => {};
+    return () => {
+      if (eeRef.current) {
+        eeRef.current.emit("clear");
+      }
+    };
   }, []);
   if (eeRef.current) {
     eeRef.current.on("mute", function (track) {

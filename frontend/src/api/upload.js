@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: "http://localhost:8080/api/",
+  baseURL: process.env.REACT_APP_TEST_SERVER_BASE_URL,
   mode: "cors",
   headers: {
     "Content-Type": "multipart/form-data",
@@ -14,7 +14,11 @@ export function uploadMusic(data) {
   console.log("axios", data);
   return apiClient.post("/content/upload", data);
 }
-export function loadMusic(data) {
+// export function loadMusic(data) {
+//   console.log("axios", data);
+//   return apiClient.get("/content/load/" + data);
+// }
+export function uploadShorts(data) {
   console.log("axios", data);
-  return apiClient.get("/content/load/"+data);
+  return apiClient.post("/shorts/upload", data);
 }
