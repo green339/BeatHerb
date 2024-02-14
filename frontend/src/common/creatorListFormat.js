@@ -4,7 +4,7 @@ export const creatorListFormat = (creatorList) => {
     if (creatorText !== "") {
       creatorText += ", ";
     }
-    creatorText += creator.nickname;
+    creatorText += (creator.nickname ? creator.nickname : "No Name");
   })
 
   return (creatorText !== "" ? creatorText : "creator");

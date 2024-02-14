@@ -2,6 +2,7 @@
 
 import { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
+import { creatorListFormat } from "../common/creatorListFormat";
 import defaultAlbum from "../assets/default_album.jpeg"
 
 export default function ContentsRanking({ title, link, data, contentList = [] }) {
@@ -17,7 +18,7 @@ export default function ContentsRanking({ title, link, data, contentList = [] })
             <img className="w-12 rounded-md" src={content.image ? content.image : defaultAlbum} alt=""/>
             <p className="text-base-content m-0">{content.title}</p>
           </div>
-          <p className="text-base-content m-0">Artist</p>
+          <p className="text-base-content m-0">{creatorListFormat(content.creatorList)}</p>
         </div>
       </Fragment>
     )

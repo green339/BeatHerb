@@ -13,7 +13,7 @@ export default function MusicPlayer({ music }) {
   const [play, setPlay] = useState(false);
 
   const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
-  const src_link = `${serverUrl}/content/plat/${music.id}`;
+  const src_link = `${serverUrl}/content/play/${music.id}`;
   
   const backward = () => {
     console.log("이전 곡으로 이동")

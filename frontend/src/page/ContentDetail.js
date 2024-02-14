@@ -2,11 +2,13 @@
 
 import NavBar from "../components/NavBar";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import ContentsItem from "../components/ContentsItem";
-import ShortsItem from "../components/ShortsItem";
+import { useParams, useNavigate } from "react-router-dom";
+import ContentsItem from "../components/ContentsItem.js";
+import ShortsItem from "../components/ShortsItem.js";
 import axios from "axios";
-import LiveItem from "../components/LiveItem";
+import LiveItem from "../components/LiveItem.js";
+import MusicPlayer from "../components/MusicPlayer.js";
+import { creatorListFormat } from "../common/creatorListFormat.js";
 
 const tabs = [
   { value: "melody", title: "멜로디" },
@@ -22,6 +24,7 @@ const commenttabs = [
 ];
 
 export default function ContentDetail() {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [category, setCategory] = useState("melody");
   const [comment, setComment] = useState("comment");
@@ -33,9 +36,11 @@ export default function ContentDetail() {
   const [creatorList, setCreatorList] = useState([]);
   const [hashtagList, setHashtagList] = useState([]);
   const [inOrderList, setInOrderList] = useState([]);
-  const [outOrderList, setOutOrderList] = useState({});
+  const [outOrder, setOutOrder] = useState({});
   const [commentList, setCommentList] = useState([]);
   const [lyrics, setLyrics] = useState("");
+
+  const [showPlayer, setShowPlayer] = useState(false);
 
   useEffect(() => {
     const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
@@ -45,34 +50,27 @@ export default function ContentDetail() {
       url: `${serverUrl}/content/${id}`,
     })
     .then((response) => {
-      console.log(response.data);
+      console.log(response.data.data);
       const data = response.data.data;
 
       setImageSrc(data.image);
       setTitle(data.title);
       setDescribe(data.describe);
       setCreatorList(data.creatorList);
-      setHashtagList(data.hashtagList);
+      setHashtagList(data.hashTagList);
       setInOrderList(data.inOrderList); 
-      setOutOrderList(data.outOrderList);
+      setOutOrder(data.outOrder);
       setCommentList(data.commentList);
       setLyrics(data.lyrics);
     })
     .catch((error) => {
       alert("데이터를 받는 도중 문제가 발생했습니다.");
+      navigate(-1);
     })
   }, [id]);
 
-  const creatorListFormat = (creatorList) => {
-    let creatorText = "";
-    creatorList.forEach((creator, index) => {
-      if (creatorText !== "") {
-        creatorText += ", ";
-      }
-      creatorText += creator.nickname;
-    })
-
-    return (creatorText !== "" ? creatorText : "creator");
+  const initPlay = () => {
+    setShowPlayer(true);
   }
 
   const inOrderListFormat = (inOrderList) => {
@@ -94,34 +92,28 @@ export default function ContentDetail() {
   if (category === "melody" || category === "vocal" || category === "music") {
     let contentList;
 
-    if (category === "melody") {
-      contentList = outOrderList.melodyList;
+    if(category === "melody") {
+      contentList = outOrder.melodyList;
     } else if (category === "vocal") {
-      contentList = outOrderList.vocalList;
+      contentList = outOrder.vocalList;
     } else {
-      contentList = outOrderList.soundTrackList;
+      contentList = outOrder.soundTrackList;
     }
 
     itemView = contentList?.map((content, index) => (
-      <div key={"content" + content.id} className="flex justify-center">
-        <ContentsItem
-          contentsId={content.id}
-          size={150}
-          albumArt={content.image}
-          title={content.title}
-          artist={creatorListFormat(content.creatorList)}
-          showFavorite={false}
-        />
-      </div>
-    ));
+        <div key={"content" + content.id} className="flex justify-center">
+          <ContentsItem contentId={content.id} size={150} albumArt={content.image} title={content.title} artist={creatorListFormat(content.creatorList)} showFavorite={false} />
+        </div>
+      )
+    );
   } else if (category === "shorts") {
-    itemView = outOrderList.shortsList?.map((shorts, index) => (
+    itemView = outOrder.shortsList?.map((shorts, index) => (
       <div key={"shorts" + shorts.id} className="flex justify-center">
         <ShortsItem title={shorts.title} />
       </div>
     ));
   } else if (category === "live") {
-    itemView = outOrderList.liveList?.map((live, index) => (
+    itemView = outOrder.liveList?.map((live, index) => (
       <div key={"live" + live.id} className="flex justify-center">
         <LiveItem title={live.title} />
       </div>
@@ -212,7 +204,7 @@ export default function ContentDetail() {
                   <div className="flex gap-1 flex-wrap">
                     {
                       hashtagList.map((hashtag, index) => (
-                        <div className="badge badge-lg badge-primary text-primary-content">
+                        <div key={"hashtag"+hashtag.id} className="badge badge-lg badge-primary text-primary-content">
                           {hashtag.name}
                         </div>
                       ))

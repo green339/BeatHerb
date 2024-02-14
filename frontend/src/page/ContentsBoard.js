@@ -45,18 +45,22 @@ export default function ContentsBoard() {
 
       // 새롭게 띄울 컨텐트들의 아이디만 모아놓은 리스트
       const contentIdList = newContentList.map((content, index) => content.id);
+      let url = `${serverUrl}/content/star`;
+      contentIdList.forEach((id, index) => { url += (index ? "&" : "?") + `contentId=${id}` })
+      console.log(url);
+      console.log(accessToken);
 
       axios({
         method: "get",
-        url: `${serverUrl}/content/star?contentId=${contentIdList}`,
+        url,
         headers: {
           Authorization: `Bearer ${accessToken}`
         }
       })
       .then((response) => {
-        console.log(response.data);
+        console.log(response);
         setContentList(newContentList);
-        setFavoriteList(contentIdList);
+        setFavoriteList(response.data.data);
       })
       .catch((error) => {
         alert(error.response.data.message ? error.response.data.message : error.response.data.error)
@@ -106,7 +110,7 @@ export default function ContentsBoard() {
             return (
               <div key={"content" + content.id} className="flex justify-center">
                 <ContentsItem 
-                  contentsId={content.id} 
+                  contentId={content.id} 
                   size={150} 
                   albumArt={content.image} 
                   title={content.title} 
