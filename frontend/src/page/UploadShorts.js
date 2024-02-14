@@ -6,9 +6,9 @@ import { uploadMusic } from "../api/upload.js";
 // 제목, 앨범 표지, 가사, 해시태그, 상세 정보
 // 향후 해시태그 및 파일 첨부, 버튼 누르면 다른 페이지로 이동 구현 필요
 
-export default function UploadMusic({ shorts }) {
+export default function UploadMusic({ shorts, getClearState }) {
   const [image, setImage] = useState(null);
-  const [creatorIdList, setCreatorIdList] = useState([]);
+  // const [creatorIdList, setCreatorIdList] = useState([]);
   const titleRef = useRef(null);
   const videoRef = useRef(null);
   useEffect(() => {
@@ -21,16 +21,18 @@ export default function UploadMusic({ shorts }) {
   const onSubmit = async () => {
     const formData = new FormData();
     formData.append("title", titleRef.current.value);
-    formData.append("creatorIdList", creatorIdList);
+    // formData.append("creatorIdList", creatorIdList);
     formData.append("image", image);
     formData.append("shorts", shorts, titleRef.current.value + ".mp4");
     await uploadMusic(formData).then();
+    clear();
   };
   const clear = async () => {
     setImage(null);
-    setCreatorIdList([]);
+    // setCreatorIdList([]);
     titleRef.current.value = "";
-    videoRef.current.pause();
+    videoRef.current = null;
+    getClearState();//이 컴포넌트 닫는다고 알려줌
   };
   const fileImgInputRef = useRef(null);
   const onChangeImg = (event) => {
@@ -41,7 +43,6 @@ export default function UploadMusic({ shorts }) {
     <div className="w-full h-full flex">
       <div className="flex flex-col w-3/6 items-center justify-center">
         <div className="text-base-content pt-5 pb-50 w-full">
-          <div className="text-4xl pb-10">쇼츠 등록하기</div>
           <div className="flex items-center pb-10 mx-6">
             <div className="text-left whitespace-nowrap pr-10">제목</div>
             <input
@@ -85,18 +86,14 @@ export default function UploadMusic({ shorts }) {
           <div className="flex justify-center">
             <div className="self-auto text-xl flex">
               <div className="modal-action px-3">
-                <form method="dialog">
-                  <button className="btn" onClick={onSubmit}>
-                    작성하기
-                  </button>
-                </form>
+                <button className="btn" onClick={onSubmit}>
+                  작성하기
+                </button>
               </div>
               <div className="modal-action px-3">
-                <form method="dialog">
-                  <button className="btn" onClick={clear}>
-                    취소하기
-                  </button>
-                </form>
+                <button className="btn" onClick={clear}>
+                  취소하기
+                </button>
               </div>
             </div>
           </div>
