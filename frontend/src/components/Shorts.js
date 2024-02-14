@@ -170,7 +170,7 @@ export default function Shorts({ getChildShorts, getClearState }) {
           style={{ justifyContent: "center", alignItems: "center" }}
         >
           <div className="modal-action px-3">
-            <button ref={buttonRef} onClick={changeUploadShortsModal}>
+            <button className="btn" ref={buttonRef} onClick={changeUploadShortsModal}>
               합치기
             </button>
           </div>

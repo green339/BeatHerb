@@ -29,7 +29,7 @@ export default function ShortsModal({ initState,getModalCloseState }) {
         <Shorts getChildShorts={getChildShorts} getClearState={getClearState}></Shorts>
       ) : (
         <div>
-          <button onClick={() => setModalState(true)}>다시 만들기</button>
+          <button className="text-right btn-s btn" onClick={() => setModalState(true)}>다시 만들기</button>
           <UploadShorts shorts={downloadData} getClearState={getClearState} />
         </div>
       )}

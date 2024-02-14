@@ -8,12 +8,13 @@
 }
 .controls{
   /* display: flex; */
-  justify-content: center;
-  align-items: center;
+  /* justify-content: center;
+  align-items: center; */
   gap: 10px; /* 요소들 사이의 간격을 조절합니다 */
   border: 1px solid #ccc;
   position: relative;
   background-color: black;
+
 }
 .controls .track-header{
   display: flex;
