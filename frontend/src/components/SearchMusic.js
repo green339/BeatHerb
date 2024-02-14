@@ -5,6 +5,7 @@ const SearchMusic = forwardRef(({ getChildSearchResult },ref) => {
   useImperativeHandle(ref, () => ({
     clear,
   }));
+  const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
   const [isSearch, setIsSearch] = useState(false);
   const [query, setQuery] = useState("");
   const [searchData, setSearchData] = useState({
@@ -31,7 +32,7 @@ const SearchMusic = forwardRef(({ getChildSearchResult },ref) => {
   
   const beatherbMusic = async (id, title) => {
     axios({
-      url: "http://localhost:8080/api/content/load/" + title,
+      url: `${ serverUrl }/content/load/${id}`,
       method: "GET",
       responseType: "arraybuffer",
     })
@@ -60,7 +61,7 @@ const SearchMusic = forwardRef(({ getChildSearchResult },ref) => {
     }
     setIsSearch(true);
     axios({
-      url: "https://node5.wookoo.shop/api/content/search?title=" + query,
+      url: `${ serverUrl }/content/search?title=${query}`,
       method: "GET",
     })
       .then((response) => {
@@ -85,6 +86,7 @@ const SearchMusic = forwardRef(({ getChildSearchResult },ref) => {
           className="input input-ghost w-full mx-3"
           value={query}
           onChange={changeInputValue}
+          style={{border:"1px solid #ccc"}}
         />
         <button onClick={searchBtnClick} className="btn btn-primary btn-m">
           검색

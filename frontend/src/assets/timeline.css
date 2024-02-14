@@ -39,8 +39,8 @@
   background-size: contain;
 }
 button{
-  border: 1px solid #ccc;
-  padding: 10px;
+  /* border: 1px solid #ccc;
+  padding: 10px; */
 }
 .waveform .cursor{
   background-color: pink;

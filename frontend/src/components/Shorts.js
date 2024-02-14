@@ -7,6 +7,9 @@ export default function Shorts({ getChildShorts, getClearState }) {
   const buttonRef = useRef(null);
   const videoFileRef = useRef(null);
   const audioFileRef = useRef(null);
+  const clearBtnRef = useRef(null)
+  const audioSelBtnRef = useRef(null);
+  const videoSelBtnRef=useRef(null)
   const ffmpeg = new FFmpeg();
 
   const [musicRoot, setMusicRoot] = useState("");
@@ -53,11 +56,17 @@ export default function Shorts({ getChildShorts, getClearState }) {
     }
     buttonRef.current.textContent = "합치는 중...";
     buttonRef.current.disabled = true;
+    videoSelBtnRef.current.disabled = true;
+    audioSelBtnRef.current.disabled = true;
+    clearBtnRef.current.disabled = true;
     await convertMedia();
     buttonRef.current.textContent = "합치기";
     videoRef.current.pause();
     audioRef.current.pause();
     buttonRef.current.disabled = false;
+    videoSelBtnRef.current.disabled = false;
+    audioSelBtnRef.current.disabled = false;
+    clearBtnRef.current.disabled = false;
   };
 
   const convertMedia = async () => {
@@ -118,6 +127,7 @@ export default function Shorts({ getChildShorts, getClearState }) {
               onClick={() => {
                 audioFileRef.current.click();
               }}
+              ref={audioSelBtnRef}
             >
               음악 파일 선택
             </button>
@@ -144,6 +154,7 @@ export default function Shorts({ getChildShorts, getClearState }) {
               onClick={() => {
                 videoFileRef.current.click();
               }}
+              ref={videoSelBtnRef}
             >
               동영상 선택
             </button>
@@ -164,7 +175,7 @@ export default function Shorts({ getChildShorts, getClearState }) {
             </button>
           </div>
           <div className="modal-action px-3">
-            <button className="btn" onClick={clear}>
+            <button className="btn" onClick={clear} ref={clearBtnRef}>
               취소하기
             </button>
           </div>

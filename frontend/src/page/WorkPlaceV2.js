@@ -5,8 +5,7 @@ import Drum from "../components/Drum";
 import MusicWave from "../components/MusicWave";
 import { useState, useRef } from "react"
 import { useLocation } from "react-router-dom";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+
 
 export default function WorkPlace() {
   const location = useLocation();
@@ -37,9 +36,10 @@ export default function WorkPlace() {
   ]
   const [instrument, setInstrument] = useState("record");
   let content;
+  
   switch (instrument) {
     case "record":
-      content = <Record getRecordResult={getRecordResult} />; break
+      content = <Record getRecordResult={getRecordResult} />;  break
     case "piano":
       content = <Piano getRecordResult={getRecordResult} />; break
     case "synth":
@@ -64,7 +64,10 @@ export default function WorkPlace() {
               key={tab.value}
               role="tab"
               onClick={() => setInstrument(tab.value)}
-              style={{ display: 'flex', alignItems:'center',justifyContent:'center', padding:'10px'}}
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px',
+                backgroundColor: instrument===tab.value ? 'red' : 'black'
+              }}
             >
               {tab.img}
               {tab.title}

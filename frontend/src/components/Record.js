@@ -123,7 +123,7 @@ export default function AudioRecorder({ getRecordResult }) {
         <div ref={resultRef} style={{ display: "none" }}>
 
         {recordedUrl && <WaveSurferPlayer url={recordedUrl} />}
-        <button onClick={uploadRecording}>올리기</button>
+        <button className="btn btn-primary" onClick={uploadRecording}>올리기</button>
         </div>
       </div>
 
@@ -131,10 +131,10 @@ export default function AudioRecorder({ getRecordResult }) {
         <div id="progress" ref={progressRef}></div>
         <div className="flex place-content-center gap-4">
          
-          <button id="record" ref={recordButtonRef} onClick={handleRecordClick}>
+          <button className="btn btn-primary" id="record" ref={recordButtonRef} onClick={handleRecordClick}>
             Record
           </button>
-          <button id="pause" ref={pauseButtonRef} onClick={handlePauseClick} style={{ display:"none" }}>
+          <button className="btn btn-primary" id="pause" ref={pauseButtonRef} onClick={handlePauseClick} style={{ display:"none" }}>
                 Pause </button>
           <select
             id="mic-select"
