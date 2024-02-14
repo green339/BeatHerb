@@ -73,9 +73,10 @@ export default function Live() {
 
   useEffect(() => {
     window.addEventListener('beforeunload', onbeforeunload);
-    window.onpopstate = (event) => leaveSession();
+    // window.onpopstate = (event) => leaveSession();
     return () =>{
       window.removeEventListener('beforeunload', onbeforeunload);
+      if(session) leaveSession();
     } 
   }, [session])
 

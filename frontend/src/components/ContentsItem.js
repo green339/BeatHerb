@@ -33,7 +33,7 @@ export default function ContentsItem({ contentId, size, albumArt, title = "Title
   }
   
   return (
-    <div style={{width: `${size}px`, height: `${size}px`}} className="items-center`">
+    <div style={{width: `${size}px`}} className="items-center`">
       <ContentsArt size={size} contentId={contentId} albumArt={albumArt} isFavorite={favorite} onClickFavorite={handleOnClickFavorite} showFavorite={showFavorite} />
       <ContentsTitleAndArtist title={title} artist={artist} />
     </div>

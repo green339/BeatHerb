@@ -10,6 +10,7 @@ import Follow from "../components/Follow";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/AuthStore";
 import axios from "axios";
+import defaultUser from "../assets/default_user.jpeg"
 
 // 탭 리스트
 const tabs = [
@@ -68,7 +69,12 @@ export default function MyPage() {
       alert(error.response.data.message);
       navigate(-1);
     })
-  }, [id])
+  }, [id]);
+
+  const onErrorImg = (e) => {
+    console.log(e.target)
+    e.target.src = defaultUser;
+  };
 
   const toggleFollow = () => {
     const method = (followerList.findIndex((follower) => follower.id === userId) !== -1 ? "delete" : "post")
@@ -170,6 +176,7 @@ export default function MyPage() {
                   <img
                     className="w-32 h-32 rounded-md"
                     src={`${serverUrl}/member/image/${id}`}
+                    onError={onErrorImg}
                     alt="Profile"
                   />
                 </div>

@@ -71,7 +71,7 @@ export default function MyPage() {
     const formData = new FormData();
     const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
 
-    formData.append("picture", file);
+    if(file) formData.append("picture", file);
 
     // 현재 닉네임에 입력된 값
     const nicknameValue = nicknameRef.current.value;
