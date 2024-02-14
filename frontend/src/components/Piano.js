@@ -8,6 +8,7 @@ const Piano = ({ getRecordResult }) => {
   const [playPiano, setPlayPiano] = useState(null);
   const [result, setResult] = useState(null);
   const [audio, setAudio] = useState(null);
+  const [showInstrument,setShowInstrument]=useState(false)
 
   useEffect(() => {
     Tone.loaded().then(() => {
@@ -28,7 +29,7 @@ const Piano = ({ getRecordResult }) => {
         .toDestination()
         .connect(newRecorder);
       setPlayPiano(newPlayPiano);
-    });
+    }).then(setShowInstrument(true));
   }, []);
 
   const playNote = (note) => {
@@ -36,8 +37,8 @@ const Piano = ({ getRecordResult }) => {
   };
 
   const startRecording = async () => {
-    await recorder.start();
     setIsRecording(true);
+    await recorder.start();
     setAudio(null);
   };
 
@@ -45,6 +46,7 @@ const Piano = ({ getRecordResult }) => {
     if (isRecording) {
       setIsRecording(false);
       const recording = await recorder.stop();
+      if (recording.size === 0) return;
       setResult(recording);
       setAudio(new Audio(URL.createObjectURL(recording)));
       // const url = URL.createObjectURL(recording);//blob객체
@@ -64,6 +66,7 @@ const Piano = ({ getRecordResult }) => {
   };
 
   const uploadRecording = () => {
+    stopPlaying()
     const url = URL.createObjectURL(result); //blob객체
     getRecordResult(url);
     setAudio(null);
@@ -76,7 +79,7 @@ const Piano = ({ getRecordResult }) => {
     height: "180px",
     backgroundColor: "#FFFFFF",
     borderBottomLeftRadius: "10px",
-    borderBottomRightRadius:"10px"
+    borderBottomRightRadius: "10px",
   };
   const blackKey = {
     border: "1px solid #000000",
@@ -86,149 +89,86 @@ const Piano = ({ getRecordResult }) => {
     marginRight: "-25px",
     backgroundColor: "#000000",
     borderBottomLeftRadius: "10px",
-    borderBottomRightRadius:"10px"
+    borderBottomRightRadius: "10px",
   };
 
   return (
+    showInstrument?
     <div>
       <div className="flex p-5" style={{ justifyContent: "center" }}>
-        
-      <div style={whiteKey} onClick={() => playNote("C3")}>
-          1
-        </div>
-        <div style={blackKey} onClick={() => playNote("C#3")}>
-          2
-        </div>
-        <div style={whiteKey} onClick={() => playNote("D3")}>
-          3
-        </div>
-        <div style={blackKey} onClick={() => playNote("D#3")}>
-          4
-        </div>
-        <div style={whiteKey} onClick={() => playNote("E3")}>
-          5
-        </div>
-        <div style={whiteKey} onClick={() => playNote("F3")}>
-          6
-        </div>
-        <div style={blackKey} onClick={() => playNote("F#3")}>
-          7
-        </div>
-        <div style={whiteKey} onClick={() => playNote("G3")}>
-          8
-        </div>
-        <div style={blackKey} onClick={() => playNote("G#3")}>
-          9
-        </div>
-        <div style={whiteKey} onClick={() => playNote("A3")}>
-          10
-        </div>
-        <div style={blackKey} onClick={() => playNote("A#3")}>
-          11
-        </div>
-        <div style={whiteKey} onClick={() => playNote("B3")}>
-          12
-        </div>
-        <div style={whiteKey} onClick={() => playNote("C4")}>
-          1
-        </div>
-        <div style={blackKey} onClick={() => playNote("C#4")}>
-          2
-        </div>
-        <div style={whiteKey} onClick={() => playNote("D4")}>
-          3
-        </div>
-        <div style={blackKey} onClick={() => playNote("D#4")}>
-          4
-        </div>
-        <div style={whiteKey} onClick={() => playNote("E4")}>
-          5
-        </div>
-        <div style={whiteKey} onClick={() => playNote("F4")}>
-          6
-        </div>
-        <div style={blackKey} onClick={() => playNote("F#4")}>
-          7
-        </div>
-        <div style={whiteKey} onClick={() => playNote("G4")}>
-          8
-        </div>
-        <div style={blackKey} onClick={() => playNote("G#4")}>
-          9
-        </div>
-        <div style={whiteKey} onClick={() => playNote("A4")}>
-          10
-        </div>
-        <div style={blackKey} onClick={() => playNote("A#4")}>
-          11
-        </div>
-        <div style={whiteKey} onClick={() => playNote("B4")}>
-          12
-        </div>
-        <div style={whiteKey} onClick={() => playNote("C5")}>
-          13
-        </div>
-        <div style={blackKey} onClick={() => playNote("C#5")}>
-          2
-        </div>
-        <div style={whiteKey} onClick={() => playNote("D5")}>
-          3
-        </div>
-        <div style={blackKey} onClick={() => playNote("D#5")}>
-          4
-        </div>
-        <div style={whiteKey} onClick={() => playNote("E5")}>
-          5
-        </div>
-        <div style={whiteKey} onClick={() => playNote("F5")}>
-          6
-        </div>
-        <div style={blackKey} onClick={() => playNote("F#5")}>
-          7
-        </div>
-        <div style={whiteKey} onClick={() => playNote("G5")}>
-          8
-        </div>
-        <div style={blackKey} onClick={() => playNote("G#5")}>
-          9
-        </div>
-        <div style={whiteKey} onClick={() => playNote("A5")}>
-          10
-        </div>
-        <div style={blackKey} onClick={() => playNote("A#5")}>
-          11
-        </div>
-        <div style={whiteKey} onClick={() => playNote("B5")}>
-          12
-        </div>
-        <div style={whiteKey} onClick={() => playNote("C6")}>
-          13
-        </div>
+        <div style={whiteKey} onClick={() => playNote("C3")}></div>
+        <div style={blackKey} onClick={() => playNote("C#3")}></div>
+        <div style={whiteKey} onClick={() => playNote("D3")}></div>
+        <div style={blackKey} onClick={() => playNote("D#3")}></div>
+        <div style={whiteKey} onClick={() => playNote("E3")}></div>
+        <div style={whiteKey} onClick={() => playNote("F3")}></div>
+        <div style={blackKey} onClick={() => playNote("F#3")}></div>
+        <div style={whiteKey} onClick={() => playNote("G3")}></div>
+        <div style={blackKey} onClick={() => playNote("G#3")}></div>
+        <div style={whiteKey} onClick={() => playNote("A3")}></div>
+        <div style={blackKey} onClick={() => playNote("A#3")}></div>
+        <div style={whiteKey} onClick={() => playNote("B3")}></div>
+        <div style={whiteKey} onClick={() => playNote("C4")}></div>
+        <div style={blackKey} onClick={() => playNote("C#4")}></div>
+        <div style={whiteKey} onClick={() => playNote("D4")}></div>
+        <div style={blackKey} onClick={() => playNote("D#4")}></div>
+        <div style={whiteKey} onClick={() => playNote("E4")}></div>
+        <div style={whiteKey} onClick={() => playNote("F4")}></div>
+        <div style={blackKey} onClick={() => playNote("F#4")}></div>
+        <div style={whiteKey} onClick={() => playNote("G4")}></div>
+        <div style={blackKey} onClick={() => playNote("G#4")}></div>
+        <div style={whiteKey} onClick={() => playNote("A4")}></div>
+        <div style={blackKey} onClick={() => playNote("A#4")}></div>
+        <div style={whiteKey} onClick={() => playNote("B4")}></div>
+        <div style={whiteKey} onClick={() => playNote("C5")}></div>
+        <div style={blackKey} onClick={() => playNote("C#5")}></div>
+        <div style={whiteKey} onClick={() => playNote("D5")}></div>
+        <div style={blackKey} onClick={() => playNote("D#5")}></div>
+        <div style={whiteKey} onClick={() => playNote("E5")}></div>
+        <div style={whiteKey} onClick={() => playNote("F5")}></div>
+        <div style={blackKey} onClick={() => playNote("F#5")}></div>
+        <div style={whiteKey} onClick={() => playNote("G5")}></div>
+        <div style={blackKey} onClick={() => playNote("G#5")}></div>
+        <div style={whiteKey} onClick={() => playNote("A5")}></div>
+        <div style={blackKey} onClick={() => playNote("A#5")}></div>
+        <div style={whiteKey} onClick={() => playNote("B5")}></div>
+        <div style={whiteKey} onClick={() => playNote("C6")}></div>
       </div>
       <div className="flex" style={{ justifyContent: "center", alignItems: "center" }}>
-
-      {isRecording ? (
-          <button className="btn btn-primary" onClick={stopRecording}>녹음멈추기</button>
-      ) : (
-        <button className="btn btn-primary" onClick={startRecording}>녹음하기</button>
-      )}
-      {audio ? (
-        isPlaying ? (
-          <div>
-            <button className="btn btn-primary" onClick={uploadRecording}>작업실로 올리기</button>
-            <button className="btn btn-primary" onClick={stopPlaying}>플레이 멈추기</button>
-          </div>
+        {isRecording ? (
+          <button className="mx-3 btn btn-primary" onClick={stopRecording}>
+            Stop
+          </button>
         ) : (
-          <div>
-            <button className="btn btn-primary" onClick={uploadRecording}>작업실로 올리기</button>
-            <button className="btn btn-primary" onClick={playRecording}>플레이하기</button>
-          </div>
-        )
-      ) : (
-        <div></div>
-      )}
+          <button className="mx-3 btn btn-primary" onClick={startRecording}>
+            Record
+          </button>
+        )}
+        {audio ? (
+          isPlaying ? (
+            <div>
+              <button className="mx-3 btn btn-primary" onClick={stopPlaying}>
+                Pause
+              </button>
+              <button className="mx-3 btn btn-primary" onClick={uploadRecording}>
+                작업실로 올리기
+              </button>
+            </div>
+          ) : (
+            <div>
+              <button className="mx-3 btn btn-primary" onClick={playRecording}>
+                Play
+              </button>
+              <button className="mx-3 btn btn-primary" onClick={uploadRecording}>
+                작업실로 올리기
+              </button>
+            </div>
+          )
+        ) : (
+          <div></div>
+        )}
       </div>
-    </div>
+    </div>:<div></div>
   );
 };
 

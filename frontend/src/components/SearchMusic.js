@@ -53,6 +53,11 @@ const SearchMusic = forwardRef(({ getChildSearchResult },ref) => {
   const changeInputValue = (event) => {
     setQuery(event.target.value);
   };
+  const enterPress = (event) => {
+    if (event.key === "Enter") {
+      searchBtnClick();
+    }
+  };
 
   const searchBtnClick = async () => {
     if (query === "") {
@@ -81,6 +86,7 @@ const SearchMusic = forwardRef(({ getChildSearchResult },ref) => {
     <div>
       <div className="flex">
         <input
+          onKeyDown={enterPress}
           type="text"
           placeholder="찾을 음원 제목을 입력해주세요."
           className="input input-ghost w-full mx-3"
@@ -93,22 +99,23 @@ const SearchMusic = forwardRef(({ getChildSearchResult },ref) => {
         </button>
       </div>
       {isSearch ? (
-        <div className="px-10 grid grid-cols-1 pt-10 gap-4 max-h-48">
-          <div className="max-h-48" style={{ overflow: "scroll", overflowX: "hidden" }}>
+        <div className="px-4 grid grid-cols-1 pt-5 gap-4 max-h-48">
+          <div className="max-h-48" style={{ overflow: "scroll", overflowX: "hidden"}}>
             {types.map((type) => (
               <div
+                className="pe-3 "
                 style={{
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "flex-start",
                 }}
                 key={type.value}>
-                <p className="text-left">{type.title}</p>
+                <p className="text-left font-bold">{type.title}</p>
                 <div>
                   {/* <div className="max-h-48" style={{ overflow: "scroll", overflowX: "hidden" }}> */}
                   {searchData[type.value].map((value, index) => (
                     <div
-                      className="w-full flex bg-neutral-700 p-2 rounded-xl"
+                      className="w-full flex bg-neutral-700 m-1 rounded-xl"
                       key={value.id}
                       onClick={() => clickMusicBtn(value.id, value.title)}>
                       <p

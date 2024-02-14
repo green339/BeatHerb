@@ -12,14 +12,15 @@ export default function Shorts({ getChildShorts, getClearState }) {
   const audioSelBtnRef = useRef(null);
   const videoSelBtnRef = useRef(null);
   const ffmpeg = new FFmpeg();
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const [musicRoot, setMusicRoot] = useState("");
   const [musicTitle, setMusicTitle] = useState("");
   const clear = async () => {
-    audioRef.current = null;
-    videoRef.current = null;
-    videoFileRef.current = null;
-    audioFileRef.current = null;
+    audioRef.current.src = null;
+    videoRef.current.src = null;
+    videoFileRef.current.files = null;
+    // audioFileRef.current.files = null;
     setMusicRoot("");
     setMusicTitle("");
     setAudioFile(null);
@@ -60,19 +61,18 @@ export default function Shorts({ getChildShorts, getClearState }) {
       alert("음악 파일과 동영상 파일을 선택해주세요");
       return;
     }
-    buttonRef.current.textContent = "합치는 중...";
-    buttonRef.current.disabled = true;
+    setIsProcessing(true);
+    // buttonRef.current.disabled = true;
     videoSelBtnRef.current.disabled = true;
-    audioSelBtnRef.current.disabled = true;
-    clearBtnRef.current.disabled = true;
-    await convertMedia();
-    buttonRef.current.textContent = "합치기";
+    // audioSelBtnRef.current.disabled = true;
+    // clearBtnRef.current.disabled = true;
+    await convertMedia().then(() => { setIsProcessing(false) });
     videoRef.current.pause();
     audioRef.current.pause();
-    buttonRef.current.disabled = false;
+    // buttonRef.current.disabled = false;
     videoSelBtnRef.current.disabled = false;
-    audioSelBtnRef.current.disabled = false;
-    clearBtnRef.current.disabled = false;
+    // audioSelBtnRef.current.disabled = false;
+    // clearBtnRef.current.disabled = false;
   };
 
   const convertMedia = async () => {
@@ -117,11 +117,10 @@ export default function Shorts({ getChildShorts, getClearState }) {
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
-              }}
-            >
+              }}>
               선택한 음악: {musicTitle}
             </p>
-            <input
+            {/* <input
               type="file"
               ref={audioFileRef}
               onChange={handleAudioChange}
@@ -136,7 +135,7 @@ export default function Shorts({ getChildShorts, getClearState }) {
               ref={audioSelBtnRef}
             >
               음악 파일 선택
-            </button>
+            </button> */}
             <div className="flex pt-10" style={{ justifyContent: "center", alignItems: "center" }}>
               <audio ref={audioRef} controls style={{ display: "none" }}></audio>
             </div>
@@ -160,8 +159,7 @@ export default function Shorts({ getChildShorts, getClearState }) {
               onClick={() => {
                 videoFileRef.current.click();
               }}
-              ref={videoSelBtnRef}
-            >
+              ref={videoSelBtnRef}>
               동영상 선택
             </button>
             <div className="flex pt-3" style={{ justifyContent: "center", alignItems: "center" }}>
@@ -173,18 +171,26 @@ export default function Shorts({ getChildShorts, getClearState }) {
         </div>
         <div
           className="flex w-full h-3/6 mt-10 "
-          style={{ justifyContent: "center", alignItems: "center" }}
-        >
-          <div className="modal-action px-3">
-            <button className="btn" ref={buttonRef} onClick={changeUploadShortsModal}>
-              합치기
-            </button>
-          </div>
-          <div className="modal-action px-3">
-            <button className="btn" onClick={clear} ref={clearBtnRef}>
-              취소하기
-            </button>
-          </div>
+          style={{ justifyContent: "center", alignItems: "center" }}>
+          {isProcessing ? (
+            <div className="flex gap-3">
+              <p>쇼츠를 만드는 중입니다. 잠시만 기다려 주세요</p>
+              <span className="loading loading-spinner text-success"></span>
+            </div>
+          ) : (
+            <div className="self-auto text-xl flex">
+              <div className="modal-action px-3">
+                <button className="btn" ref={buttonRef} onClick={changeUploadShortsModal}>
+                  합치기
+                </button>
+              </div>
+              <div className="modal-action px-3">
+                <button className="btn" onClick={clear} ref={clearBtnRef}>
+                  취소하기
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

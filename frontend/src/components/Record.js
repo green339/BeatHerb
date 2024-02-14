@@ -124,7 +124,7 @@ export default function AudioRecorder({ getRecordResult }) {
       <div>
         <div ref={resultRef} style={{ display: "none" }}>
           {recordedUrl && <WaveSurferPlayer url={recordedUrl} />}
-          <button className="btn btn-primary" onClick={uploadRecording}>
+          <button className="mx-3 btn btn-primary" onClick={uploadRecording}>
             작업실로 올리기
           </button>
         </div>

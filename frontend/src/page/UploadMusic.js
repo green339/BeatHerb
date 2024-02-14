@@ -11,7 +11,8 @@ import HashTagList from "../page/HashTagList.js";
 // 2. uploadMusic.then()으로 clear 해줌
 
 // 부모 페이지로부터 넘어오는 요소들 : 음악 파일, 진입차수 id 리스트
-export default function UploadMusic({ music, rootContentIdList }) {
+export default function UploadMusic({ music, rootContentIdList, closeUploadModal }) {
+  const [isProcessing, setIsProcessing] = useState(false);
   const [image, setImage] = useState(null);
   const selectImgFile = useRef(null);
 
@@ -78,16 +79,16 @@ export default function UploadMusic({ music, rootContentIdList }) {
 
   const onSubmit = async () => {
     const selectedHashTags = hashTagIdList.filter((item) => item.selected).map((item) => item.id);
-
     if (
       !titleRef.current.value ||
       !type ||
       hashTagIdList.filter((item) => item.selected).length === 0
     ) {
       alert("제목, 타입, 해시태그는 필수 입력 사항입니다.");
+      setIsProcessing(false)
       return;
     }
-
+    setIsProcessing(true);
     const formData = new FormData();
     formData.append("title", titleRef.current.value);
     if (lyrics) {
@@ -104,7 +105,7 @@ export default function UploadMusic({ music, rootContentIdList }) {
     formData.append("music", await convertMedia(music), titleRef.current.value + ".mp3");
     formData.append("type", type);
     console.log(formData);
-    await uploadMusic(formData).then(clear);
+    await uploadMusic(formData).then(clear).then(closeUploadModal());
   };
   const clear = async () => {
     setImage(null);
@@ -116,6 +117,7 @@ export default function UploadMusic({ music, rootContentIdList }) {
     describeRef.current.value = "";
     titleRef.current.value = "";
     setType(null);
+    setIsProcessing(false);
   };
 
   const onChangeImg = (e) => {
@@ -163,8 +165,7 @@ export default function UploadMusic({ music, rootContentIdList }) {
               className="btn btn-primary btn-xs"
               onClick={() => {
                 selectImgFile.current.click();
-              }}
-            >
+              }}>
               첨부하기
             </div>
           </div>
@@ -182,8 +183,7 @@ export default function UploadMusic({ music, rootContentIdList }) {
               className="btn btn-primary btn-xs"
               onClick={() => {
                 selectLyricsFile.current.click();
-              }}
-            >
+              }}>
               첨부하기
             </div>
           </div>
@@ -220,8 +220,7 @@ export default function UploadMusic({ music, rootContentIdList }) {
                   } mr-2 py-0`}
                   onClick={() => {
                     setType(item);
-                  }}
-                >
+                  }}>
                   {item}
                 </button>
               ))}
@@ -234,27 +233,31 @@ export default function UploadMusic({ music, rootContentIdList }) {
               className="textarea textarea-bordered w-full"
               rows={8}
               placeholder="내용을 입력해주세요."
-              ref={describeRef}
-            ></textarea>
+              ref={describeRef}></textarea>
           </div>
 
           <div className="flex justify-center">
-            <div className="self-auto text-xl flex">
-              <div className="modal-action px-3">
-                <form method="dialog">
+            {isProcessing ? (
+              <div className="flex gap-3">
+                <p>음악을 올리는 중입니다. 잠시만 기다려 주세요</p>
+                <span className="loading loading-spinner text-success"></span>
+              </div>
+            ) : (
+              <div className="self-auto text-xl flex">
+                <div className="modal-action px-3">
                   <button className="btn" onClick={onSubmit}>
                     작성하기
                   </button>
-                </form>
+                </div>
+                <div className="modal-action px-3">
+                  <form method="dialog">
+                    <button className="btn" onClick={clear}>
+                      취소하기
+                    </button>
+                  </form>
+                </div>
               </div>
-              <div className="modal-action px-3">
-                <form method="dialog">
-                  <button className="btn" onClick={clear}>
-                    취소하기
-                  </button>
-                </form>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

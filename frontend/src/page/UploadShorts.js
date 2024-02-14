@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import { uploadMusic } from "../api/upload.js";
+import { uploadShorts } from "../api/upload.js";
 
-export default function UploadMusic({ shorts, getClearState }) {
+export default function UploadMusic({ shorts, root, getClearState, getModalState }) {
   const [image, setImage] = useState(null);
   // const [creatorIdList, setCreatorIdList] = useState([]);
   const titleRef = useRef(null);
   const videoRef = useRef(null);
+  const btnRef = useRef(null);
+  const [isProcessing, setIsProcessing] = useState(false);
   useEffect(() => {
     if (videoRef.current && shorts) {
       const videoUrl = URL.createObjectURL(shorts);
@@ -15,20 +17,33 @@ export default function UploadMusic({ shorts, getClearState }) {
   }, [shorts]);
 
   const onSubmit = async () => {
+    if (!titleRef.current.value) {
+      alert("제목을 입력해주세요")
+      setIsProcessing(false);
+      return;
+    }
+    setIsProcessing(true);
+    btnRef.current.disabled = true;
+    console.log(btnRef.current.disabled);
     const formData = new FormData();
     formData.append("title", titleRef.current.value);
     // formData.append("creatorIdList", creatorIdList);
     // formData.append("image", image);
     formData.append("shorts", shorts, titleRef.current.value + ".mp4");
-    await uploadMusic(formData).then();
-    clear();
+    formData.append("root", root);
+    await uploadShorts(formData)
+      .then(() => {
+        btnRef.current.disabled = false;
+      })
+      .then(clear);
   };
   const clear = async () => {
     setImage(null);
     // setCreatorIdList([]);
     titleRef.current.value = "";
-    videoRef.current = null;
-    getClearState();//이 컴포넌트 닫는다고 알려줌
+    videoRef.current.src = null;
+    getClearState(); //이 컴포넌트 닫는다고 알려줌
+    setIsProcessing(false);
   };
   const fileImgInputRef = useRef(null);
   const onChangeImg = (event) => {
@@ -80,22 +95,32 @@ export default function UploadMusic({ shorts, getClearState }) {
           </div> */}
 
           <div className="flex justify-center">
-            <div className="self-auto text-xl flex">
-              <div className="modal-action px-3">
-                <button className="btn" onClick={onSubmit}>
-                  작성하기
-                </button>
+            {isProcessing ? (
+              <div className="flex gap-3">
+                <p>쇼츠를 올리는 중입니다. 잠시만 기다려 주세요</p>
+                <span className="loading loading-spinner text-success"></span>
               </div>
-              <div className="modal-action px-3">
-                <button className="btn" onClick={clear}>
-                  취소하기
-                </button>
+            ) : (
+              <div className="self-auto text-xl flex">
+                <div className="modal-action px-3">
+                  <button className="btn" onClick={onSubmit}>
+                    작성하기
+                  </button>
+                </div>
+                <div className="modal-action px-3">
+                  <button className="btn" onClick={clear}>
+                    취소하기
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
       <div className="flex flex-col w-3/6 items-center justify-center">
+        <button className="text-right btn-s btn" ref={btnRef} onClick={() => getModalState()}>
+          다시 만들기
+        </button>
         <video ref={videoRef} controls></video>
       </div>
     </div>
