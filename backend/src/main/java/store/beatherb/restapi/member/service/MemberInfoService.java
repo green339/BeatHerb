@@ -7,12 +7,21 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
+import store.beatherb.restapi.content.domain.HashTag;
+import store.beatherb.restapi.content.domain.HashTagRepository;
 import store.beatherb.restapi.content.exception.ContentErrorCode;
 import store.beatherb.restapi.content.exception.ContentException;
+import store.beatherb.restapi.content.exception.HashTagErrorCode;
+import store.beatherb.restapi.content.exception.HashTagException;
 import store.beatherb.restapi.global.exception.BeatHerbErrorCode;
 import store.beatherb.restapi.global.exception.BeatHerbException;
 import store.beatherb.restapi.global.validate.MusicValid;
 import store.beatherb.restapi.global.validate.PictureValid;
+import store.beatherb.restapi.interest.domain.Interest;
+import store.beatherb.restapi.interest.domain.InterestRepository;
+import store.beatherb.restapi.interest.dto.request.PutInterestRequest;
+import store.beatherb.restapi.interest.exception.InterestErrorCode;
+import store.beatherb.restapi.interest.exception.InterestException;
 import store.beatherb.restapi.member.domain.Member;
 import store.beatherb.restapi.member.domain.MemberRepository;
 import store.beatherb.restapi.member.dto.MemberDTO;
@@ -25,6 +34,8 @@ import store.beatherb.restapi.oauth.service.OAuthService;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -33,14 +44,20 @@ import java.util.UUID;
 public class MemberInfoService {
 
     private final MemberRepository memberRepository;
+    private final InterestRepository interestRepository;
+    private final HashTagRepository hashTagRepository;
     private final OAuthService oauthService;
     private final String IMG_DIRECTORY;
 
 
     public MemberInfoService(MemberRepository memberRepository,
+                             InterestRepository interestRepository,
+                             HashTagRepository hashTagRepository,
                              OAuthService oauthService,
                              @Value("${resource.directory.profile.image}") String IMG_DIRECTORY) {
         this.memberRepository = memberRepository;
+        this.interestRepository = interestRepository;
+        this.hashTagRepository = hashTagRepository;
         this.oauthService = oauthService;
         this.IMG_DIRECTORY = IMG_DIRECTORY;
     }
@@ -51,9 +68,26 @@ public class MemberInfoService {
 
         String nickname = editRequest.getNickname() != null? editRequest.getNickname() : memberDTO.getNickname();
         Boolean isDmAgree = editRequest.getDmAgree() != null? editRequest.getDmAgree() : memberDTO.getDmAgree();
+        List<PutInterestRequest> interestList = editRequest.getInterestList();
 
         Member member = memberRepository.findById(memberDTO.getId())
                 .orElseThrow(()->new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
+
+
+        //기존 가지고 있는 관심사를 모두 삭제
+        for(Interest interest : member.getInterestList()){
+            interestRepository.delete(interestRepository.findById(interest.getId())
+                    .orElseThrow(() -> new InterestException(InterestErrorCode.INTEREST_IS_NOT_EXIST)));
+        }
+
+        if(interestList != null){
+            for(PutInterestRequest request : interestList){
+                HashTag hashTag = hashTagRepository.findById(request.getHashTagId())
+                        .orElseThrow(() -> new HashTagException(HashTagErrorCode.HASHTAG_IS_NOT_EXIST));
+
+                interestRepository.save(Interest.builder().hashTag(hashTag).member(member).build());
+            }
+        }
 
         if(nickname==null){
             throw new MemberException(MemberErrorCode.NICKNAME_IS_NOT_EXIST);
@@ -61,7 +95,6 @@ public class MemberInfoService {
 
         member.setNickname(nickname);
         member.setDmAgree(isDmAgree);
-
 
 
         // 요청 시 이미지가 있는 경우에만, 이미지 저장
@@ -91,8 +124,6 @@ public class MemberInfoService {
         }
 
         memberRepository.save(member);
-
-
     }
 
     //회원 정보 수정 - 소셜 로그인 연동
