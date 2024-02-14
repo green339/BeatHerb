@@ -96,9 +96,10 @@ export default function UploadMusic({ music, rootContentIdList }) {
       formData.append("lyrics", await readLyrics(lyrics));
     }
     formData.append("describe", describeRef.current.value);
-
+    if (rootContentIdList) {
+      formData.append("rootContentIdList", rootContentIdList);
+    }
     formData.append("hashTagIdList", selectedHashTags);
-
     if (image) {
       formData.append("image", image);
     }
@@ -273,90 +274,4 @@ export default function UploadMusic({ music, rootContentIdList }) {
       </div>
     </div>
   );
-
-  // return (
-  //   <div className="w-full h-full">
-  //     <div className="flex flex-col w-full items-center justify-center">
-  //       <div className="text-base-content pt-5 pb-50 w-full">
-  //         <div className="text-4xl pb-10">음원 등록하기</div>
-  //         <div className="flex items-center pb-10 mx-6">
-  //           <div className="text-left whitespace-nowrap pr-10">제목</div>
-  //           <input
-  //             type="text"
-  //             id="title"
-  //             ref={titleRef}
-  //             placeholder="제목을 입력해주세요."
-  //             className="input input-ghost w-full max-w-xs px-3"
-  //           />
-  //         </div>
-
-  //         <div className="flex pb-10 justify-between mx-6">
-  //           <div className="text-left whitespace-nowrap pr-10">창작가</div>
-  //           <div className="btn btn-primary btn-xs">+ 추가하기</div>
-  //         </div>
-
-  //         <div className="flex pb-10 justify-between mx-6">
-  //           <div className="text-left whitespace-nowrap pr-10">타입</div>
-  //           <div className="btn btn-primary btn-xs">+ 추가하기</div>
-  //         </div>
-
-  //         <div className="flex pb-10 justify-between mx-6">
-  //           {/* 파일 첨부 구현 필요*/}
-  //           <input
-  //             type="file"
-  //             style={{ display: "none" }}
-  //             accept="image/jpg,impge/png,image/jpeg"
-  //             name="cover_img"
-  //             onChange={onChangeImg}
-  //             ref={fileImgInputRef}
-  //           />
-  //           <div className="text-left whitespace-nowrap pr-10">앨범표지</div>
-  //           <button
-  //             className="btn btn-primary btn-xs"
-  //             onClick={() => {
-  //               fileImgInputRef.current.click();
-  //             }}
-  //           >
-  //             첨부하기
-  //           </button>
-  //         </div>
-
-  //         <div className="flex pb-10 justify-between mx-6">
-  //           {/* 파일 첨부 구현 필요*/}
-  //           <div className="text-left whitespace-nowrap pr-10">가사</div>
-  //           <div className="btn btn-primary btn-xs">첨부하기</div>
-  //         </div>
-
-  //         <div className="flex pb-10 justify-between mx-6">
-  //           <div className="text-left whitespace-nowrap pr-10">해시태그</div>
-  //           <div className="btn btn-primary btn-xs">+ 추가하기</div>
-  //         </div>
-
-  //         <div className="flex pb-10 mx-6">
-  //           <div className="text-left whitespace-nowrap pr-7">상세 내용</div>
-  //           <textarea
-  //             className="textarea textarea-bordered w-full"
-  //             rows={8}
-  //             placeholder="Bio"
-  //           ></textarea>
-  //         </div>
-
-  //         <div className="flex justify-center">
-  //           <div className="self-auto text-xl flex">
-  //             <div className="modal-action px-3">
-  //               <form method="dialog">
-  //                 <button className="btn">작성하기</button>
-  //               </form>
-  //             </div>
-  //             <div className="modal-action px-3">
-  //               <form method="dialog">
-  //                 <button className="btn">취소하기</button>
-  //               </form>
-  //             </div>
-  //           </div>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   </div>
-  // );
 }
