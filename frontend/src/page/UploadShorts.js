@@ -18,7 +18,7 @@ export default function UploadMusic({ shorts, getClearState }) {
     const formData = new FormData();
     formData.append("title", titleRef.current.value);
     // formData.append("creatorIdList", creatorIdList);
-    formData.append("image", image);
+    // formData.append("image", image);
     formData.append("shorts", shorts, titleRef.current.value + ".mp4");
     await uploadMusic(formData).then();
     clear();
@@ -50,7 +50,7 @@ export default function UploadMusic({ shorts, getClearState }) {
             />
           </div>
 
-          <div className="flex pb-10 justify-between mx-6">
+          {/* <div className="flex pb-10 justify-between mx-6">
             <div className="text-left whitespace-nowrap pr-10">창작가</div>
             <div className="btn btn-primary btn-xs">+ 추가하기</div>
           </div>
@@ -77,7 +77,7 @@ export default function UploadMusic({ shorts, getClearState }) {
               }}>
               첨부하기
             </button>
-          </div>
+          </div> */}
 
           <div className="flex justify-center">
             <div className="self-auto text-xl flex">

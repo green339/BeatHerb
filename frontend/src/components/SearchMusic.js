@@ -43,7 +43,7 @@ const SearchMusic = forwardRef(({ getChildSearchResult },ref) => {
           lastModified: new Date(),
         });
         let url = URL.createObjectURL(file);
-        getChildSearchResult(url,title,id)
+        getChildSearchResult(file,title,id)
       })
       .catch(function (error) {
         console.log(error);

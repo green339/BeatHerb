@@ -7,9 +7,10 @@ export default function Shorts({ getChildShorts, getClearState }) {
   const buttonRef = useRef(null);
   const videoFileRef = useRef(null);
   const audioFileRef = useRef(null);
-  const clearBtnRef = useRef(null)
+  const [audioFile, setAudioFile] = useState(null);
+  const clearBtnRef = useRef(null);
   const audioSelBtnRef = useRef(null);
-  const videoSelBtnRef=useRef(null)
+  const videoSelBtnRef = useRef(null);
   const ffmpeg = new FFmpeg();
 
   const [musicRoot, setMusicRoot] = useState("");
@@ -21,21 +22,25 @@ export default function Shorts({ getChildShorts, getClearState }) {
     audioFileRef.current = null;
     setMusicRoot("");
     setMusicTitle("");
+    setAudioFile(null);
     getClearState(); //이 컴포넌트 닫는다고 알려줌
   };
-  const getChildSearchResult = (url, title, id) => {
-    console.log(url, title, id);
+  const getChildSearchResult = (file, title, id) => {
+    console.log(file, title, id);
     // setMusicUrl(url);
     setMusicTitle(title);
     setMusicRoot(id);
-    audioRef.current.src = url;
+    audioRef.current.src = URL.createObjectURL(file);
+    setAudioFile(file);
+    console.log(file);
     // audioRef.current.style.display = "inline";
   };
   const handleAudioChange = async () => {
-    const audioFile = audioFileRef.current.files[0];
-    if (!audioFile) return;
-    const audioUrl = URL.createObjectURL(audioFile);
-    setMusicTitle(audioFile.name);
+    const audioRefFile = audioFileRef.current.files[0];
+    if (!audioRefFile) return;
+    setAudioFile(audioRefFile);
+    const audioUrl = URL.createObjectURL(audioRefFile);
+    setMusicTitle(audioRefFile.name);
 
     audioRef.current.src = audioUrl;
     // audioRef.current.style.display = "inline";
@@ -50,7 +55,8 @@ export default function Shorts({ getChildShorts, getClearState }) {
     // videoRef.current.play();
   };
   const changeUploadShortsModal = async () => {
-    if (!(videoFileRef.current.files[0] && audioFileRef.current.files[0])) {
+    console.log("convert", audioFile);
+    if (!(videoFileRef.current.files[0] && audioFile)) {
       alert("음악 파일과 동영상 파일을 선택해주세요");
       return;
     }
@@ -72,7 +78,7 @@ export default function Shorts({ getChildShorts, getClearState }) {
   const convertMedia = async () => {
     await ffmpeg.load();
     const video = await videoFileRef.current.files[0].arrayBuffer();
-    const audio = await audioFileRef.current.files[0].arrayBuffer();
+    const audio = await audioFile.arrayBuffer();
 
     await ffmpeg.writeFile("video.mp4", new Uint8Array(video));
     await ffmpeg.writeFile("audio.mp3", new Uint8Array(audio));
