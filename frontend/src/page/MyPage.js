@@ -137,7 +137,7 @@ export default function MyPage() {
             albumArt={content.image}
             title={content.title}
             artist={creatorListFormat(content.creatorList)}
-            showFavorite={content.creatorList.findIndex((creator) => creator.id === userId) === -1}
+            showFavorite={false}
           />
         </div>
       )
@@ -274,7 +274,7 @@ export default function MyPage() {
               </button>
             ))}
           </div>
-          <div className="grid grid-cols-4 gap-4 items-center scrollbar scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-base-200 hover:scrollbar-thumb-primary overflow-y-scroll">
+          <div className="h-[350px] grid grid-cols-4 gap-4 items-center scrollbar scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-base-200 hover:scrollbar-thumb-primary overflow-y-scroll">
             {itemList}
           </div>
         </div>
