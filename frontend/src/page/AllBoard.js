@@ -35,13 +35,12 @@ export default function AllBoard() {
       url: `${serverUrl}/content/search?title=${query}`
     })
     .then((response) => {
-      console.log(response.data);
       setContents(response.data.data);
     })
     .catch((error) => {
       console.log(error.response.data.message);
     })
-  }, [])
+  }, [query])
 
   let contentView;
 
@@ -101,9 +100,9 @@ export default function AllBoard() {
     contentView = (
       <>
         <ItemContainerWithTitle title="컨텐츠" link="/board/contents">
-          <ContentsRanking title="신규 멜로디" link="/board/contents" data={{ category: "melody" }} />
-          <ContentsRanking title="신규 보컬" link="/board/contents" data={{ category: "vocal" }} />
-          <ContentsRanking title="신규 음원" link="/board/contents" data={{ category: "music" }} />
+          <ContentsRanking title="신규 멜로디" link="/board/contents" data={{ category: "melody" }} contentList={contents.melodyList?.slice(0, 5)} />
+          <ContentsRanking title="신규 보컬" link="/board/contents" data={{ category: "vocal" }} contentList={contents.vocalList?.slice(0, 5)} />
+          <ContentsRanking title="신규 음원" link="/board/contents" data={{ category: "music" }} contentList={contents.soundTrackList?.slice(0, 5)} />
         </ItemContainerWithTitle>
         <ItemContainerWithTitle title="Shorts" link="/board/shorts" scrolled>
           {Array(10).fill().map((v,i)=>i+1).map((value, index) => {

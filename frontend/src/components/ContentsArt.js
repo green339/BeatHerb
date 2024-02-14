@@ -3,8 +3,9 @@
 import { Link } from "react-router-dom"
 
 export default function ContentsArt({ size, contentId, albumArt, isFavorite, onClickFavorite, showFavorite }) {
+  console.log(contentId);
   return (
-    <div style={{width: `${size}px`}} className="relative">
+    <div style={{width: `${size}px`, height: `${size}px`}} className="relative object-fill">
       <Link to={`/content/${contentId}`} className="text-base-content hover:text-base-content">
         <img className="w-full rounded-md" src={albumArt} alt=""/>
       </Link>

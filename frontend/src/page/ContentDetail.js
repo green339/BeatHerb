@@ -36,7 +36,7 @@ export default function ContentDetail() {
   const [creatorList, setCreatorList] = useState([]);
   const [hashtagList, setHashtagList] = useState([]);
   const [inOrderList, setInOrderList] = useState([]);
-  const [outOrderList, setOutOrderList] = useState({});
+  const [outOrder, setOutOrder] = useState({});
   const [commentList, setCommentList] = useState([]);
   const [lyrics, setLyrics] = useState("");
 
@@ -50,16 +50,16 @@ export default function ContentDetail() {
       url: `${serverUrl}/content/${id}`,
     })
     .then((response) => {
-      console.log(response.data);
+      console.log(response.data.data);
       const data = response.data.data;
 
       setImageSrc(data.image);
       setTitle(data.title);
       setDescribe(data.describe);
       setCreatorList(data.creatorList);
-      setHashtagList(data.hashtagList);
+      setHashtagList(data.hashTagList);
       setInOrderList(data.inOrderList); 
-      setOutOrderList(data.outOrderList);
+      setOutOrder(data.outOrder);
       setCommentList(data.commentList);
       setLyrics(data.lyrics);
     })
@@ -93,11 +93,11 @@ export default function ContentDetail() {
     let contentList;
 
     if(category === "melody") {
-      contentList = outOrderList.melodyList;
+      contentList = outOrder.melodyList;
     } else if (category === "vocal") {
-      contentList = outOrderList.vocalList;
+      contentList = outOrder.vocalList;
     } else {
-      contentList = outOrderList.soundTrackList;
+      contentList = outOrder.soundTrackList;
     }
 
     itemView = contentList?.map((content, index) => (
@@ -107,13 +107,13 @@ export default function ContentDetail() {
       )
     );
   } else if (category === "shorts") {
-    itemView = outOrderList.shortsList?.map((shorts, index) => (
+    itemView = outOrder.shortsList?.map((shorts, index) => (
       <div key={"shorts" + shorts.id} className="flex justify-center">
         <ShortsItem title={shorts.title} />
       </div>
     ));
   } else if (category === "live") {
-    itemView = outOrderList.liveList?.map((live, index) => (
+    itemView = outOrder.liveList?.map((live, index) => (
       <div key={"live" + live.id} className="flex justify-center">
         <LiveItem title={live.title} />
       </div>
@@ -199,7 +199,7 @@ export default function ContentDetail() {
                   <div className="flex gap-1 flex-wrap">
                     {
                       hashtagList.map((hashtag, index) => (
-                        <div className="badge badge-lg badge-primary text-primary-content">
+                        <div key={"hashtag"+hashtag.id} className="badge badge-lg badge-primary text-primary-content">
                           {hashtag.name}
                         </div>
                       ))
