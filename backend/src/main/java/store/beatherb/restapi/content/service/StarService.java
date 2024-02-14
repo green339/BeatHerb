@@ -97,10 +97,12 @@ public class StarService {
 
         for (Star star : starList) {
             Content content = star.getContent();
-            ContentStarCheckResponse.builder()
-                    .id(content.getId())
-                    .star(true)
-                    .build();
+            contentStarCheckResponses.add(
+                    ContentStarCheckResponse.builder()
+                            .id(content.getId())
+                            .star(true)
+                            .build()
+            );
         }
         return contentStarCheckResponses;
     }
