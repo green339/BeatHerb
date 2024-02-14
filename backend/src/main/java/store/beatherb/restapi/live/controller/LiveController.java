@@ -14,9 +14,12 @@ import store.beatherb.restapi.live.domain.Live;
 import store.beatherb.restapi.live.domain.dto.request.LiveCreateRequest;
 import store.beatherb.restapi.live.domain.dto.request.LiveJoinRequest;
 import store.beatherb.restapi.live.domain.dto.response.LiveJoinResponse;
+import store.beatherb.restapi.live.dto.response.LiveDetailResponse;
 import store.beatherb.restapi.live.service.LiveService;
 import store.beatherb.restapi.member.dto.MemberDTO;
 import store.beatherb.restapi.openvidu.property.OpenviduProperties;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -51,5 +54,12 @@ public class LiveController {
         liveService.deleteLive(memberDTO);
 
         return ResponseEntity.ok(ApiResponse.successWithoutData());
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<LiveDetailResponse>>> liveList(){
+        List<LiveDetailResponse> response = liveService.liveList();
+        ApiResponse<List<LiveDetailResponse>> apiResponse = ApiResponse.successWithData(response);
+        return ResponseEntity.status(apiResponse.getCode()).body(apiResponse);
     }
 }
