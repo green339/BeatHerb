@@ -17,11 +17,11 @@ public class SocketTokenValidService {
     private final RedisTemplate<String,Integer> redisTemplate;
 
     public Long getMemberId(String uuid){
-//        log.info("uuid = [{}]",uuid);
+        log.info("uuid = [{}]",uuid);
 //        SocketToken socketToken = socketTokenRepository.findByUuid(uuid).orElse(null);
         Integer id = redisTemplate.opsForValue().get(uuid);
         if(id == null){
-//            log.info("call socketToken null");
+            log.info("call socketToken null");
 //            SocketToken socketToken1 = SocketToken.builder()
 //                    .memberId(1L)
 //                    .uuid(uuid)
@@ -31,7 +31,7 @@ public class SocketTokenValidService {
         }
 //        Long id = socketToken.getMemberId();
 //        socketTokenRepository.delete(socketToken);
-//        log.info("call delete");
+        log.info("call delete");
         redisTemplate.delete(uuid);
         return  id.longValue();
     }

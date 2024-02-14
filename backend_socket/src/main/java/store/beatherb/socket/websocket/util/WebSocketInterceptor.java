@@ -20,7 +20,7 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
 
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
-//        log.info("beforeHandShake Call");
+        log.info("beforeHandShake Call");
 
         String query = request.getURI().getQuery();
         if (query == null) {
@@ -35,17 +35,17 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
                 break;
             }
         }
-//        log.info("Token = [{}]" , token);
+        log.info("Token = [{}]" , token);
         if (token != null) {
             Long id = socketTokenValidService.getMemberId(token);
 
-//            log.info("Long id = [{}]" , id);
+            log.info("Long id = [{}]" , id);
             if (id != null) {
                 attributes.put("id", id);
                 return true;
             }
         }
-//        log.info("beforeHandShake done!");
+        log.info("beforeHandShake done!");
         return false;
     }
 
