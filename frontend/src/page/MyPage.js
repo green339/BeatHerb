@@ -42,10 +42,9 @@ export default function MyPage() {
   const [followingList, setFollowingList] = useState([]);
 
   const id = Number(params.id);
+  const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
 
   useEffect(() => {
-    const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
-
     axios({
       method: "get",
       url: `${serverUrl}/member/${id}`
@@ -72,7 +71,6 @@ export default function MyPage() {
   }, [id])
 
   const toggleFollow = () => {
-    const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
     const method = (followerList.findIndex((follower) => follower.id === userId) !== -1 ? "delete" : "post")
 
     axios({
@@ -170,9 +168,9 @@ export default function MyPage() {
               <div className="flex place-items-center">
                 <div className="w-32 h-32 rounded-md">
                   <img
-                    className="w-full rounded-md"
-                    src="https://img.freepik.com/free-vector/background-colorful-musical-notes_23-2147633120.jpg?w=740&t=st=1705448093~exp=1705448693~hmac=00f2208917eeabe7c5309cb7efc90defc713277bede12138776ae696c5456d04"
-                    alt=""
+                    className="w-32 h-32 rounded-md"
+                    src={`${serverUrl}/member/image/${id}`}
+                    alt="Profile"
                   />
                 </div>
               </div>

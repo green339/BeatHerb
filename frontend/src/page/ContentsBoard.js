@@ -24,10 +24,11 @@ export default function ContentsBoard() {
 
   useEffect(() => {
     const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
+    const endPoint = (sortOption === "recent" ? "/content/search?title=" : "/content/popularity")
 
     axios({
       method: "get",
-      url: `${serverUrl}/content/search?title=`
+      url: `${serverUrl}${endPoint}`
     })
     .then((response) => {
 
@@ -39,7 +40,7 @@ export default function ContentsBoard() {
       } else if (category === "vocal") {
         newContentList = response.data.data.vocalList;
       } else {
-        newContentList = response.data.data.vocalList;
+        newContentList = response.data.data.soundTrackList;
       }
 
       // 새롭게 띄울 컨텐트들의 아이디만 모아놓은 리스트

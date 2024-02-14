@@ -1,6 +1,8 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuthStore } from "../store/AuthStore";
+import defaultUser from "../assets/default_user.jpeg"
 
 // 유저 정보 수정 로직
 // 프로필 사진, 닉네임, DM 수신 여부
@@ -11,19 +13,42 @@ import axios from "axios";
 export default function MyPage() {
   const navigate = useNavigate();
   // 프로필 이미지
-  const defaultImg =
-    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
-  const [image, setImage] = useState(defaultImg);
+  const [image, setImage] = useState(defaultUser);
+  const { accessToken, setNickname, userId } = useAuthStore();
 
   const [file, setFile] = useState(null);
   const fileInput = useRef(null);
+
+  // 닉네임
+  const nicknameRef = useRef(null);
+
+  // DM 여부
+  const [isActive, setIsActive] = useState(true); // 여기서 true 또는 false에 따라 버튼 활성화 여부 결정
+  
+  useEffect(() => {
+    const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
+
+    axios({
+      method: "get",
+      url: `${serverUrl}/member/${userId}`
+    })
+    .then((response) => {
+      const data = response.data.data;
+      setImage((data.image ? data.image : defaultUser));
+      nicknameRef.current.value = data.nickname;
+    })
+    .catch((error) => {
+      alert(error.response.data.message[0]);
+      navigate(`/mypage/${userId}`);
+    })
+  }, [userId]);
 
   const onChangeImg = (e) => {
     if (e.target.files[0]) {
       setFile(e.target.files[0]);
     } else {
       // 업로드 취소할 시
-      setImage(defaultImg);
+      setImage(defaultUser);
       return;
     }
 
@@ -37,11 +62,6 @@ export default function MyPage() {
     reader.readAsDataURL(e.target.files[0]);
   };
 
-  // 닉네임
-  const nicknameRef = useRef(null);
-
-  // DM 여부
-  const [isActive, setIsActive] = useState(true); // 여기서 true 또는 false에 따라 버튼 활성화 여부 결정
   const handleToggle = () => {
     setIsActive(!isActive); // 상태값을 변경하여 버튼 활성화 여부 토글
   };
@@ -49,6 +69,7 @@ export default function MyPage() {
   // 수정하기 버튼 누를 때
   const onSubmit = async () => {
     const formData = new FormData();
+    const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
 
     formData.append("picture", file);
 
@@ -68,13 +89,20 @@ export default function MyPage() {
     // 프론트에서 file 없을 시 null로 넘어감을 확인
     await axios({
       method: "PUT",
-      url: "https://node5.wookoo.shop/api/member",
+      url: `${serverUrl}/member`,
       mode: "cors",
       headers: {
-        Authorization: "Bearer apple",
+        Authorization: `Bearer ${accessToken}`,
       },
       data: formData, // data 전송시에 반드시 생성되어 있는 formData 객체만 전송 하여야 한다.
-    });
+    })
+    .then((response) => {
+      setNickname(nicknameValue);
+      window.location.replace(`/mypage/${userId}`);
+    })
+    .catch((error) => {
+      alert("요청에 실패했습니다.");
+    })
   };
 
   return (

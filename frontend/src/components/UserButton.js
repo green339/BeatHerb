@@ -9,10 +9,12 @@ export default function UserButton() {
   const { accessToken, userId, nickname } = useAuthStore();
   const dmModalRef = useRef();
   const notifyModalRef = useRef();
-  const { removeAccessToken } = useAuthStore();
+  const { removeUserStatus } = useAuthStore();
+
+  const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
 
   const logout = () => {
-    removeAccessToken();
+    removeUserStatus();
     removeRefreshToken();
   }
 
@@ -25,7 +27,7 @@ export default function UserButton() {
             <summary className="btn btn-circle btn-ghost">
               <div className="avatar">
                 <div className="w-10 rounded-full">
-                  <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" alt="" />
+                  <img src={`${serverUrl}/member/image/${userId}`} alt="Profile" />
                 </div>
               </div>
             </summary>

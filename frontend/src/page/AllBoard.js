@@ -21,7 +21,7 @@ export default function AllBoard() {
 
     axios({
       method: "get",
-      url: `${serverUrl}/content/search?title=`
+      url: `${serverUrl}/content/search?title=${query}`
     })
     .then((response) => {
       console.log(response.data);

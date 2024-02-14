@@ -2,7 +2,7 @@
 
 import { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
-import defaultContent from "../assets/default_content.jpeg"
+import defaultAlbum from "../assets/default_album.jpeg"
 
 export default function ContentsRanking({ title, link, data, contentList = [] }) {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ export default function ContentsRanking({ title, link, data, contentList = [] })
         <div className="flex place-content-between items-center h-14">
           <div className="flex gap-2 items-center">
             <p className="text-base-content m-0">{index + 1}. </p>
-            <img className="w-12 rounded-md" src={content.image ? content.image : defaultContent} alt=""/>
+            <img className="w-12 rounded-md" src={content.image ? content.image : defaultAlbum} alt=""/>
             <p className="text-base-content m-0">{content.title}</p>
           </div>
           <p className="text-base-content m-0">Artist</p>

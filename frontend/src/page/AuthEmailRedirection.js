@@ -27,8 +27,9 @@ export default function AuthEmailRedirection() {
       setAccessToken(accessToken);
       setRefreshToken(refreshToken, refreshTokenExpiresIn);
       setNickname(nickname);
-      setUserId((id ? id : 1));
-      navigate(`/mypage/${(id ? id : 1)}`);
+      setUserId((id));
+      navigate(`/mypage/${(id)}`);
+      
     })
     .catch((error) => {
       console.log("로그인에 실패했습니다");
