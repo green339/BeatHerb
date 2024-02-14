@@ -12,10 +12,10 @@ import java.util.List;
 
 @Slf4j
 @Entity
-@Table(name="live")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
+@Table(name = "live")
 public class Live {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +33,7 @@ public class Live {
     private LocalDateTime createdAt;
 
 
-    @Column(name="describe")
+    @Column(name="live_describe")
     private String describe;
 
     @OneToMany(mappedBy = "live", cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)

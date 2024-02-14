@@ -18,7 +18,6 @@ import java.util.Set;
 
 @Slf4j
 @Entity
-@Table(name="content")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Content {
@@ -53,7 +52,7 @@ public class Content {
     @Column(name="lyrics")
     private String lyrics;
 
-    @Column(name="describe")
+    @Column(name="cotent_describe")
     private String describe;
 
     @Column(name="hit")
