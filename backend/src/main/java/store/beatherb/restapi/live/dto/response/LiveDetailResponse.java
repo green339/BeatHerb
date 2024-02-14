@@ -7,21 +7,18 @@ import java.util.List;
 
 @Getter
 public class LiveDetailResponse {
-    private Long liveId;
-    @JsonIgnore
-    private Long memberId;
-    private String liveTitle;
-    private List<String> contentTitleList;
-    private String masterName;
+    private Long id;
+    private String title;
+    private List<LiveContentResponse> contentList;
+    private MasterMemberResponse member;
     private String image;
 
     @Builder
-    public LiveDetailResponse(Long liveId, Long memberId, String liveTitle, List<String> contentTitleList, String masterName){
-        this.liveId = liveId;
-        this.memberId = memberId;
-        this.liveTitle = liveTitle;
-        this.contentTitleList = contentTitleList;
-        this.masterName = masterName;
-        this.image = "/api/member/image/"+memberId;
+    public LiveDetailResponse(Long id, String title, List<LiveContentResponse> contentList, MasterMemberResponse member){
+        this.id = id;
+        this.title = title;
+        this.contentList = contentList;
+        this.member = member;
+        this.image = "/api/member/image/"+member.getId();
     }
 }
