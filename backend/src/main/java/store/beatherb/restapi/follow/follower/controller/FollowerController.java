@@ -12,6 +12,7 @@ import store.beatherb.restapi.follow.follower.dto.response.RegistFollowerRespons
 import store.beatherb.restapi.follow.follower.service.FollowerService;
 import store.beatherb.restapi.global.auth.domain.LoginUser;
 import store.beatherb.restapi.global.response.ApiResponse;
+import store.beatherb.restapi.member.domain.Member;
 import store.beatherb.restapi.member.dto.MemberDTO;
 
 import java.util.List;
@@ -38,8 +39,8 @@ public class FollowerController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteFollower(@Valid @RequestBody DeleteFollowerRequest deleteFollowerRequest){
-        followService.deleteFollower(deleteFollowerRequest);
+    public ResponseEntity<?> deleteFollower(@LoginUser MemberDTO memberDTO, @Valid @RequestBody DeleteFollowerRequest deleteFollowerRequest){
+        followService.deleteFollower(memberDTO, deleteFollowerRequest);
         ApiResponse<?> apiResponse = ApiResponse.successWithoutData();
         return ResponseEntity.status(apiResponse.getCode()).body(apiResponse);
     }
