@@ -56,6 +56,8 @@ public class ContentService {
 
     private final ContentTypeRepository contentTypeRepository;
 
+    private final ContentHashTagRepository contentHashTagRepository;
+
     private final String CROPPED_DIRECTORY;
     private final String REFERENCE_DIRECTORY;
     private final String IMAGE_DIRECTORY;
@@ -432,7 +434,7 @@ public class ContentService {
                             return new ContentException(ContentErrorCode.CONTENT_NOT_FOUND);
                         }
                 );
-        content.setHit(content.getHit()+1);
+        content.setHit(content.getHit() + 1);
         contentRepository.save(content);
         return ContentDetailResponse.toDto(content);
     }
@@ -464,12 +466,19 @@ public class ContentService {
 
     }
 
-    public ContentTitleSearchResponse searchByTitle(String title) {
-        List<Content> contentList = contentRepository.findByTitleContains(title);
+    public ContentTitleSearchResponse searchByTitle(String title, List<HashTag> hashTags) {
 
-        return ContentTitleSearchResponse.toDto(contentList);
+        List<Content> contentList = null;
+        if (title != null && hashTags != null){
+            contentList = contentRepository.findByTitleAndHashtags(title, hashTags);
+        } else if (title != null) {
+            contentList = contentRepository.findByTitleContains(title);
+        } else if (hashTags != null) {
+            contentList = contentRepository.findByHashtags(hashTags);
+        }
 
-
+        return ContentTitleSearchResponse.toDto(Objects.requireNonNull(contentList));
     }
+
 }
 

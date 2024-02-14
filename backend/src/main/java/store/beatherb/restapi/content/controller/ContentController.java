@@ -9,6 +9,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import store.beatherb.restapi.content.domain.Content;
+import store.beatherb.restapi.content.domain.HashTag;
 import store.beatherb.restapi.content.domain.embed.ContentTypeEnum;
 import store.beatherb.restapi.content.dto.request.CreatorAgreeRequest;
 import store.beatherb.restapi.content.dto.request.ContentUploadRequest;
@@ -32,8 +33,8 @@ public class ContentController {
 
 
     @GetMapping("/search")
-    public ResponseEntity<ApiResponse<ContentTitleSearchResponse>> searchByTitle(@RequestParam String title){
-        ContentTitleSearchResponse contentTitleSearchResponse = contentService.searchByTitle(title);
+    public ResponseEntity<ApiResponse<ContentTitleSearchResponse>> searchByTitle(@RequestParam String title, @RequestParam List<HashTag> hashtags){
+        ContentTitleSearchResponse contentTitleSearchResponse = contentService.searchByTitle(title, hashtags);
         return ResponseEntity.ok(ApiResponse.successWithData(contentTitleSearchResponse));
 
     }
