@@ -16,15 +16,15 @@ const tabs = [
   { value: "melody", title: "멜로디" },
   { value: "vocal", title: "보컬" },
   { value: "music", title: "음원" },
-]
+];
 
 export default function AllBoard() {
   const [searchParams] = useSearchParams();
-  const queryParam = searchParams.get('query'); 
-  const hashtagListParam = searchParams.get('hashtagList');
-  const query = queryParam ? queryParam : ""; 
+  const queryParam = searchParams.get("query");
+  const hashtagListParam = searchParams.get("hashtagList");
+  const query = queryParam ? queryParam : "";
   const hashtagListString = hashtagListParam ? hashtagListParam : "";
-  const [contents, setContents] = useState({})
+  const [contents, setContents] = useState({});
   const [category, setCategory] = useState("melody");
 
   useEffect(() => {
@@ -32,21 +32,21 @@ export default function AllBoard() {
 
     axios({
       method: "get",
-      url: `${serverUrl}/content/search?title=${query}`
+      url: `${serverUrl}/content/search?title=${query}`,
     })
-    .then((response) => {
-      setContents(response.data.data);
-    })
-    .catch((error) => {
-      console.log(error.response.data.message);
-    })
-  }, [query])
+      .then((response) => {
+        setContents(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error.response.data.message);
+      });
+  }, [query]);
 
   let contentView;
 
-  if(query || hashtagListString) {
+  if (query || hashtagListString) {
     let searchList;
-    
+
     if (category === "melody") {
       searchList = contents.melodyList ? contents.melodyList : [];
     } else if (category === "vocal") {
@@ -59,83 +59,105 @@ export default function AllBoard() {
       <div className="w-full h-full">
         <div className="flex flex-col gap-4">
           {query && <p className="text-primary text-2xl font-semibold">검색어 : {query}</p>}
-          {hashtagListString && <p className="text-xl" >적용된 해시태그 : {hashtagListString}</p>}
+          {hashtagListString && <p className="text-xl">적용된 해시태그 : {hashtagListString}</p>}
         </div>
         <div role="tablist" className="tabs tabs-bordered my-8 tabs-lg">
-          {
-            tabs.map((tab) => (
-              <button
-                key={tab.value}
-                role="tab"
-                className={"tab w-1/2 translate-x-1/2" + (category === tab.value ? " tab-active" : "")}
-                onClick={() => setCategory(tab.value)}
-              >
-                {tab.title}
-              </button>
-            ))
-          }
+          {tabs.map((tab) => (
+            <button
+              key={tab.value}
+              role="tab"
+              className={
+                "tab w-1/2 translate-x-1/2" + (category === tab.value ? " tab-active" : "")
+              }
+              onClick={() => setCategory(tab.value)}
+            >
+              {tab.title}
+            </button>
+          ))}
         </div>
 
         <div className="grid grid-cols-4 gap-4 items-center">
-          {
-            searchList.map((content, index) => {
-              return (
-                <div key={"content" + content.id} className="flex justify-center">
-                  <ContentsItem 
-                    contentsId={content.id} 
-                    size={150} 
-                    albumArt={content.image} 
-                    title={content.title} 
-                    artist={creatorListFormat(content.creatorList)}
-                   showFavorite={false}
-                  />
-                </div>
-              )
-            })
-          }
+          {searchList.map((content, index) => {
+            return (
+              <div key={"content" + content.id} className="flex justify-center">
+                <ContentsItem
+                  contentId={content.id}
+                  size={150}
+                  albumArt={content.image}
+                  title={content.title}
+                  artist={creatorListFormat(content.creatorList)}
+                  showFavorite={false}
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
-    )
+    );
   } else {
     contentView = (
       <>
         <ItemContainerWithTitle title="컨텐츠" link="/board/contents">
-          <ContentsRanking title="신규 멜로디" link="/board/contents" data={{ category: "melody" }} contentList={contents.melodyList?.slice(0, 5)} />
-          <ContentsRanking title="신규 보컬" link="/board/contents" data={{ category: "vocal" }} contentList={contents.vocalList?.slice(0, 5)} />
-          <ContentsRanking title="신규 음원" link="/board/contents" data={{ category: "music" }} contentList={contents.soundTrackList?.slice(0, 5)} />
+          <ContentsRanking
+            title="신규 멜로디"
+            link="/board/contents"
+            contentId={contents.id}
+            data={{ category: "melody" }}
+            contentList={contents.melodyList?.slice(0, 5)}
+          />
+          <ContentsRanking
+            title="신규 보컬"
+            link="/board/contents"
+            contentId={contents.id}
+            data={{ category: "vocal" }}
+            contentList={contents.vocalList?.slice(0, 5)}
+          />
+          <ContentsRanking
+            title="신규 음원"
+            link="/board/contents"
+            contentId={contents.id}
+            data={{ category: "music" }}
+            contentList={contents.soundTrackList?.slice(0, 5)}
+          />
         </ItemContainerWithTitle>
         <ItemContainerWithTitle title="Shorts" link="/board/shorts" scrolled>
-          {Array(10).fill().map((v,i)=>i+1).map((value, index) => {
-            return (
-              <div key={"shorts" + index} className="flex justify-center">
-                <div>
-                  <ShortsItem title="Title"/>
+          {Array(10)
+            .fill()
+            .map((v, i) => i + 1)
+            .map((value, index) => {
+              return (
+                <div key={"shorts" + index} className="flex justify-center">
+                  <div>
+                    <ShortsItem title="Title" />
+                  </div>
                 </div>
-              </div>
-            )
-          })}
+              );
+            })}
         </ItemContainerWithTitle>
         <ItemContainerWithTitle title="라이브" link="/board/live" scrolled>
-          {Array(10).fill().map((v,i)=>i+1).map((value, index) => {
-            return (
-              <div key={"live" + index} className="flex justify-center">
-                <div>
-                  <LiveItem title="Title"/>
+          {Array(10)
+            .fill()
+            .map((v, i) => i + 1)
+            .map((value, index) => {
+              return (
+                <div key={"live" + index} className="flex justify-center">
+                  <div>
+                    <LiveItem title="Title" />
+                  </div>
                 </div>
-              </div>
-            )
-          })}
+              );
+            })}
         </ItemContainerWithTitle>
       </>
-    )
+    );
   }
-  
+
   return (
     <>
       <div className="my-16 w-full min-w-112 px-16">
         <SearchBar initQuery={query} initHashtagListString={hashtagListString} />
       </div>
-      { contentView }
-    </> 
+      {contentView}
+    </>
   );
 }
