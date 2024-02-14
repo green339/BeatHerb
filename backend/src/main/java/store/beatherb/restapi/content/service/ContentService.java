@@ -12,6 +12,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import store.beatherb.restapi.content.domain.*;
 import store.beatherb.restapi.content.domain.embed.ContentTypeEnum;
+import store.beatherb.restapi.content.dto.HashTagDTO;
 import store.beatherb.restapi.content.dto.request.CreatorAgreeRequest;
 import store.beatherb.restapi.content.dto.request.ContentUploadRequest;
 import store.beatherb.restapi.content.dto.response.*;
@@ -519,7 +520,7 @@ public class ContentService {
                             return new ContentException(ContentErrorCode.CONTENT_NOT_FOUND);
                         }
                 );
-        content.setHit(content.getHit()+1);
+        content.setHit(content.getHit() + 1);
         contentRepository.save(content);
         if(memberDTO == null){
             return ContentDetailResponse.toDto(content,false);
@@ -561,12 +562,21 @@ public class ContentService {
 
     }
 
-    public ContentTitleSearchResponse searchByTitle(String title) {
-        List<Content> contentList = contentRepository.findByTitleContains(title);
+    public ContentTitleSearchResponse searchByTitle(String title, List<Long> hashTagIds) {
+
+        List<Content> contentList = new ArrayList<>();
+        System.out.println(title);
+        System.out.println(hashTagIds);
+        if (title != null && hashTagIds != null) {
+            contentList = contentRepository.findByTitleAndHashtags(title, hashTagIds);
+        } else if (title != null) {
+            contentList = contentRepository.findByTitleContains(title);
+        } else if (hashTagIds != null) {
+            contentList = contentRepository.findByHashtags(hashTagIds);
+        }
 
         return ContentTitleSearchResponse.toDto(contentList);
-
-
     }
+
 }
 

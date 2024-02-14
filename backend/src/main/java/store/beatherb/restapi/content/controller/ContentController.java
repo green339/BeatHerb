@@ -9,7 +9,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import store.beatherb.restapi.content.domain.Content;
+import store.beatherb.restapi.content.domain.HashTag;
 import store.beatherb.restapi.content.domain.embed.ContentTypeEnum;
+import store.beatherb.restapi.content.dto.HashTagDTO;
 import store.beatherb.restapi.content.dto.request.CreatorAgreeRequest;
 import store.beatherb.restapi.content.dto.request.ContentUploadRequest;
 import store.beatherb.restapi.content.dto.response.ContentPopularityResponse;
@@ -33,10 +35,9 @@ public class ContentController {
 
 
     @GetMapping("/search")
-    public ResponseEntity<ApiResponse<ContentTitleSearchResponse>> searchByTitle(@RequestParam String title){
-        ContentTitleSearchResponse contentTitleSearchResponse = contentService.searchByTitle(title);
+    public ResponseEntity<ApiResponse<ContentTitleSearchResponse>> searchByTitle(@RequestParam(required = false) String title, @RequestParam(name="id", required = false) List<Long> hashTagIds){
+        ContentTitleSearchResponse contentTitleSearchResponse = contentService.searchByTitle(title, hashTagIds);
         return ResponseEntity.ok(ApiResponse.successWithData(contentTitleSearchResponse));
-
     }
 
     @GetMapping("/image/{id}")
