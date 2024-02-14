@@ -30,6 +30,8 @@ function UserVideoComponent({ streamManager, width, height, mainVideo = false })
     return JSON.parse(streamManager.stream.connection.data).clientData;
   }
 
+  console.log(streamManager);
+
   return (
     <div>
       {streamManager !== undefined ? (
@@ -73,7 +75,6 @@ export default function Live() {
 
   useEffect(() => {
     window.addEventListener('beforeunload', onbeforeunload);
-    // window.onpopstate = (event) => leaveSession();
     return () =>{
       window.removeEventListener('beforeunload', onbeforeunload);
       if(session) leaveSession();
@@ -178,7 +179,6 @@ export default function Live() {
               insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
               mirror: false, // 당사자 로컬 비디오의 거울 반전 여부
             });
-
             // 생성된 퍼블리셔를 퍼블리싱
             mySession.publish(publisher);
 
@@ -195,10 +195,10 @@ export default function Live() {
           }
         })
         .catch((error) => {
-          alert(error.response.data.message);
+          console.log(error);
           navigate(-1); 
         });
-      });
+    })
   }
 
   useEffect(() => {
@@ -216,11 +216,14 @@ export default function Live() {
               <UserVideoComponent streamManager={mainStreamManager} width={640} height={480} mainVideo />
             ) : null}
           </div>
-          {subscribers.map((sub, i) => (
-            <div key={"sub"+i} className="inline-block mr-4 relavive">
-              <UserVideoComponent streamManager={mainStreamManager} width={160} height={120} />
-            </div>
-          ))}
+          {subscribers.map((sub, i) => {
+            console.log(sub);
+            return (
+              <div key={"sub"+i} className="inline-block mr-4 relavive">
+                <UserVideoComponent streamManager={sub} width={160} height={120} />
+              </div>
+            )
+          })}
           <div style={{ paddingLeft: '180px' }}>
             <p className="text-white font-bold text-2xl text-left">{title}</p>
             <p className="text-white text-semibold text-left">@구글 자작곡, @구글 자작 곡곡, @애국가</p>

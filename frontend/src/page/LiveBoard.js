@@ -22,6 +22,7 @@ export default function LiveBoard() {
       url: `${serverUrl}/live`
     })
     .then((response) => {
+      console.log(response.data.data);
       setLiveList(response.data.data);
     })
     .catch((error) => {
@@ -63,6 +64,26 @@ export default function LiveBoard() {
     })
   }
 
+  const joinLive = (liveId) => {
+    axios({
+      method: "get",
+      url: `${serverUrl}/live/join/${liveId}`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+    .then(response => {
+      const id = response.data.id || 1;
+      const token = response.data.data.token;
+      const role = response.data.data.role;
+      const title = response.data.data.title;
+      const describe = response.data.data.describe;
+
+      navigate(`/live/${id}`, {state: {token, role, title, describe}});
+    })
+
+  }
+
   const openLiveCreateModal = () => {
     liveCreateRef.current?.showModal();
   }
@@ -95,7 +116,7 @@ export default function LiveBoard() {
           {
             liveList.map((live, index) => {
               return (
-                <div key={"live" + live.id} className="flex justify-center">
+                <div key={"live" + live.id} className="flex justify-center cursor-pointer" onClick={() => joinLive(live.id)}>
                   <LiveItem title={live.title}/>
                 </div>
               )
