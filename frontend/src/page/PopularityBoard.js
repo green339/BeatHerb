@@ -41,7 +41,7 @@ export default function PopularityBoard() {
         stateSetter[value](response.data);
       })
       .catch((error) => {
-        console.log(error.message);
+        console.log(error.response.data.message);
       })
     })
   }, [])

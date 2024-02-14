@@ -5,32 +5,13 @@ import imgNaver from "../assets/naver.png";
 import imgKakao from "../assets/kakao.png";
 import { useState } from "react";
 import { loginWithGoogle, loginWithNaver, loginWithKakao, loginWithEmail } from "../api/auth";
-import { useAuthStore } from "../store/AuthStore"
-import { setRefreshToken } from "../store/cookie";
-import axios from "axios";
-import { useNavigate } from "react-router";
 
 export default function LogIn() {
   const [email, setEmail] = useState('');
-  const { setAccessToken } = useAuthStore();
-  const navigate = useNavigate();
 
   // 이메일 정규표현식
   const emailExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
   const isValid = emailExp.test(email);
-
-  const testLogin = () => {
-    axios({
-      method: 'get',
-      url: "https://backend.wookoo.shop/api/verify?token=uuid1",
-    })
-    .then(response => {
-      const { accessToken, refreshToken, refreshTokenExpiresIn } = response.data.data;
-      setAccessToken(accessToken);
-      setRefreshToken(refreshToken, refreshTokenExpiresIn);
-      navigate("/");
-    })
-  }
 
   return (
     <div className="absolute w-full right-1/2 bottom-1/2 translate-x-1/2 translate-y-1/2">
@@ -54,8 +35,6 @@ export default function LogIn() {
         <p className={"text-error mt-2 mb-1 text-sm" + (isValid || !email ? " invisible" : "")}>이메일 형식이 올바르지 않습니다.</p>
         <button disabled={!isValid} onClick={() => loginWithEmail(email)} className="btn btn-primary w-4/12 items-center my-2">이메일로 로그인</button>
       </div>
-
-      <button className="btn btn-warning" onClick={testLogin}>Login Test</button>
     </div>
   );
 }

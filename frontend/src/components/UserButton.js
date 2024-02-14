@@ -6,7 +6,7 @@ import { removeRefreshToken } from "../store/cookie.js";
 import Notify from "./Notify.js";
 
 export default function UserButton() {
-  const { accessToken, userId } = useAuthStore();
+  const { accessToken, userId, nickname } = useAuthStore();
   const dmModalRef = useRef();
   const notifyModalRef = useRef();
   const { removeAccessToken } = useAuthStore();
@@ -20,7 +20,7 @@ export default function UserButton() {
     return (
       <>
         <div className="flex gap-1 items-center">
-          <p className="text-base-content m-0">BeatHerb님 환영합니다.</p>
+          <p className="text-base-content m-0">{(nickname ? nickname : "No Name")}님 환영합니다.</p>
           <details className="dropdown dropdown-bottom dropdown-end">
             <summary className="btn btn-circle btn-ghost">
               <div className="avatar">

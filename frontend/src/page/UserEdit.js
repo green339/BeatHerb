@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 // 유저 정보 수정 로직
@@ -9,6 +9,7 @@ import axios from "axios";
 // 이미지 업로드 기능도 구현
 
 export default function MyPage() {
+  const navigate = useNavigate();
   // 프로필 이미지
   const defaultImg =
     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
@@ -144,13 +145,10 @@ export default function MyPage() {
             <div className="self-auto text-xl flex">
               {/* 파일 업로드 로직 구현 필요 */}
               {/* <Link to="/"> */}
-              <div onClick={onSubmit} className="px-8">
+              <div onClick={onSubmit} className="px-8 hover:cursor-pointer">
                 수정하기
               </div>
-              {/* </Link> */}
-              <Link to="/mypage/1">
-                <div className="px-8">취소하기</div>
-              </Link>
+              <div className="px-8 hover:cursor-pointer" onClick={() => navigate(-1)}>취소하기</div>
             </div>
           </div>
         </div>

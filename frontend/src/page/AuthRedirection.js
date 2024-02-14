@@ -37,8 +37,7 @@ export default function AuthRedirection() {
       })
       .catch((error) => {
         console.log(error.message);
-      })
-      .finally(() => {
+        alert("로그인에 실패했습니다.")
         navigate("/");
       })
 
@@ -66,8 +65,7 @@ export default function AuthRedirection() {
       })
       .catch((error) => {
         console.log(error.message);
-      })
-      .finally(() => {
+        alert("로그인에 실패했습니다.")
         navigate("/");
       })
 
@@ -90,15 +88,14 @@ export default function AuthRedirection() {
       })
       .catch((error) => {
         console.log(error.message);
-      })
-      .finally(() => {
+        alert("로그인에 실패했습니다.")
         navigate("/");
       })
 
     } else if (provider === "email") {
       const encoded_email = new URL(window.location.href).searchParams.get("encoded");
       const email = atob(encoded_email);
-      console.log(email)
+      
       // 서버로 요청을 보냄
       axios({
         method: 'post',
@@ -107,9 +104,8 @@ export default function AuthRedirection() {
           email : email
         },
       })
-      .then((response) => {
-        console.log(response.data);
-        navigate("/auth_email")
+      .then(() => {
+        navigate("/auth_email");
       })
       .catch((error) => {
         console.log(error);

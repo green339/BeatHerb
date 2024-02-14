@@ -1,41 +1,59 @@
 //팔로우 팔로워 모달 컴포넌트
 import { useState, useEffect } from "react";
+import axios from "axios";
+import { useAuthStore } from "../store/AuthStore";
 
 const tabs = [
   { value: "follower", title: "팔로워" },
   { value: "following", title: "팔로잉" },
 ];
 
-export default function Follow({ followType }) {
+export default function Follow({ followType, followingList, followerList }) {
   const [follow, setFollow] = useState(followType);
+  const { accessToken } = useAuthStore();
 
   useEffect(() => {
     setFollow(followType);
   }, [followType]);
 
-  const tempArray = Array(10)
-    .fill()
-    .map((v, i) => i + 1);
+  const handleDeleteFollowing = (id) => {
+    const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
 
-  let followList = null;
+    axios({
+      method: "delete",
+      url: `${serverUrl}/follower`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      data: {
+        id
+      }
+    })
+    .then((response) => {
+      window.location.reload();
+    })
+    .catch((error) => {
+      console.log(error);
+      alert("오류가 발생했습니다.");
+    })
+  }
 
-  if (follow === "follower") {
-    followList = tempArray.map((value, index) => (
-      <div key={index} className="flex justify-center">
-        <div className="flex">
-          <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
-          <div className="w-52 h-12">Alex</div>
-          <button className="flex px-3 md:px-4 py-1 md:py-2 bg-base-100 text-white rounded-lg hover:bg-base-200">
+  const followList = (follow === "follower" ? followerList : followingList).map((followUser, index) => (
+    <div key={"follow" + followUser.id} className="flex justify-center">
+      <div className="flex">
+        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
+        <div className="w-52 h-12">{followUser.id}</div>
+        {follow === "following" && (
+          <button 
+            className="flex px-3 md:px-4 py-1 md:py-2 bg-base-100 text-white rounded-lg hover:bg-base-200" 
+            onClick={() => handleDeleteFollowing(followUser.id)}
+          >
             삭제
           </button>
-        </div>
+        )}
       </div>
-    ));
-  } else if (follow === "following") {
-    followList = tempArray.map((value, index) => (
-      <div key={index} className="flex justify-center"></div>
-    ));
-  }
+    </div>
+  ));
 
   return (
     <div>
