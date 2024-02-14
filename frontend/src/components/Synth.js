@@ -208,20 +208,20 @@ const Synth = ({ getRecordResult }) => {
       <div className="flex" style={{ justifyContent: "center", alignItems: "center" }}>
 
       {isRecording ? (
-          <button onClick={stopRecording}>녹음멈추기</button>
+          <button className="btn btn-primary" onClick={stopRecording}>녹음멈추기</button>
       ) : (
-        <button onClick={startRecording}>녹음하기</button>
+        <button className="btn btn-primary" onClick={startRecording}>녹음하기</button>
       )}
       {audio ? (
         isPlaying ? (
           <div>
-            <button onClick={uploadRecording}>작업실로 올리기</button>
-            <button onClick={stopPlaying}>플레이 멈추기</button>
+            <button className="btn btn-primary" onClick={uploadRecording}>작업실로 올리기</button>
+            <button className="btn btn-primary" onClick={stopPlaying}>플레이 멈추기</button>
           </div>
         ) : (
           <div>
-            <button onClick={uploadRecording}>작업실로 올리기</button>
-            <button onClick={playRecording}>플레이하기</button>
+            <button className="btn btn-primary" onClick={uploadRecording}>작업실로 올리기</button>
+            <button className="btn btn-primary" onClick={playRecording}>플레이하기</button>
           </div>
         )
       ) : (

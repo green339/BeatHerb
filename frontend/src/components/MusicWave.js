@@ -14,7 +14,7 @@ const MusicWave = forwardRef(({}, ref) => {
   const [cnt, setCnt] = useState(0);
   const loadMusicModalRef = useRef();
   const uploadMusicModalRef = useRef();
-  const [rootContentIdList,setRootContentIdList]=useState([])
+  const [rootContentIdList, setRootContentIdList] = useState([]);
   const playlistRef = useRef();
   const eeRef = useRef(null);
   const audios = [];
@@ -36,12 +36,13 @@ const MusicWave = forwardRef(({}, ref) => {
   useImperativeHandle(ref, () => ({
     handleRecordingUpload,
   }));
-  const getLoadMusic = (files) => {
+  const getLoadMusic = (files, roots) => {
     console.log(files);
     files.map((file) => {
-      console.log("file",file)
+      console.log("file", file);
       handleFileUpload(file);
     });
+    setRootContentIdList((rootContentIdList) => [...rootContentIdList, ...roots]);
   };
   const handleFileUpload = (file) => {
     //파일업로드
@@ -49,15 +50,14 @@ const MusicWave = forwardRef(({}, ref) => {
     //   const url = URL.createObjectURL(file);
     //   console.log(audioData)
     eeRef.current.emit("newtrack", file);
-    
-    setCnt(cnt+1)
+    setCnt(cnt + 1);
   };
   const handleRecordingUpload = (url) => {
     //악기랑 음성녹음 업로드
     // setAudioData((prevAudios) => [...prevAudios, { id: cnt, src: url, x: 1,y:0 }]);
     // setCnt((cnt) => cnt + 1);
     eeRef.current.emit("newtrack", url);
-    setCnt(cnt+1)
+    setCnt(cnt + 1);
     console.log("handle", url);
   };
 
@@ -119,12 +119,12 @@ const MusicWave = forwardRef(({}, ref) => {
     let userMediaStream;
     let playlist;
     const constraints = { audio: true };
-
-    const gotStream = (stream) => {
-      userMediaStream = stream;
-      playlist.initRecorder(userMediaStream);
-      // Update UI to enable recording button
-    };
+    //녹음 동그라미 버튼 없애기
+    // const gotStream = (stream) => {
+    //   userMediaStream = stream;
+    //   playlist.initRecorder(userMediaStream);
+    //   // Update UI to enable recording button
+    // };
 
     const logError = (err) => {
       console.error(err);
@@ -165,14 +165,14 @@ const MusicWave = forwardRef(({}, ref) => {
     playlist.load(audioData).then(function () {
       playlist.initExporter();
       eeRef.current = playlist.getEventEmitter();
-      if (navigator.mediaDevices) {
-        navigator.mediaDevices.getUserMedia(constraints).then(gotStream).catch(logError);
-      } else if (navigator.getUserMedia && "MediaRecorder" in window) {
-        navigator.getUserMedia(constraints, gotStream, logError);
-      }
+      //녹음 동그라미 버튼 없애기
+      // if (navigator.mediaDevices) {
+      //   navigator.mediaDevices.getUserMedia(constraints).then(gotStream).catch(logError);
+      // } else if (navigator.getUserMedia && "MediaRecorder" in window) {
+      //   navigator.getUserMedia(constraints, gotStream, logError);
+      // }
     });
-    return () => {
-    };
+    return () => {};
   }, []);
   if (eeRef.current) {
     eeRef.current.on("mute", function (track) {
@@ -181,7 +181,7 @@ const MusicWave = forwardRef(({}, ref) => {
   }
   if (eeRef.current) {
     eeRef.current.on("removeTrack", function (track) {
-      setCnt(cnt-1)
+      setCnt(cnt - 1);
       console.log("Remove button pressed for " + track.name);
     });
   }
@@ -222,7 +222,7 @@ const MusicWave = forwardRef(({}, ref) => {
   };
 
   const openUploadMusicModal = async () => {
-    if(cnt===0) return
+    if (cnt === 0) return;
     await eeRef.current.emit("startaudiorendering", "wav");
     await eeRef.current.on("audiorenderingfinished", audiorenderingfinished);
     await uploadMusicModalRef.current.showModal();
@@ -237,26 +237,43 @@ const MusicWave = forwardRef(({}, ref) => {
           </div>
         </dialog>
         <div className="grid grid-cols-1 gap-5">
-          <button style={{ display: 'flex', alignItems: 'between', justifyContent: 'center', padding: '5px' }} onClick={openLoadMusicModal}>
-<svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-6 h-6">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-          </svg>
-          
-          </button>
-          <button style={{ display: 'flex', alignItems:'center',justifyContent:'center', padding:'5px'}} onClick={playBtn}>
+          <button
+            style={{
+              display: "flex",
+              alignItems: "between",
+              justifyContent: "center",
+              padding: "5px",
+            }}
+            onClick={openLoadMusicModal}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6">
+              className="w-6 h-6"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+          </button>
+          <button
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "5px",
+            }}
+            onClick={playBtn}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -264,14 +281,23 @@ const MusicWave = forwardRef(({}, ref) => {
               />
             </svg>
           </button>
-          <button style={{ display: 'flex', alignItems:'center',justifyContent:'center', padding:'5px'}} onClick={pauseBtn}>
+          <button
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "5px",
+            }}
+            onClick={pauseBtn}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6">
+              className="w-6 h-6"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -279,14 +305,23 @@ const MusicWave = forwardRef(({}, ref) => {
               />
             </svg>
           </button>
-          <button style={{ display: 'flex', alignItems:'center',justifyContent:'center', padding:'5px'}} onClick={stopBtn}>
+          <button
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "5px",
+            }}
+            onClick={stopBtn}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6">
+              className="w-6 h-6"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -295,14 +330,23 @@ const MusicWave = forwardRef(({}, ref) => {
             </svg>
           </button>
 
-          <button style={{ display: 'flex', alignItems:'center',justifyContent:'center', padding:'5px'}} onClick={cursorBtn}>
+          <button
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "5px",
+            }}
+            onClick={cursorBtn}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6">
+              className="w-6 h-6"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -310,14 +354,23 @@ const MusicWave = forwardRef(({}, ref) => {
               />
             </svg>
           </button>
-          <button style={{ display: 'flex', alignItems:'center',justifyContent:'center', padding:'5px'}} onClick={shiftAudioBtn}>
+          <button
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "5px",
+            }}
+            onClick={shiftAudioBtn}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6">
+              className="w-6 h-6"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -327,7 +380,7 @@ const MusicWave = forwardRef(({}, ref) => {
           </button>
           {/* <button onClick={selectBtn}>select</button>
           <button onClick={trimBtn}> */}
-            {/* <svg
+          {/* <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -340,16 +393,25 @@ const MusicWave = forwardRef(({}, ref) => {
                 d="m7.848 8.25 1.536.887M7.848 8.25a3 3 0 1 1-5.196-3 3 3 0 0 1 5.196 3Zm1.536.887a2.165 2.165 0 0 1 1.083 1.839c.005.351.054.695.14 1.024M9.384 9.137l2.077 1.199M7.848 15.75l1.536-.887m-1.536.887a3 3 0 1 1-5.196 3 3 3 0 0 1 5.196-3Zm1.536-.887a2.165 2.165 0 0 0 1.083-1.838c.005-.352.054-.695.14-1.025m-1.223 2.863 2.077-1.199m0-3.328a4.323 4.323 0 0 1 2.068-1.379l5.325-1.628a4.5 4.5 0 0 1 2.48-.044l.803.215-7.794 4.5m-2.882-1.664A4.33 4.33 0 0 0 10.607 12m3.736 0 7.794 4.5-.802.215a4.5 4.5 0 0 1-2.48-.043l-5.326-1.629a4.324 4.324 0 0 1-2.068-1.379M14.343 12l-2.882 1.664"
               />
             </svg> */}
-            {/* trim
+          {/* trim
           </button> */}
-          <button style={{ display: 'flex', alignItems:'center',justifyContent:'center', padding:'5px'}} onClick={openUploadMusicModal}>
+          <button
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "5px",
+            }}
+            onClick={openUploadMusicModal}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6">
+              className="w-6 h-6"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -359,15 +421,17 @@ const MusicWave = forwardRef(({}, ref) => {
           </button>
           <dialog ref={uploadMusicModalRef} className="modal">
             <div className="modal-box w-11/12 max-w-5xl">
-              <UploadMusic music={downloadData} rootContentIdList={rootContentIdList}/>
+              <UploadMusic music={downloadData} rootContentIdList={rootContentIdList} />
             </div>
           </dialog>
         </div>
       </div>
       <div
         className="rounded-md bg-base-300 w-10/12 mx-5"
-        style={{ overflow: "scroll", overflowX: "hidden" }}>
-        <div className="p-5" id="playlist" ref={playlistRef}></div><div>
+        style={{ overflow: "scroll", overflowX: "hidden" }}
+      >
+        <div className="p-5" id="playlist" ref={playlistRef}></div>
+        <div>
           <button onClick={openLoadMusicModal}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -375,11 +439,12 @@ const MusicWave = forwardRef(({}, ref) => {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6">
+              className="w-6 h-6"
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
-            </button>
-            </div>
+          </button>
+        </div>
       </div>
     </div>
   );

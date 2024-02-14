@@ -14,7 +14,7 @@ export default function AudioRecorder({ getRecordResult }) {
   const pauseButtonRef = useRef(null);
   const recordButtonRef = useRef(null);
   const resultRef = useRef(null);
-  const [playStatus,setPlayStatus]=useState(false)
+  const [playStatus, setPlayStatus] = useState(false);
 
   useEffect(() => {
     createWaveSurfer();
@@ -89,26 +89,28 @@ export default function AudioRecorder({ getRecordResult }) {
 
   // 녹음 버튼 클릭 시
   const handleRecordClick = () => {
-    if (record.current.isRecording() || record.current.isPaused()) { //녹음 종료
+    if (record.current.isRecording() || record.current.isPaused()) {
+      //녹음 종료
       record.current.stopRecording();
       recordButtonRef.current.textContent = "Record";
       pauseButtonRef.current.style.display = "none";
       progressRef.current.style.display = "none";
-      resultRef.current.style.display = "inline"
+      resultRef.current.style.display = "inline";
       pauseButtonRef.current.textContent = "Pause";
-      micRef.current.style.display="none"
+      micRef.current.style.display = "none";
       return;
     }
 
     recordButtonRef.current.disabled = true;
 
-    record.current.startRecording({ deviceId: selectedDevice }).then(() => { //녹음시작
+    record.current.startRecording({ deviceId: selectedDevice }).then(() => {
+      //녹음시작
       recordButtonRef.current.textContent = "Stop";
       recordButtonRef.current.disabled = false;
       pauseButtonRef.current.style.display = "inline";
       progressRef.current.style.display = "inline";
-      resultRef.current.style.display = "none"
-      micRef.current.style.display="inline"
+      resultRef.current.style.display = "none";
+      micRef.current.style.display = "inline";
     });
   };
   const uploadRecording = () => {
@@ -121,26 +123,39 @@ export default function AudioRecorder({ getRecordResult }) {
       <div id="mic" ref={micRef}></div>
       <div>
         <div ref={resultRef} style={{ display: "none" }}>
-
-        {recordedUrl && <WaveSurferPlayer url={recordedUrl} />}
-        <button onClick={uploadRecording}>올리기</button>
+          {recordedUrl && <WaveSurferPlayer url={recordedUrl} />}
+          <button className="btn btn-primary" onClick={uploadRecording}>
+            작업실로 올리기
+          </button>
         </div>
       </div>
 
       <div>
         <div id="progress" ref={progressRef}></div>
         <div className="flex place-content-center gap-4">
-         
-          <button id="record" ref={recordButtonRef} onClick={handleRecordClick}>
+          <button
+            className="btn btn-primary"
+            id="record"
+            ref={recordButtonRef}
+            onClick={handleRecordClick}
+          >
             Record
           </button>
-          <button id="pause" ref={pauseButtonRef} onClick={handlePauseClick} style={{ display:"none" }}>
-                Pause </button>
+          <button
+            className="btn btn-primary"
+            id="pause"
+            ref={pauseButtonRef}
+            onClick={handlePauseClick}
+            style={{ display: "none" }}
+          >
+            Pause{" "}
+          </button>
           <select
             id="mic-select"
             className="select select-ghost w-full max-w-xs text-base-content"
             value={selectedDevice}
-            onChange={(e) => setSelectedDevice(e.target.value)}>
+            onChange={(e) => setSelectedDevice(e.target.value)}
+          >
             {devices.map((device) => (
               <option key={device.deviceId} value={device.deviceId}>
                 {device.label || device.deviceId}
