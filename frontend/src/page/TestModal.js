@@ -14,7 +14,7 @@ export default function TestModal() {
   const openShortsModal = () => {
     shortsModalRef.current.showModal();
   };
-  const getModalClearState = () => { //닫는다고 알려주는 그리고 여기서 닫아
+  const getModalCloseState = () => { //닫는다고 알려주는 그리고 여기서 닫아
     shortsModalRef.current.close();
   };
   return (
@@ -29,7 +29,7 @@ export default function TestModal() {
       <button onClick={openShortsModal}>open modal</button>
       <dialog ref={shortsModalRef} className="modal">
         <div className="modal-box w-11/12 max-w-5xl">
-          <ShortsModal initState={true} getModalClearState={getModalClearState} />
+          <ShortsModal initState={true} getModalCloseState={getModalCloseState} />
         </div>
       </dialog>
     </div>

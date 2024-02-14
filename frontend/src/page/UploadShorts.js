@@ -1,10 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { uploadMusic } from "../api/upload.js";
-// 음원 업로드 모달
-// 향후 DaisyUI 이용해서 모달로 구현 필요
-// 제목, 앨범 표지, 가사, 해시태그, 상세 정보
-// 향후 해시태그 및 파일 첨부, 버튼 누르면 다른 페이지로 이동 구현 필요
 
 export default function UploadMusic({ shorts, getClearState }) {
   const [image, setImage] = useState(null);

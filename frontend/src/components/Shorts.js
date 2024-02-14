@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import SearchMusic from "../components/SearchMusic.js";
-export default function Shorts({ getChildShorts,getClearState }) {
+export default function Shorts({ getChildShorts, getClearState }) {
   const videoRef = useRef(null);
   const audioRef = useRef(null);
   const buttonRef = useRef(null);
@@ -16,9 +16,9 @@ export default function Shorts({ getChildShorts,getClearState }) {
     videoRef.current = null;
     videoFileRef.current = null;
     audioFileRef.current = null;
-    setMusicRoot("")
-    setMusicTitle("")
-    getClearState();//이 컴포넌트 닫는다고 알려줌
+    setMusicRoot("");
+    setMusicTitle("");
+    getClearState(); //이 컴포넌트 닫는다고 알려줌
   };
   const getChildSearchResult = (url, title, id) => {
     console.log(url, title, id);
@@ -102,7 +102,8 @@ export default function Shorts({ getChildShorts,getClearState }) {
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
-              }}>
+              }}
+            >
               선택한 음악: {musicTitle}
             </p>
             <input
@@ -116,7 +117,8 @@ export default function Shorts({ getChildShorts,getClearState }) {
               className="btn btn-primary btn-xs"
               onClick={() => {
                 audioFileRef.current.click();
-              }}>
+              }}
+            >
               음악 파일 선택
             </button>
             <div className="flex pt-10" style={{ justifyContent: "center", alignItems: "center" }}>
@@ -141,7 +143,8 @@ export default function Shorts({ getChildShorts,getClearState }) {
               className="btn btn-primary btn-xs"
               onClick={() => {
                 videoFileRef.current.click();
-              }}>
+              }}
+            >
               동영상 선택
             </button>
             <div className="flex pt-3" style={{ justifyContent: "center", alignItems: "center" }}>
@@ -153,11 +156,13 @@ export default function Shorts({ getChildShorts,getClearState }) {
         </div>
         <div
           className="flex w-full h-3/6 mt-10 "
-          style={{ justifyContent: "center", alignItems: "center" }}>
+          style={{ justifyContent: "center", alignItems: "center" }}
+        >
           <div className="modal-action px-3">
-          <button ref={buttonRef} onClick={changeUploadShortsModal}>
-            합치기
-          </button></div>
+            <button ref={buttonRef} onClick={changeUploadShortsModal}>
+              합치기
+            </button>
+          </div>
           <div className="modal-action px-3">
             <button className="btn" onClick={clear}>
               취소하기

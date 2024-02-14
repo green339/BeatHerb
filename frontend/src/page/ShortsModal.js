@@ -7,7 +7,6 @@ export default function ShortsModal({ initState,getModalCloseState }) {
   const [modalState, setModalState] = useState(initState);
   const [downloadData, setDownloadData] = useState(null);
   const [musicRoot, setMusicRoot] = useState("");
-  const clearBtnRef = useRef(null);
   const getChildShorts = (url, root) => {
     setDownloadData(url);
     setModalState(false);
@@ -27,7 +26,7 @@ export default function ShortsModal({ initState,getModalCloseState }) {
     <div className="w-full h-full">
       <div className="text-4xl pb-10">쇼츠 올리기</div>
       {modalState ? (
-        <Shorts getChildShorts={getChildShorts}></Shorts>
+        <Shorts getChildShorts={getChildShorts} getClearState={getClearState}></Shorts>
       ) : (
         <div>
           <button onClick={() => setModalState(true)}>다시 만들기</button>
