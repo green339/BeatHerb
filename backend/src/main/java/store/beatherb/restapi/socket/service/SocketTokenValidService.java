@@ -18,7 +18,7 @@ public class SocketTokenValidService {
     private final RedisTemplate<String,Integer> redisTemplate;
     public String registMemberSocket(Long memberId){
         String uuid = UUID.randomUUID().toString();
-        redisTemplate.opsForValue().set(uuid, memberId.intValue(), 30, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(uuid, memberId.intValue(), 120, TimeUnit.SECONDS);
         return uuid;
     }
 
