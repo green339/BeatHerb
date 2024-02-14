@@ -12,6 +12,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import store.beatherb.restapi.content.domain.*;
 import store.beatherb.restapi.content.domain.embed.ContentTypeEnum;
+import store.beatherb.restapi.content.dto.HashTagDTO;
 import store.beatherb.restapi.content.dto.request.CreatorAgreeRequest;
 import store.beatherb.restapi.content.dto.request.ContentUploadRequest;
 import store.beatherb.restapi.content.dto.response.*;
@@ -466,18 +467,18 @@ public class ContentService {
 
     }
 
-    public ContentTitleSearchResponse searchByTitle(String title, List<HashTag> hashTags) {
+    public ContentTitleSearchResponse searchByTitle(String title, List<Long> hashTagIds) {
 
-        List<Content> contentList = null;
-        if (title != null && hashTags != null){
-            contentList = contentRepository.findByTitleAndHashtags(title, hashTags);
+        List<Content> contentList = new ArrayList<>();
+        if (title != null && hashTagIds.isEmpty()){
+            contentList = contentRepository.findByTitleAndHashtags(title, hashTagIds);
         } else if (title != null) {
             contentList = contentRepository.findByTitleContains(title);
-        } else if (hashTags != null) {
-            contentList = contentRepository.findByHashtags(hashTags);
+        } else if (hashTagIds.isEmpty()) {
+            contentList = contentRepository.findByHashtags(hashTagIds);
         }
 
-        return ContentTitleSearchResponse.toDto(Objects.requireNonNull(contentList));
+        return ContentTitleSearchResponse.toDto(contentList);
     }
 
 }
