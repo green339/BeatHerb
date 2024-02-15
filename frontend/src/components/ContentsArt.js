@@ -8,7 +8,6 @@ export default function ContentsArt({
   onClickFavorite,
   showFavorite,
 }) {
-  console.log(contentId);
   return (
     <div style={{ width: `${size}px`, height: `${size}px` }} className="relative object-fill">
       <div className="text-base-content hover:text-base-content">

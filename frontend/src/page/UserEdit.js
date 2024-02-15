@@ -102,7 +102,7 @@ export default function MyPage() {
     const formData = new FormData();
     const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
 
-    formData.append("picture", file);
+    if(file) formData.append("picture", file);
 
     // 현재 닉네임에 입력된 값
     const nicknameValue = nicknameRef.current.value;
@@ -121,19 +121,34 @@ export default function MyPage() {
       },
       data: formData, // data 전송시에 반드시 생성되어 있는 formData 객체만 전송 하여야 한다.
     })
-      .then((response) => {
-        setNickname(nicknameValue);
+    .then((response) => {
+      setNickname(nicknameValue);
+      // onSubmit 안에서 관심사 설정하는 axios 요청 보내기
+      // selectedHashTags를 보내야 한다.
+      const selectedHashTags = hashTagIdList
+        .filter((item) => item.selected)
+        .map((item) => item.id);
+
+      axios({
+        method: "PUT",
+        url: `${serverUrl}/interest`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data: {
+          hashtagId: selectedHashTags
+        }
+      })
+      .then((resopnse) => {
         window.location.replace(`/mypage/${userId}`);
       })
       .catch((error) => {
         alert("요청에 실패했습니다.");
-      });
-
-    // onSubmit 안에서 관심사 설정하는 axios 요청 보내기
-    // selectedHashTags를 보내야 한다.
-    const selectedHashTags = hashTagIdList
-      .filter((item) => item.selected)
-      .map((item) => item.id);
+      })
+    })
+    .catch((error) => {
+      alert("요청에 실패했습니다.");
+    });
   };
 
   return (

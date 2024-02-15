@@ -43,7 +43,7 @@ export default function ContentsItem({
   return (
     <Link
       to={`/content/${contentId}`}
-      style={{ width: `${size}px`, height: `${size}px` }}
+      style={{ width: `${size}px` }}
       className="items-center`"
     >
       <ContentsArt

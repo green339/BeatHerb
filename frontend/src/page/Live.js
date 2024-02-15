@@ -73,9 +73,9 @@ export default function Live() {
 
   useEffect(() => {
     window.addEventListener('beforeunload', onbeforeunload);
-    window.onpopstate = (event) => leaveSession();
     return () =>{
       window.removeEventListener('beforeunload', onbeforeunload);
+      if(session) leaveSession();
     } 
   }, [session])
 
@@ -129,7 +129,7 @@ export default function Live() {
   }
 
   const joinSession = () => {
-    console.log(token, role);
+    console.log(role);
 
     const openVidu = new OpenVidu(); // OpenVidu 객체 생성
     ov.current = openVidu;
@@ -177,7 +177,6 @@ export default function Live() {
               insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
               mirror: false, // 당사자 로컬 비디오의 거울 반전 여부
             });
-
             // 생성된 퍼블리셔를 퍼블리싱
             mySession.publish(publisher);
 
@@ -194,10 +193,11 @@ export default function Live() {
           }
         })
         .catch((error) => {
-          alert(error.response.data.message);
+          console.log(error);
+          alert("에러가 발생했습니다")
           navigate(-1); 
         });
-      });
+    })
   }
 
   useEffect(() => {
@@ -210,16 +210,35 @@ export default function Live() {
     <>
       <div className="pt-4 grid grid-cols-10">
         <div className="col-span-7">
-          <div className="mt-6 mb-4 flex justify-center items-center">
-            {mainStreamManager !== undefined ? (
-              <UserVideoComponent streamManager={mainStreamManager} width={640} height={480} mainVideo />
-            ) : null}
-          </div>
-          {subscribers.map((sub, i) => (
-            <div key={"sub"+i} className="inline-block mr-4 relavive">
-              <UserVideoComponent streamManager={mainStreamManager} width={160} height={120} />
-            </div>
-          ))}
+          {(role === "OWNER" || role === "GUEST") ? (
+            <>
+              <div className="mt-6 mb-4 flex justify-center items-center">
+                {mainStreamManager !== undefined ? (
+                  <UserVideoComponent streamManager={mainStreamManager} width={640} height={480} mainVideo />
+                ) : null}
+              </div>
+              {subscribers.map((subscriber, i) => {
+                return (
+                  <div key={"sub"+i} className="inline-block mr-4 relavive">
+                    <UserVideoComponent streamManager={subscriber} width={160} height={120} />
+                  </div>
+                )
+              })}
+            </>
+          ) : null}
+          {role === "SUBSCRIBER" ? (
+            <>
+              <div className="grid grid-cols-4 gap-4 mt-6 mb-4 justify-center items-center">
+                {subscribers.map((subscriber, i) => {
+                  return (
+                    <div key={"sub"+i} className="inline-block mr-4 relavive">
+                      <UserVideoComponent streamManager={subscriber} width={320} height={240} />
+                    </div>
+                  )
+                })}
+              </div>
+            </>
+          ) : null}
           <div style={{ paddingLeft: '180px' }}>
             <p className="text-white font-bold text-2xl text-left">{title}</p>
             <p className="text-white text-semibold text-left">@구글 자작곡, @구글 자작 곡곡, @애국가</p>

@@ -5,14 +5,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { creatorListFormat } from "../common/creatorListFormat";
 import defaultAlbum from "../assets/default_album.jpeg";
 
-export default function ContentsRanking({ contentId, title, link, data, contentList = [] }) {
+export default function ContentsRanking({ title, link, data, contentList = [] }) {
   const navigate = useNavigate();
 
   const itemList = contentList.map((content, index) => {
     return (
       <Fragment key={"Rank" + (index + 1)}>
         <div className="divider my-1" />
-        <Link to={`/content/${contentId}`} className="flex place-content-between items-center h-14">
+        <Link to={`/content/${content.id}`} className="flex place-content-between items-center h-14">
           <div className="flex gap-2 items-center">
             <p className="text-base-content m-0">{index + 1}. </p>
             <img

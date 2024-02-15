@@ -12,7 +12,7 @@ export default function SearchBar({ initQuery = "", initHashtagListString = "" }
   const [hashtagList, setHashtagList] = useState([]);
   const searchDetailModalRef = useRef();
 
-  const initHashtagNameList = initHashtagListString.split(",");
+  const initHashtagIdList = initHashtagListString.split(' ');
 
   useEffect(() => {
     const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
@@ -20,35 +20,16 @@ export default function SearchBar({ initQuery = "", initHashtagListString = "" }
       method: "get",
       url: `${serverUrl}/content/hashtag`,
     })
-      .then((response) => {
-        console.log(response.data.data);
-        const newHashtagList = response.data.data.map((hashtag) => {
-          return {
-            ...hashtag,
-            isSelected:
-              initHashtagNameList.findIndex((hashtagName) => hashtagName === hashtag.name) !== -1,
-          };
-        });
-        setHashtagList(newHashtagList);
-        console.log(newHashtagList);
-      })
-      .catch((error) => {
-        console.log(error.message);
-        alert("오류가 발생했습니다.");
+    .then((response) => {
+      const newHashtagList = response.data.data.map((hashtag) => {
+        const isSelected = initHashtagIdList.findIndex((hashtagId) => Number(hashtagId) === hashtag.id) !== -1;
+        return { ...hashtag,isSelected };
       });
-
-    // axios({
-    //   method: "get",
-    //   url: `${serverUrl}/content/search?query=&hashtag=`
-    // })
-    // .then((response) => {
-    //   console.log(response.data.data);
-
-    // })
-    // .catch((error) => {
-    //   console.log(error.message);
-    //   alert("검색에 실패했습니다.")
-    // })
+      setHashtagList(newHashtagList);
+    })
+    .catch((error) => {
+      alert("오류가 발생했습니다.");
+    });
   }, []);
 
   const handleSearchChange = (e) => {
@@ -63,15 +44,14 @@ export default function SearchBar({ initQuery = "", initHashtagListString = "" }
 
   // 검색
   const handleSearchClick = () => {
-    console.log("검색어는", query);
     let url = "/board/all";
-    let hashtagNameListString = "";
+    let hashtagIdString = "";
     let paramCount = 0;
 
     hashtagList.forEach((hashtag) => {
       if (hashtag.isSelected) {
-        if (hashtagNameListString !== "") hashtagNameListString += ",";
-        hashtagNameListString += hashtag.name;
+        if (hashtagIdString !== "") hashtagIdString += " ";
+        hashtagIdString += hashtag.id;
       }
     });
 
@@ -80,10 +60,10 @@ export default function SearchBar({ initQuery = "", initHashtagListString = "" }
       url = url + `?query=${query}`;
     }
 
-    if (hashtagNameListString !== "") {
+    if (hashtagIdString !== "") {
       paramCount++;
       url += paramCount === 2 ? "&" : "?";
-      url = url + `hashtagList=${hashtagNameListString}`;
+      url = url + `hashtagList=${hashtagIdString}`;
     }
 
     navigate(url);

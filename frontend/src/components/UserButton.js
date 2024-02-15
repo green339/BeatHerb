@@ -4,6 +4,7 @@ import Dm from "./Dm.js";
 import { useAuthStore } from "../store/AuthStore.js";
 import { removeRefreshToken } from "../store/cookie.js";
 import Notify from "./Notify.js";
+import defaultUser from "../assets/default_user.jpeg"
 
 export default function UserButton() {
   const { accessToken, userId, nickname } = useAuthStore();
@@ -18,6 +19,10 @@ export default function UserButton() {
     removeRefreshToken();
   }
 
+  const onErrorImg = (e) => {
+    e.target.src = defaultUser;
+  }
+
   if(accessToken) {
     return (
       <>
@@ -27,7 +32,7 @@ export default function UserButton() {
             <summary className="btn btn-circle btn-ghost">
               <div className="avatar">
                 <div className="w-10 rounded-full">
-                  <img src={`${serverUrl}/member/image/${userId}`} alt="Profile" />
+                  <img src={`${serverUrl}/member/image/${userId}`} onError={onErrorImg} alt="Profile" />
                 </div>
               </div>
             </summary>

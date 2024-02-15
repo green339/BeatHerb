@@ -21,26 +21,34 @@ const tabs = [
 export default function AllBoard() {
   const [searchParams] = useSearchParams();
   const queryParam = searchParams.get("query");
-  const hashtagListParam = searchParams.get("hashtagList");
   const query = queryParam ? queryParam : "";
+
+  const hashtagListParam = searchParams.get("hashtagList");
   const hashtagListString = hashtagListParam ? hashtagListParam : "";
+  const hashtagIdList = (hashtagListString === "" ? [] : hashtagListString.split(' '));
+
   const [contents, setContents] = useState({});
   const [category, setCategory] = useState("melody");
 
   useEffect(() => {
     const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
+    let url = `${serverUrl}/content/search?title=${query}`
+
+    hashtagIdList.forEach((hashtagId, index) => {
+      url += `&id=${hashtagId}`;
+    });
 
     axios({
       method: "get",
-      url: `${serverUrl}/content/search?title=${query}`,
+      url,
     })
-      .then((response) => {
-        setContents(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error.response.data.message);
-      });
-  }, [query]);
+    .then((response) => {
+      setContents(response.data.data);
+    })
+    .catch((error) => {
+      alert(error.response.data.message);
+    });
+  }, [query, hashtagListString]);
 
   let contentView;
 
@@ -57,9 +65,9 @@ export default function AllBoard() {
 
     contentView = (
       <div className="w-full h-full">
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 py-4">
           {query && <p className="text-primary text-2xl font-semibold">검색어 : {query}</p>}
-          {hashtagListString && <p className="text-xl">적용된 해시태그 : {hashtagListString}</p>}
+          {hashtagIdList.length > 0 && <p className="text-xl">적용된 해시태그 갯수 : {hashtagIdList.length}개</p>}
         </div>
         <div role="tablist" className="tabs tabs-bordered my-8 tabs-lg">
           {tabs.map((tab) => (
@@ -101,21 +109,18 @@ export default function AllBoard() {
           <ContentsRanking
             title="신규 멜로디"
             link="/board/contents"
-            contentId={contents.id}
             data={{ category: "melody" }}
             contentList={contents.melodyList?.slice(0, 5)}
           />
           <ContentsRanking
             title="신규 보컬"
             link="/board/contents"
-            contentId={contents.id}
             data={{ category: "vocal" }}
             contentList={contents.vocalList?.slice(0, 5)}
           />
           <ContentsRanking
             title="신규 음원"
             link="/board/contents"
-            contentId={contents.id}
             data={{ category: "music" }}
             contentList={contents.soundTrackList?.slice(0, 5)}
           />
@@ -154,7 +159,7 @@ export default function AllBoard() {
 
   return (
     <>
-      <div className="my-16 w-full min-w-112 px-16">
+      <div className="mt-16 mb-8 w-full min-w-112 px-16">
         <SearchBar initQuery={query} initHashtagListString={hashtagListString} />
       </div>
       {contentView}

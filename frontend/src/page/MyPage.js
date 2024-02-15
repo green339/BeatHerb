@@ -10,6 +10,7 @@ import Follow from "../components/Follow";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/AuthStore";
 import axios from "axios";
+import defaultUser from "../assets/default_user.jpeg"
 
 // 탭 리스트
 const tabs = [
@@ -51,7 +52,6 @@ export default function MyPage() {
     })
     .then((response) => {
       const data = response.data.data;
-      console.log(data);
 
       setNickname(data.nickname);
       setHashtagList((data.hashtagList ? data.hashtagList : []))
@@ -68,7 +68,11 @@ export default function MyPage() {
       alert(error.response.data.message);
       navigate(-1);
     })
-  }, [id])
+  }, [id]);
+
+  const onErrorImg = (e) => {
+    e.target.src = defaultUser;
+  };
 
   const toggleFollow = () => {
     const method = (followerList.findIndex((follower) => follower.id === userId) !== -1 ? "delete" : "post")
@@ -87,7 +91,6 @@ export default function MyPage() {
       window.location.reload();
     })
     .catch((error) => {
-      console.log(error)
       alert(error.response.data.message);
     })
   }
@@ -137,7 +140,7 @@ export default function MyPage() {
             albumArt={content.image}
             title={content.title}
             artist={creatorListFormat(content.creatorList)}
-            showFavorite={content.creatorList.findIndex((creator) => creator.id === userId) === -1}
+            showFavorite={false}
           />
         </div>
       )
@@ -170,6 +173,7 @@ export default function MyPage() {
                   <img
                     className="w-32 h-32 rounded-md"
                     src={`${serverUrl}/member/image/${id}`}
+                    onError={onErrorImg}
                     alt="Profile"
                   />
                 </div>
@@ -274,7 +278,7 @@ export default function MyPage() {
               </button>
             ))}
           </div>
-          <div className="grid grid-cols-4 gap-4 items-center scrollbar scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-base-200 hover:scrollbar-thumb-primary overflow-y-scroll">
+          <div className="h-[350px] grid grid-cols-4 gap-4 items-center scrollbar scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-base-200 hover:scrollbar-thumb-primary overflow-y-scroll">
             {itemList}
           </div>
         </div>
