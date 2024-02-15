@@ -48,8 +48,10 @@ export default function LiveBoard() {
       const role = response.data.data.role;
       const title = response.data.data.title;
       const describe = response.data.data.describe;
+      const contentList = response.data.data.contentList;
+      const guestList = response.data.data.guestList;
 
-      navigate(`/live/${id}`, {state: {token, role, title, describe}});
+      navigate(`/live/${id}`, {state: {token, role, title, describe, contentList, guestList}});
     })
     .catch((error) => {
       alert(error.response.data.message[0]);
