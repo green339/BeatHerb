@@ -6,24 +6,27 @@ read DOMAIN
 echo "SMTP 용 EMAIL 을 입력해주세요 : "
 read EMAIL
 
+echo "SMTP 용 비밀번호를 입력해주세요 : "
+read MAIL_PASSWORD
+
 echo "SMTP 용 주소를 입력해주세요 : "
-read SMTP
+read MAIL_HOST
+
+
 
 IP=$(curl -s ifconfig.me)
 
 echo "============="
-echo "openvid.$DOMAIN"
+echo "openvidu.$DOMAIN"
 echo "socket.$DOMAIN"
 echo "$DOMAIN" 
 echo "상위 3개 도메인의 A레코드를 $IP 로 설정후 엔터를 눌러주세요"
 echo "============="
-read
+read t
 
 
 
 curl -s https://s3-eu-west-1.amazonaws.com/aws.openvidu.io/install_openvidu_latest.sh | bash
-sleep 10;
-
 
 sed -i "s/DOMAIN_OR_PUBLIC_IP=.*/DOMAIN_OR_PUBLIC_IP=openvidu.$DOMAIN/" ./openvidu/.env
 
@@ -52,17 +55,15 @@ sed -i "s/DB_PASSSWORD=.*/DB_PASSSWORD=$DB_PASSSWORD/" ./env/.env_backend
 sed -i "s/JWT_SALT=.*/JWT_SALT=$JWT_SALT/" ./env/.env_backend
 sed -i "s/OPENVIDU_SECRET=.*/OPENVIDU_SECRET=$OPENVIDU_SECRET/" ./env/.env_backend
 sed -i "s/OPENVIDU_BASE_URL=.*/OPENVIDU_BASE_URL=https:\/\/openvidu.$DOMAIN/" ./env/.env_backend
+sed -i "s/MAIL_HOST=.*/MAIL_HOST=$MAIL_HOST/" ./env/.env_backend
+sed -i "s/MAIL_USERNAME=.*/MAIL_USERNAME=$EMAIL/" ./env/.env_backend
+sed -i "s/MAIL_PASSWORD=.*/MAIL_PASSWORD=$MAIL_PASSWORD/" ./env/.env_backend
+
 
 sed -i "s/JWT_SALT=.*/JWT_SALT=$JWT_SALT/" ./env/.env_socket
 sed -i "s/OPENVIDU_SECRET=.*/OPENVIDU_SECRET=$OPENVIDU_SECRET/" ./openvidu/.env
 sed -i "s/LETSENCRYPT_EMAIL=.*/LETSENCRYPT_EMAIL=$EMAIL/" ./openvidu/.env
 sed -i "s/CERTIFICATE_TYPE=.*/CERTIFICATE_TYPE=letsencrypt/" ./openvidu/.env
-
-
-
-# read OPENVIDU_SECRET
-
-
 
 mkdir -p resource/{music/{convert,cropped,image,reference,lyrics,decribe},profile/image}
 echo "Backend APP 을 시작합니다"
