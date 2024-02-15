@@ -66,30 +66,30 @@ public class MemberInfoService {
     @Transactional
     public void edit(MemberDTO memberDTO, EditRequest editRequest) {
 
-        String nickname = editRequest.getNickname() != null? editRequest.getNickname() : memberDTO.getNickname();
-        Boolean isDmAgree = editRequest.getDmAgree() != null? editRequest.getDmAgree() : memberDTO.getDmAgree();
+        String nickname = editRequest.getNickname() != null ? editRequest.getNickname() : memberDTO.getNickname();
+        Boolean isDmAgree = editRequest.getDmAgree() != null ? editRequest.getDmAgree() : memberDTO.getDmAgree();
         List<Long> interestList = editRequest.getHashTagIdList();
 
         Member member = memberRepository.findById(memberDTO.getId())
-                .orElseThrow(()->new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
 
 
-        //기존 가지고 있는 관심사를 모두 삭제
-        for(Interest interest : member.getInterestList()){
-            interestRepository.delete(interestRepository.findById(interest.getId())
-                    .orElseThrow(() -> new InterestException(InterestErrorCode.INTEREST_IS_NOT_EXIST)));
-        }
-
-        if(interestList != null){
-            for(Long request : interestList){
+        if (!interestList.isEmpty()) {
+            for (Interest interest : member.getInterestList()) {
+                interestRepository.delete(interestRepository.findById(interest.getId())
+                        .orElseThrow(() -> new InterestException(InterestErrorCode.INTEREST_IS_NOT_EXIST)));
+            }
+            for (Long request : interestList) {
                 HashTag hashTag = hashTagRepository.findById(request)
                         .orElseThrow(() -> new HashTagException(HashTagErrorCode.HASHTAG_IS_NOT_EXIST));
 
                 interestRepository.save(Interest.builder().hashTag(hashTag).member(member).build());
             }
+            //기존 가지고 있는 관심사를 모두 삭제
+
         }
 
-        if(nickname==null){
+        if (nickname == null) {
             throw new MemberException(MemberErrorCode.NICKNAME_IS_NOT_EXIST);
         }
 
@@ -98,7 +98,7 @@ public class MemberInfoService {
 
 
         // 요청 시 이미지가 있는 경우에만, 이미지 저장
-        if(editRequest.getPicture() != null){
+        if (editRequest.getPicture() != null) {
             if (!PictureValid.isPictureFile(editRequest.getPicture())) {
                 throw new MemberException(MemberErrorCode.PROFILE_IMAGE_NOT_VALID);
             }
@@ -129,24 +129,30 @@ public class MemberInfoService {
     //회원 정보 수정 - 소셜 로그인 연동
     public void linkage(OAuthRequest oauthRequest, Provider provider, MemberDTO memberDTO) {
         Long id;//헤더에서 access token을 받아와서 id값 가져오기. 토큰값 확인
-        log.info("사용자 정보"+memberDTO.getId());
-        Member member=memberRepository.findById(memberDTO.getId())
-                .orElseThrow(()->new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
-        String sub=oauthService.sub(oauthRequest,provider);
-        switch(provider){
+        log.info("사용자 정보" + memberDTO.getId());
+        Member member = memberRepository.findById(memberDTO.getId())
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
+        String sub = oauthService.sub(oauthRequest, provider);
+        switch (provider) {
             case KAKAO -> {
                 memberRepository.findByKakao(sub)
-                        .ifPresent(i->{throw new MemberException(MemberErrorCode.SOCIAL_EXIST);});
+                        .ifPresent(i -> {
+                            throw new MemberException(MemberErrorCode.SOCIAL_EXIST);
+                        });
                 member.setKakao(sub);
             }
             case NAVER -> {
                 memberRepository.findByNaver(sub)
-                        .ifPresent(i->{throw new MemberException(MemberErrorCode.SOCIAL_EXIST);});
+                        .ifPresent(i -> {
+                            throw new MemberException(MemberErrorCode.SOCIAL_EXIST);
+                        });
                 member.setNaver(sub);
             }
             case GOOGLE -> {
                 memberRepository.findByGoogle(sub)
-                        .ifPresent(i->{throw new MemberException(MemberErrorCode.SOCIAL_EXIST);});
+                        .ifPresent(i -> {
+                            throw new MemberException(MemberErrorCode.SOCIAL_EXIST);
+                        });
                 member.setGoogle(sub);
             }
         }
