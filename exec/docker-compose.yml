@@ -4,7 +4,8 @@ services:
         build:
             context: ../
             dockerfile: ./exec/frontend/dockerfile
-
+        volumes:
+            - ./frontend/build:/file/build
 
 
     beatherb-socket:
