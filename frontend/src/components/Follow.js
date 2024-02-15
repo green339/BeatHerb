@@ -12,13 +12,13 @@ export default function Follow({ followType, followingList, followerList }) {
   const [follow, setFollow] = useState(followType);
   const { accessToken } = useAuthStore();
 
+  const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
+
   useEffect(() => {
     setFollow(followType);
   }, [followType]);
 
   const handleDeleteFollowing = (id) => {
-    const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
-
     axios({
       method: "delete",
       url: `${serverUrl}/follower`,
@@ -41,8 +41,10 @@ export default function Follow({ followType, followingList, followerList }) {
   const followList = (follow === "follower" ? followerList : followingList).map((followUser, index) => (
     <div key={"follow" + followUser.id} className="flex justify-center">
       <div className="flex">
-        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
-        <div className="w-52 h-12">{followUser.id}</div>
+        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
+          <img className="h-10 w-10 rounded-full" src={`${serverUrl}/member/image/${followUser.id}`}/>
+        </div>
+        <div className="w-52 h-12">{(followUser.nickname ? followUser.nickname : "No Name")}</div>
         {follow === "following" && (
           <button 
             className="flex px-3 md:px-4 py-1 md:py-2 bg-base-100 text-white rounded-lg hover:bg-base-200" 

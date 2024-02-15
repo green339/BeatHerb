@@ -7,6 +7,7 @@ export const useAuthStore = create(
       accessToken: null,
       nickname: "",
       userId: null,
+      socket: null,
       setAccessToken: (token) => {
         set((prev) => ({accessToken: token}))
       },
@@ -16,12 +17,16 @@ export const useAuthStore = create(
       setUserId: (id) => {
         set((prev) => ({userId: id}))
       },
+      setSocket: (socket) => {
+        set((prev) => ({socket: socket}))
+      },
       removeUserStatus: () => {
         set((prev) => ({
           accessToken: null,
           nickname: "",
           userId: null,
           profileImage: null,
+          socket: null,
         }))
       }
     }),

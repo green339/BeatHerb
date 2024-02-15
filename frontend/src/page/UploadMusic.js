@@ -1,17 +1,19 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+import axios from "axios";
 import { useState, useRef, useEffect } from "react";
 import { uploadMusic } from "../api/upload.js";
 import { getHashtag } from "../api/getHashtag.js";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import HashTagList from "../page/HashTagList.js";
-
+import { useAuthStore } from "../store/AuthStore";
 // 음원 업로드 모달
 // 기존 코드에서 수정 사항
 // 1. 창작자 id리스트는 부모로부터 넘어오므로 prop으로 넘겨줌
 // 2. uploadMusic.then()으로 clear 해줌
 
 // 부모 페이지로부터 넘어오는 요소들 : 음악 파일, 진입차수 id 리스트
-export default function UploadMusic({ music, rootContentIdList }) {
+export default function UploadMusic({ music, rootContentIdList, closeUploadModal }) {
+  const [isProcessing, setIsProcessing] = useState(false);
   const [image, setImage] = useState(null);
   const selectImgFile = useRef(null);
 
@@ -25,7 +27,10 @@ export default function UploadMusic({ music, rootContentIdList }) {
   const describeRef = useRef(null);
   const [type, setType] = useState(null);
   const types = ["VOCAL", "MELODY", "SOUNDTRACK"];
-  console.log(music);
+
+  const { accessToken } = useAuthStore();
+  const serverURL = process.env.REACT_APP_TEST_SERVER_BASE_URL;
+  const navigate= useNavigate();
 
   useEffect(() => {
     // 서버에서 데이터를 가져오는 비동기 함수를 호출
@@ -42,10 +47,9 @@ export default function UploadMusic({ music, rootContentIdList }) {
         console.error("Error fetching data:", error);
       }
     };
-
     // 컴포넌트가 마운트되었을 때 한 번만 데이터를 가져오도록 설정
     fetchData();
-  }, []);
+  }, [music]);
 
   const handleAddCategory = () => {
     setShowHashTag(!showHashTag);
@@ -77,19 +81,17 @@ export default function UploadMusic({ music, rootContentIdList }) {
   };
 
   const onSubmit = async () => {
-    const selectedHashTags = hashTagIdList
-      .filter((item) => item.selected)
-      .map((item) => item.id);
-
+    const selectedHashTags = hashTagIdList.filter((item) => item.selected).map((item) => item.id);
     if (
       !titleRef.current.value ||
       !type ||
       hashTagIdList.filter((item) => item.selected).length === 0
     ) {
       alert("제목, 타입, 해시태그는 필수 입력 사항입니다.");
+      setIsProcessing(false);
       return;
     }
-
+    setIsProcessing(true);
     const formData = new FormData();
     formData.append("title", titleRef.current.value);
     if (lyrics) {
@@ -103,14 +105,30 @@ export default function UploadMusic({ music, rootContentIdList }) {
     if (image) {
       formData.append("image", image);
     }
-    formData.append(
-      "music",
-      await convertMedia(music),
-      titleRef.current.value + ".mp3"
-    );
+    formData.append("music", await convertMedia(music), titleRef.current.value + ".mp3");
     formData.append("type", type);
-    console.log(formData);
-    await uploadMusic(formData).then(clear);
+    // console.log(formData);
+    // 서버로 요청을 보냄
+    await axios({
+      method: "post",
+      url: `${serverURL}/content/upload`,
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data:formData,
+    })
+      .then((response) => {
+        console.log(response.data.data.id)
+        clear()
+        navigate("/content/"+response.data.data.id)
+      })
+      .catch((error) => {
+        console.log(error.message);
+        alert("음악 업로드에 실패했습니다");
+        clear();
+        navigate("/")
+      });
   };
   const clear = async () => {
     setImage(null);
@@ -118,9 +136,11 @@ export default function UploadMusic({ music, rootContentIdList }) {
     setLyrics(null);
     selectImgFile.current.value = "";
     setHashTagIdList([]);
+    setShowHashTag(false);
     describeRef.current.value = "";
     titleRef.current.value = "";
     setType(null);
+    setIsProcessing(false);
   };
 
   const onChangeImg = (e) => {
@@ -156,9 +176,7 @@ export default function UploadMusic({ music, rootContentIdList }) {
 
           <div className="flex pb-10 justify-between mx-6">
             <div className="text-left whitespace-nowrap pr-10">앨범표지</div>
-            {image && (
-              <div className="w-full h-full text-left">{image.name}</div>
-            )}
+            {image && <div className="w-full h-full text-left">{image.name}</div>}
             <input
               type="file"
               accept="image/*"
@@ -178,9 +196,7 @@ export default function UploadMusic({ music, rootContentIdList }) {
 
           <div className="flex pb-10 justify-between mx-6">
             <div className="text-left whitespace-nowrap pr-10">가사</div>
-            {lyrics && (
-              <div className="w-full h-full text-left pl-8">{lyrics.name}</div>
-            )}
+            {lyrics && <div className="w-full h-full text-left pl-8">{lyrics.name}</div>}
             <input
               type="file"
               style={{ display: "none" }}
@@ -204,10 +220,7 @@ export default function UploadMusic({ music, rootContentIdList }) {
                 hashTagIdList.map(
                   (item, index) =>
                     item.selected && (
-                      <div
-                        key={index}
-                        className="btn btn-xs btn-outline btn-primary mr-2"
-                      >
+                      <div key={index} className="btn btn-xs btn-outline btn-primary mr-2">
                         {item.name}
                       </div>
                     )
@@ -218,9 +231,7 @@ export default function UploadMusic({ music, rootContentIdList }) {
             </div>
           </div>
           <div className="ml-32 pb-8">
-            {showHashTag && (
-              <HashTagList data={hashTagIdList} setData={setHashTagIdList} />
-            )}
+            {showHashTag && <HashTagList data={hashTagIdList} setData={setHashTagIdList} />}
           </div>
 
           <div className="flex pb-10 justify-between mx-6 items-top">
@@ -253,22 +264,27 @@ export default function UploadMusic({ music, rootContentIdList }) {
           </div>
 
           <div className="flex justify-center">
-            <div className="self-auto text-xl flex">
-              <div className="modal-action px-3">
-                <form method="dialog">
+            {isProcessing ? (
+              <div className="flex gap-3">
+                <p>음악을 올리는 중입니다. 잠시만 기다려 주세요</p>
+                <span className="loading loading-spinner text-success"></span>
+              </div>
+            ) : (
+                <div className="self-auto text-xl flex">
+                <div className="modal-action px-3">
                   <button className="btn" onClick={onSubmit}>
                     작성하기
                   </button>
-                </form>
+                  </div>
+                <div className="modal-action px-3">
+                  <form method="dialog">
+                    <button className="btn" onClick={clear}>
+                      취소하기
+                    </button>
+                  </form>
+                </div>
               </div>
-              <div className="modal-action px-3">
-                <form method="dialog">
-                  <button className="btn" onClick={clear}>
-                    취소하기
-                  </button>
-                </form>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

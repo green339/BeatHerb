@@ -3,7 +3,7 @@ import axios from "axios";
 export function getHashtag() {
   return axios({
     method: "GET",
-    url: "https://node5.wookoo.shop/api/content/hashtag",
+    url: process.env.REACT_APP_TEST_SERVER_BASE_URL +"/content/hashtag",
     mode: "cors",
     params: {
       name: null,

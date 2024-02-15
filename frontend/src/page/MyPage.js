@@ -3,20 +3,19 @@
 import NavBar from "../components/NavBar";
 import ContentsItem from "../components/ContentsItem";
 import { useRef, useState, useEffect } from "react";
-import ShortsItem from "../components/ShortsItem";
 import LiveItem from "../components/LiveItem";
 import Dm from "../components/Dm";
 import Follow from "../components/Follow";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/AuthStore";
 import axios from "axios";
+import defaultUser from "../assets/default_user.jpeg"
 
 // 탭 리스트
 const tabs = [
   { value: "melody", title: "멜로디" },
   { value: "vocal", title: "보컬" },
   { value: "music", title: "음원" },
-  { value: "shorts", title: "Shorts" },
   { value: "live", title: "라이브" },
 ];
 
@@ -32,7 +31,6 @@ export default function MyPage() {
   const [melodyList, setMelodyList] = useState([]);
   const [vocalList, setVocalList] = useState([]);
   const [musicList, setMusicList] = useState([]);
-  const [shortsList, setShortsList] = useState([]);
   const [liveList, setLiveList] = useState([]);
 
   // 유저 정보
@@ -51,24 +49,35 @@ export default function MyPage() {
     })
     .then((response) => {
       const data = response.data.data;
+
       console.log(data);
 
       setNickname(data.nickname);
-      setHashtagList((data.hashtagList ? data.hashtagList : []))
+      setHashtagList((data.hashTagList ? data.hashTagList : []))
       setFollowingList((data.followerList ? data.followerList : []));
       setFollowerList((data.followingList ? data.followingList : []));
 
       setMelodyList((data.melodyList ? data.melodyList : []));
       setVocalList((data.vocalList ? data.vocalList : []));
       setMusicList((data.soundTrackList ? data.soundTrackList : []));
-      setShortsList((data.shortsList ? data.shortsList : []));
       setLiveList((data.liveList ? data.liveList : []));
+
+      const userLiveList = []
+      if (data.live) {
+        userLiveList.push(data.live);
+      }
+      userLiveList.push(...data.guestList);
+      setLiveList(userLiveList);
     })
     .catch((error) => {
       alert(error.response.data.message);
       navigate(-1);
     })
-  }, [id])
+  }, [id]);
+
+  const onErrorImg = (e) => {
+    e.target.src = defaultUser;
+  };
 
   const toggleFollow = () => {
     const method = (followerList.findIndex((follower) => follower.id === userId) !== -1 ? "delete" : "post")
@@ -87,7 +96,6 @@ export default function MyPage() {
       window.location.reload();
     })
     .catch((error) => {
-      console.log(error)
       alert(error.response.data.message);
     })
   }
@@ -137,21 +145,15 @@ export default function MyPage() {
             albumArt={content.image}
             title={content.title}
             artist={creatorListFormat(content.creatorList)}
-            showFavorite={content.creatorList.findIndex((creator) => creator.id === userId) === -1}
+            showFavorite={false}
           />
         </div>
       )
     });
-  } else if (category === "shorts") {
-    itemList = shortsList.map((shorts, index) => (
-      <div key={"shorts" + shorts.id} className="flex justify-center">
-        <ShortsItem title={shorts.title} />
-      </div>
-    ));
   } else if (category === "live") {
     itemList = liveList.map((live, index) => (
       <div key={"live" + live.id} className="flex justify-center">
-        <LiveItem title={live.title} />
+        <LiveItem imgSrc={live.image} title={live.title} />
       </div>
     ));
   }
@@ -168,24 +170,22 @@ export default function MyPage() {
               <div className="flex place-items-center">
                 <div className="w-32 h-32 rounded-md">
                   <img
-                    className="w-32 h-32 rounded-md"
+                    className="w-32 h-32 rounded-md object-cover"
                     src={`${serverUrl}/member/image/${id}`}
+                    onError={onErrorImg}
                     alt="Profile"
                   />
                 </div>
               </div>
-              <div className="flex flex-col justify-center space-y-2">
+              <div className="flex flex-col justify-center space-y-4">
                 <p className="text-base-content text-left text-3xl font-semibold">
                   {(nickname ? nickname : "No Name")}
-                </p>
-                <p className="text-base-content text-left">
-                  총 좋아요 수: 123456789
                 </p>
                 <div className="flex gap-1 flex-wrap">
                   {
                     hashtagList.length
                       ? hashtagList.map((hashtag) => (
-                          <div key={"hashtag" + hashtag.id} className="badge badge-lg badge-primary text-primary-content">
+                          <div key={"hashtag" + hashtag.id} className="badge badge-lg badge-primary text-primary-content hover:cursor-pointer" onClick={() => navigate(`/board/all?hashtagList=${hashtag.id}`)}>
                             {hashtag.name}
                           </div>
                         ))
@@ -217,24 +217,9 @@ export default function MyPage() {
               </div>
               { userId === id ? (
                 <div className="flex place-items-center">
-                  <button
-                    className="btn btn-ghost"
-                    onClick={() => dmModalRef.current?.showModal()}
-                  >
-                    <svg
-                      className="fill-primary"
-                      xmlns="http://www.w3.org/2000/svg"
-                      height="32"
-                      viewBox="0 -960 960 960"
-                      width="32"
-                    >
-                      <path d="M240-400h320v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z" />
-                    </svg>
-                  </button>
                   <Link to="/useredit" className="fill-primary hover:fill-primary">
                     <button
                       className="btn btn-ghost"
-                      onClick={() => dmModalRef.current?.showModal()}
                     >
                       <svg
                         className="fill-primary"
@@ -274,7 +259,7 @@ export default function MyPage() {
               </button>
             ))}
           </div>
-          <div className="grid grid-cols-4 gap-4 items-center scrollbar scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-base-200 hover:scrollbar-thumb-primary overflow-y-scroll">
+          <div className="h-[350px] grid grid-cols-4 gap-4 items-center scrollbar scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-base-200 hover:scrollbar-thumb-primary overflow-y-scroll">
             {itemList}
           </div>
         </div>

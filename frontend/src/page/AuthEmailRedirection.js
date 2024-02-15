@@ -10,9 +10,8 @@ import axios from "axios";
 
 export default function AuthEmailRedirection() {
   const navigate = useNavigate();
-  const { setAccessToken, setNickname, setUserId } = useAuthStore();
+  const { setAccessToken, setNickname, setUserId, setSocket } = useAuthStore();
   
-
   // 비동기 작업을 동기로 바꿔주기 위해, async await 적용 생각해 볼 수 있음
   useEffect(() => {
     // 인가 코드
@@ -23,16 +22,18 @@ export default function AuthEmailRedirection() {
       url: `${serverURL}/api/auth/verify?token=${token}`,
     })
     .then((response) => {
-      const { accessToken, refreshToken, refreshTokenExpiresIn, nickname, id } = response.data;
+      const { accessToken, refreshToken, refreshTokenExpiresIn, nickname, id, socket } = response.data;
       setAccessToken(accessToken);
       setRefreshToken(refreshToken, refreshTokenExpiresIn);
       setNickname(nickname);
-      setUserId((id));
+      setUserId(id);
+      setSocket(socket);
       navigate(`/mypage/${(id)}`);
-      
+      console.log(socket);
     })
     .catch((error) => {
-      console.log("로그인에 실패했습니다");
+      console.log(error);
+      alert("로그인에 실패했습니다");
       navigate("/login");
     })
   }, []);

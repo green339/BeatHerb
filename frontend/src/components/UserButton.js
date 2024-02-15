@@ -4,6 +4,7 @@ import Dm from "./Dm.js";
 import { useAuthStore } from "../store/AuthStore.js";
 import { removeRefreshToken } from "../store/cookie.js";
 import Notify from "./Notify.js";
+import defaultUser from "../assets/default_user.jpeg"
 
 export default function UserButton() {
   const { accessToken, userId, nickname } = useAuthStore();
@@ -18,6 +19,10 @@ export default function UserButton() {
     removeRefreshToken();
   }
 
+  const onErrorImg = (e) => {
+    e.target.src = defaultUser;
+  }
+
   if(accessToken) {
     return (
       <>
@@ -27,14 +32,12 @@ export default function UserButton() {
             <summary className="btn btn-circle btn-ghost">
               <div className="avatar">
                 <div className="w-10 rounded-full">
-                  <img src={`${serverUrl}/member/image/${userId}`} alt="Profile" />
+                  <img src={`${serverUrl}/member/image/${userId}`} onError={onErrorImg} alt="Profile" />
                 </div>
               </div>
             </summary>
             
             <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-200 rounded-box w-52">
-              <li><button className="text-base-content" onClick={() => notifyModalRef.current?.showModal()}>알림</button></li>
-              <li><button className="text-base-content" onClick={() => dmModalRef.current?.showModal()}>메시지</button></li>
               <li><Link to={`/mypage/${userId}`} className="text-base-content hover:text-base-content">마이페이지</Link></li>
               <li><button className="text-base-content" onClick={logout}>로그아웃</button></li>
             </ul>

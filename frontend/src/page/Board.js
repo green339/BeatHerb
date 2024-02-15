@@ -4,17 +4,13 @@ import NavBar from "../components/NavBar";
 import { useParams } from "react-router";
 import { Link, Navigate } from "react-router-dom";
 import ContentsBoard from "./ContentsBoard";
-import ShortsBoard from "./ShortsBoard";
 import LiveBoard from "./LiveBoard";
 import AllBoard from "./AllBoard";
-import PopularityBoard from "./PopularityBoard";
 
 // 사이드바에 들어갈 메뉴들
 const sideBarMenus = [
   { key: "all", title: "전체", href: "/board/all"},
-  { key: "popularity", title: "인기", href: "/board/popularity"},
   { key: "contents", title: "컨텐츠", href: "/board/contents"},
-  { key: "shorts", title: "Shorts", href: "/board/shorts"},
   { key: "live", title: "라이브", href: "/board/live"},
 ]
 
@@ -26,14 +22,8 @@ export default function Board() {
     case "all":
       children = <AllBoard />;
       break;
-    case "popularity":
-      children = <PopularityBoard />;
-      break;
     case "contents":
       children = <ContentsBoard />;
-      break;
-    case "shorts":
-      children = <ShortsBoard />;
       break;
     case "live":
       children = <LiveBoard />;

@@ -5,7 +5,7 @@ import ContentsItem from "../components/ContentsItem";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { useAuthStore } from "../store/AuthStore";
-import { creatorListFormat } from "../common/creatorListFormat.js";
+import { creatorListFormatWithoutLink } from "../common/creatorListFormat.js";
 
 // 탭 리스트
 const tabs = [
@@ -18,17 +18,15 @@ export default function ContentsBoard() {
   const location = useLocation();
   const { accessToken } = useAuthStore();
   const [category, setCategory] = useState(location.state?.category || "melody");
-  const [sortOption, setSortOption] = useState(location.state?.sortOption || "recent");
   const [contentList, setContentList] = useState([]);
   const [favoriteList, setFavoriteList] = useState([]);
 
   useEffect(() => {
     const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
-    const endPoint = (sortOption === "recent" ? "/content/search?title=" : "/content/popularity")
 
     axios({
       method: "get",
-      url: `${serverUrl}${endPoint}`
+      url: `${serverUrl}/content/search?title=`
     })
     .then((response) => {
 
@@ -36,44 +34,46 @@ export default function ContentsBoard() {
       let newContentList = []
 
       if (category === "melody") {
-        newContentList = response.data.data.melodyList;
+        newContentList = [...response.data.data.melodyList].reverse();
       } else if (category === "vocal") {
-        newContentList = response.data.data.vocalList;
+        newContentList = [...response.data.data.vocalList].reverse();
       } else {
-        newContentList = response.data.data.soundTrackList;
+        newContentList = [...response.data.data.soundTrackList].reverse();
       }
 
-      // 새롭게 띄울 컨텐트들의 아이디만 모아놓은 리스트
-      const contentIdList = newContentList.map((content, index) => content.id);
-      let url = `${serverUrl}/content/star`;
-      contentIdList.forEach((id, index) => { url += (index ? "&" : "?") + `contentId=${id}` })
-      console.log(url);
-      console.log(accessToken);
+      setContentList(newContentList);
 
-      axios({
-        method: "get",
-        url,
-        headers: {
-          Authorization: `Bearer ${accessToken}`
-        }
-      })
-      .then((response) => {
-        console.log(response);
-        setContentList(newContentList);
-        setFavoriteList(response.data.data);
-      })
-      .catch((error) => {
-        alert(error.response.data.message ? error.response.data.message : error.response.data.error)
-      })
+      if (accessToken && newContentList.length > 0) {
+        // 새롭게 띄울 컨텐트들의 아이디만 모아놓은 리스트
+        const contentIdList = newContentList.map((content, index) => content.id);
+        let url = `${serverUrl}/content/star`;
+        contentIdList.forEach((id, index) => { url += (index ? "&" : "?") + `contentId=${id}` })
+        console.log(url);
+        
+        axios({
+          method: "get",
+          url,
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        })
+        .then((response) => {
+          setFavoriteList(response.data.data);
+        })
+        .catch((error) => {
+          alert(error.response.data.message ? error.response.data.message : error.response.data.error)
+        })
+      }
     })
     .catch((error) => {
       alert(error.response.data.message);
     })
-  }, [accessToken, category, sortOption])
 
-  const handleSortOptionChange = (e) => {
-    setSortOption(e.target.value);
-  }
+    return () => {
+      setContentList([]);
+      setFavoriteList([]);
+    }
+  }, [accessToken, category]);
 
   return (
     <div className="w-full h-full">
@@ -92,21 +92,11 @@ export default function ContentsBoard() {
         }
       </div>
 
-      <div className="w-full flex justify-end mb-8 pr-8">
-        <select 
-          value={sortOption} 
-          className="select select-ghost w-full max-w-xs text-base-content justify-self-end"
-          onChange={handleSortOptionChange}
-        >
-          <option key="recent" value="recent">최신 순</option>
-          <option key="popularity" value="popularity">인기 순</option>
-        </select>
-      </div>
-
       <div className="grid grid-cols-4 gap-4 items-center">
         {
           contentList.map((content, index) => {
-            const isFavorite = favoriteList.find((favorite) => favorite.id === content.id);
+            const isFavorite = favoriteList.findIndex((favorite) => favorite.id === content.id) !== -1;
+            console.log(favoriteList);
             return (
               <div key={"content" + content.id} className="flex justify-center">
                 <ContentsItem 
@@ -114,8 +104,9 @@ export default function ContentsBoard() {
                   size={150} 
                   albumArt={content.image} 
                   title={content.title} 
-                  artist={creatorListFormat(content.creatorList)}
+                  artist={creatorListFormatWithoutLink(content.creatorList)}
                   isFavorite={isFavorite}
+                  showFavorite={accessToken !== null}
                 />
               </div>
             )

@@ -7,7 +7,7 @@ export default function LoadMusic({ getLoadMusic }) {
   const [urls, setUrls] = useState([]);
   const fileInput = useRef(null);
   const [roots, setRoots] = useState([]);
-  const [titles, setTitles] = useState(["a", "b", "c"]);
+  const [titles, setTitles] = useState([]);
   const childSearchMusicRef=useRef(null)
 
   const getChildSearchResult = (url, title, id) => {
