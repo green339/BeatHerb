@@ -5,7 +5,7 @@ import ContentsItem from "../components/ContentsItem";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { useAuthStore } from "../store/AuthStore";
-import { creatorListFormat } from "../common/creatorListFormat.js";
+import { creatorListFormatWithoutLink } from "../common/creatorListFormat.js";
 
 // 탭 리스트
 const tabs = [
@@ -48,6 +48,7 @@ export default function ContentsBoard() {
         const contentIdList = newContentList.map((content, index) => content.id);
         let url = `${serverUrl}/content/star`;
         contentIdList.forEach((id, index) => { url += (index ? "&" : "?") + `contentId=${id}` })
+        console.log(url);
         
         axios({
           method: "get",
@@ -94,7 +95,8 @@ export default function ContentsBoard() {
       <div className="grid grid-cols-4 gap-4 items-center">
         {
           contentList.map((content, index) => {
-            const isFavorite = favoriteList.find((favorite) => favorite.id === content.id);
+            const isFavorite = favoriteList.findIndex((favorite) => favorite.id === content.id) !== -1;
+            console.log(favoriteList);
             return (
               <div key={"content" + content.id} className="flex justify-center">
                 <ContentsItem 
@@ -102,9 +104,9 @@ export default function ContentsBoard() {
                   size={150} 
                   albumArt={content.image} 
                   title={content.title} 
-                  artist={creatorListFormat(content.creatorList)}
+                  artist={creatorListFormatWithoutLink(content.creatorList)}
                   isFavorite={isFavorite}
-                  showFavorite={accessToken}
+                  showFavorite={accessToken !== null}
                 />
               </div>
             )

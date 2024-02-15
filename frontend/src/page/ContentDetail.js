@@ -244,17 +244,17 @@ export default function ContentDetail() {
                 </div>
                 <div className="space-y-2">
                   <div className="flex gap-1 flex-wrap">
-                    {hashtagList.map((hashtag, index) => (
-                      <div
-                        key={"hashtag" + hashtag.id}
-                        className="badge badge-lg badge-primary text-primary-content"
-                      >
-                        {hashtag.name}
-                      </div>
-                    ))}
-                  </div>
-                  <div className="text-left">
-                    진입차수 : <>{inOrderListFormat(inOrderList)}</>
+                    {
+                      hashtagList.map((hashtag, index) => (
+                        <div
+                          key={"hashtag"+hashtag.id}
+                          className="badge badge-lg badge-primary text-primary-content hover:cursor-pointer"
+                          onClick={() => navigate(`/board/all?hashtagList=${hashtag.id}`)}
+                        >
+                          {hashtag.name}
+                        </div>
+                      ))
+                    }
                   </div>
                 </div>
               </div>

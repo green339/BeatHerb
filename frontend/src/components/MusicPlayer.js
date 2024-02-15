@@ -80,7 +80,6 @@ export default function MusicPlayer({ music }) {
     }
 
     if (videoRef.current) {
-      
       videoRef.current.addEventListener('loadedmetadata', handleLoadedMetadata);
       videoRef.current.addEventListener('play', playTime)
       videoRef.current.addEventListener('pause', pauseMusic)
@@ -91,9 +90,9 @@ export default function MusicPlayer({ music }) {
     return () => {
       if (videoRef.current) {
         videoRef.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
-        videoRef.current.removeEventListener('play', playTime)
-        videoRef.current.removeEventListener('pause', pauseMusic)
-        videoRef.current.removeEventListener('ended', endMusic)
+        videoRef.current.removeEventListener('play', playTime);
+        videoRef.current.removeEventListener('pause', pauseMusic);
+        videoRef.current.removeEventListener('ended', endMusic);
       }
     };
   }, [videoRef.current]);

@@ -8,7 +8,7 @@ import ContentsItem from "../components/ContentsItem";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { creatorListFormat } from "../common/creatorListFormat";
+import { creatorListFormatWithoutLink } from "../common/creatorListFormat";
 
 // 탭 리스트
 const tabs = [
@@ -104,7 +104,7 @@ export default function AllBoard() {
                   size={150}
                   albumArt={content.image}
                   title={content.title}
-                  artist={creatorListFormat(content.creatorList)}
+                  artist={creatorListFormatWithoutLink(content.creatorList)}
                   showFavorite={false}
                 />
               </div>
@@ -137,7 +137,7 @@ export default function AllBoard() {
           />
         </ItemContainerWithTitle>
         <ItemContainerWithTitle title="라이브" link="/board/live" scrolled>
-          {
+          {liveList.length > 0 ? 
             liveList.map((live, index) => {
               return (
                 <div key={"live" + live.id} className="flex justify-center">
@@ -146,7 +146,8 @@ export default function AllBoard() {
                   </div>
                 </div>
               );
-            })
+            }) :
+            <div className="w-full h-[225px] flex justify-center place-items-center"><p>진행중인 라이브가 없습니다.</p></div>
           }
         </ItemContainerWithTitle>
       </>

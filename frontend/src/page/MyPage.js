@@ -61,6 +61,13 @@ export default function MyPage() {
       setVocalList((data.vocalList ? data.vocalList : []));
       setMusicList((data.soundTrackList ? data.soundTrackList : []));
       setLiveList((data.liveList ? data.liveList : []));
+
+      const userLiveList = []
+      if (data.live) {
+        userLiveList.push(data.live);
+      }
+      userLiveList.push(...data.guestList);
+      setLiveList(userLiveList);
     })
     .catch((error) => {
       alert(error.response.data.message);
@@ -146,7 +153,7 @@ export default function MyPage() {
   } else if (category === "live") {
     itemList = liveList.map((live, index) => (
       <div key={"live" + live.id} className="flex justify-center">
-        <LiveItem title={live.title} />
+        <LiveItem imgSrc={live.image} title={live.title} />
       </div>
     ));
   }

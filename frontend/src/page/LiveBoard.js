@@ -100,7 +100,7 @@ export default function LiveBoard() {
             liveList.map((live, index) => {
               return (
                 <div key={"live" + live.id} className="flex justify-center cursor-pointer" onClick={() => joinLive(live.id)}>
-                  <LiveItem title={live.title}/>
+                  <LiveItem imgSrc={live.image} title={(live.title ? live.title : "No title")}/>
                 </div>
               )
             })

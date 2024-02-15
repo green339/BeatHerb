@@ -1,6 +1,6 @@
 // 컨텐츠(멜로디/보컬.음반) 항목
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ContentsArt from "./ContentsArt.js";
 import ContentsTitleAndArtist from "./ContentsTitleAndArtist.js";
 import axios from "axios";
@@ -16,10 +16,16 @@ export default function ContentsItem({
   showFavorite = true,
   isFavorite = false,
 }) {
-  const [favorite, setFavorite] = useState(isFavorite);
+  const [favorite, setFavorite] = useState(false);
   const { accessToken } = useAuthStore();
 
-  const handleOnClickFavorite = () => {
+  useEffect(() => {
+    setFavorite(isFavorite);
+  }, [isFavorite])
+
+  const handleOnClickFavorite = (e) => {
+    e.preventDefault();
+
     const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
 
     axios({
@@ -44,16 +50,18 @@ export default function ContentsItem({
     <Link
       to={`/content/${contentId}`}
       style={{ width: `${size}px` }}
-      className="items-center`"
+      className="items-center hover:shadow-lg hover:shadow-base-content rounded-md group"
     >
-      <ContentsArt
-        size={size}
-        contentId={contentId}
-        albumArt={albumArt}
-        isFavorite={favorite}
-        onClickFavorite={handleOnClickFavorite}
-        showFavorite={showFavorite}
-      />
+      <div className="group-hover:shadow-sm group-hover:shadow-base-content rounded-md">
+        <ContentsArt
+          size={size}
+          contentId={contentId}
+          albumArt={albumArt}
+          isFavorite={favorite}
+          onClickFavorite={handleOnClickFavorite}
+          showFavorite={showFavorite}
+        />
+      </div>
       <ContentsTitleAndArtist title={title} artist={artist} />
     </Link>
   );

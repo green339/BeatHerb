@@ -212,52 +212,29 @@ export default function Live() {
   return (
     <>
       <div className="pt-4 grid grid-cols-10">
-        <div className="col-span-7">
-          {(role === "OWNER" || role === "GUEST") ? (
-            <>
-              <div className="mt-6 mb-4 flex justify-center items-center">
-                {mainStreamManager !== undefined ? (
-                  <UserVideoComponent streamManager={mainStreamManager} width={640} height={480} mainVideo />
-                ) : null}
+        <div className="col-start-3 col-end-9">
+          <div className="mt-6 mb-4 flex justify-center items-center">
+            {mainStreamManager !== undefined ? (
+              <UserVideoComponent streamManager={mainStreamManager} width={640} height={480} mainVideo />
+            ) : null}
+            {(mainStreamManager === undefined && subscribers.length > 0) ? (
+              <div className="inline-block mr-4 relavive">
+                <UserVideoComponent streamManager={subscribers[0]} width={640} height={480} mainVideo />
               </div>
-              {subscribers.map((subscriber, i) => {
-                return (
-                  <div key={"sub"+i} className="inline-block mr-4 relavive">
-                    <UserVideoComponent streamManager={subscriber} width={160} height={120} />
-                  </div>
-                )
-              })}
-            </>
-          ) : null}
-          {role === "SUBSCRIBER" ? (
-            <>
-              <div className="grid grid-cols-4 gap-4 mt-6 mb-4 justify-center items-center">
-                {subscribers.map((subscriber, i) => {
-                  return (
-                    <div key={"sub"+i} className="inline-block mr-4 relavive">
-                      <UserVideoComponent streamManager={subscriber} width={320} height={240} />
-                    </div>
-                  )
-                })}
-              </div>
-            </>
-          ) : null}
+            ) : null}
+          </div>
           <div style={{ paddingLeft: '180px' }}>
             <p className="text-white font-bold text-2xl text-left">{title}</p>
-            {contentList.map((content) => {
-              <Link to={`/content/${content.id}`}>
-                <p className="text-white text-semibold text-left">@{content.title}</p>
-              </Link>
-            })}
+            {contentList.length > 0 ? (
+              contentList.map((content) => {
+                <Link to={`/content/${content.id}`}>
+                  <p className="text-white text-semibold text-left">@{content.title}</p>
+                </Link>
+              })) : (
+                <p className="text-white text-semibold text-left">사용중인 컨텐츠가 없습니다.</p>
+              )
+            }
             <p className="text-white text-left">{describe}</p>
-          </div>
-        </div>
-        <div className="col-span-3 flex justify-center items-center">
-          <div style={{ width: '400px', height: '680px', backgroundColor: 'white', position: 'relative'}} className="items-start">
-            <div style={{ width: '250px', height: '80px', position: 'absolute', right: '120px', bottom: '30px'}} className="bg-gray-200"/>
-            <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48" style={{ position: 'absolute', right: '40px', bottom: '50px'}}>
-              <path d="M240-400h320v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/>
-            </svg>
           </div>
         </div>
       </div>

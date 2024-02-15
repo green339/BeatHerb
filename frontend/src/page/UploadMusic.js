@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { useState, useRef, useEffect } from "react";
 import { uploadMusic } from "../api/upload.js";
@@ -30,6 +30,7 @@ export default function UploadMusic({ music, rootContentIdList, closeUploadModal
 
   const { accessToken } = useAuthStore();
   const serverURL = process.env.REACT_APP_TEST_SERVER_BASE_URL;
+  const navigate= useNavigate();
 
   useEffect(() => {
     // 서버에서 데이터를 가져오는 비동기 함수를 호출
@@ -117,13 +118,16 @@ export default function UploadMusic({ music, rootContentIdList, closeUploadModal
       },
       data:formData,
     })
-      .then(clear)
-      .then(closeUploadModal)
+      .then((response) => {
+        console.log(response.data.data.id)
+        clear()
+        navigate("/content/"+response.data.data.id)
+      })
       .catch((error) => {
         console.log(error.message);
         alert("음악 업로드에 실패했습니다");
         clear();
-        closeUploadModal();
+        navigate("/")
       });
   };
   const clear = async () => {
@@ -266,12 +270,12 @@ export default function UploadMusic({ music, rootContentIdList, closeUploadModal
                 <span className="loading loading-spinner text-success"></span>
               </div>
             ) : (
-              <div className="self-auto text-xl flex">
+                <div className="self-auto text-xl flex">
                 <div className="modal-action px-3">
                   <button className="btn" onClick={onSubmit}>
                     작성하기
                   </button>
-                </div>
+                  </div>
                 <div className="modal-action px-3">
                   <form method="dialog">
                     <button className="btn" onClick={clear}>
