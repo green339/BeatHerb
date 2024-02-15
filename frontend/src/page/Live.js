@@ -212,19 +212,17 @@ export default function Live() {
   return (
     <>
       <div className="pt-4 grid grid-cols-10">
-        <div className="col-span-7">
-          <>
-            <div className="mt-6 mb-4 flex justify-center items-center">
-              {mainStreamManager !== undefined ? (
-                <UserVideoComponent streamManager={mainStreamManager} width={640} height={480} mainVideo />
-              ) : null}
-              {(mainStreamManager === undefined && subscribers.length > 0) ? (
-                <div className="inline-block mr-4 relavive">
-                  <UserVideoComponent streamManager={subscribers[0]} width={160} height={120} />
-                </div>
-              ) : null}
-            </div>
-          </>
+        <div className="col-start-3 col-end-9">
+          <div className="mt-6 mb-4 flex justify-center items-center">
+            {mainStreamManager !== undefined ? (
+              <UserVideoComponent streamManager={mainStreamManager} width={640} height={480} mainVideo />
+            ) : null}
+            {(mainStreamManager === undefined && subscribers.length > 0) ? (
+              <div className="inline-block mr-4 relavive">
+                <UserVideoComponent streamManager={subscribers[0]} width={640} height={480} mainVideo />
+              </div>
+            ) : null}
+          </div>
           <div style={{ paddingLeft: '180px' }}>
             <p className="text-white font-bold text-2xl text-left">{title}</p>
             {contentList.length > 0 ? (
