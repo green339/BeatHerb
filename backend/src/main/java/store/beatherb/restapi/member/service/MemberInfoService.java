@@ -68,7 +68,7 @@ public class MemberInfoService {
 
         String nickname = editRequest.getNickname() != null? editRequest.getNickname() : memberDTO.getNickname();
         Boolean isDmAgree = editRequest.getDmAgree() != null? editRequest.getDmAgree() : memberDTO.getDmAgree();
-        List<PutInterestRequest> interestList = editRequest.getInterestList();
+        List<Long> interestList = editRequest.getHashTagIdList();
 
         Member member = memberRepository.findById(memberDTO.getId())
                 .orElseThrow(()->new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
@@ -81,8 +81,8 @@ public class MemberInfoService {
         }
 
         if(interestList != null){
-            for(PutInterestRequest request : interestList){
-                HashTag hashTag = hashTagRepository.findById(request.getHashTagId())
+            for(Long request : interestList){
+                HashTag hashTag = hashTagRepository.findById(request)
                         .orElseThrow(() -> new HashTagException(HashTagErrorCode.HASHTAG_IS_NOT_EXIST));
 
                 interestRepository.save(Interest.builder().hashTag(hashTag).member(member).build());

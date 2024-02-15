@@ -21,5 +21,5 @@ public class EditRequest {
     Boolean dmAgree;
     // 향후 파일 업로드 로직 확인하고 Service Layer 및 Entity에 반영 필요
     MultipartFile picture;
-    List<PutInterestRequest> interestList;
+    List<Long> hashTagIdList;
 }
