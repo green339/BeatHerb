@@ -262,6 +262,7 @@ export default function ContentDetail() {
                       ))
                     }
                   </div>
+                  <div className="text-left">진입차수 : <>{inOrderListFormat(inOrderList)}</></div>
                 </div>
               </div>
             </div>
