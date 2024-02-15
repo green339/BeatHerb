@@ -19,7 +19,7 @@ export default function ContentsRanking({ title, link, data, contentList = [] })
           <div className="flex gap-2 items-center">
             <p className="text-base-content m-0">{index + 1}. </p>
             <img
-              className="w-12 rounded-md"
+              className="w-12 h-12 rounded-md object-cover"
               src={content.image ? content.image : defaultAlbum}
               alt=""
             />

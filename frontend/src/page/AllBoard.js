@@ -43,6 +43,7 @@ export default function AllBoard() {
       url: searchUrl,
     })
     .then((response) => {
+      console.log(response);
       setContents(response.data.data);
     })
     .catch((error) => {
@@ -67,11 +68,11 @@ export default function AllBoard() {
     let searchList;
 
     if (category === "melody") {
-      searchList = contents.melodyList ? [...contents.melodyList].reverse() : [];
+      searchList = contents.melodyList ? [...(contents.melodyList)].reverse() : [];
     } else if (category === "vocal") {
-      searchList = contents.vocalList ? [...contents.vocalList].reverse() : [];
+      searchList = contents.vocalList ? [...(contents.vocalList)].reverse() : [];
     } else {
-      searchList = contents.soundTrackList ? [...contents.soundTrackList].reverse() : [];
+      searchList = contents.soundTrackList ? [...(contents.soundTrackList)].reverse() : [];
     }
 
     contentView = (
@@ -121,19 +122,19 @@ export default function AllBoard() {
             title="신규 멜로디"
             link="/board/contents"
             data={{ category: "melody" }}
-            contentList={[...contents.melodyList].reverse().slice(0, 5)}
+            contentList={contents.melodyList ? [...(contents.melodyList)].reverse().slice(0, 5) : []}
           />
           <ContentsRanking
             title="신규 보컬"
             link="/board/contents"
             data={{ category: "vocal" }}
-            contentList={[...contents.vocalList].reverse().slice(0, 5)}
+            contentList={contents.vocalList ? [...(contents.vocalList)].reverse().slice(0, 5) : []}
           />
           <ContentsRanking
             title="신규 음원"
             link="/board/contents"
             data={{ category: "music" }}
-            contentList={[...contents.soundTrackList].reverse().slice(0, 5)}
+            contentList={contents.soundTrackList ? [...(contents.soundTrackList)].reverse().slice(0, 5) : []}
           />
         </ItemContainerWithTitle>
         <ItemContainerWithTitle title="라이브" link="/board/live" scrolled>
