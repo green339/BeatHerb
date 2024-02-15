@@ -28,22 +28,34 @@ export default function AllBoard() {
   const hashtagIdList = (hashtagListString === "" ? [] : hashtagListString.split(' '));
 
   const [contents, setContents] = useState({});
+  const [liveList, setLiveList] = useState([]);
   const [category, setCategory] = useState("melody");
 
   useEffect(() => {
     const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
-    let url = `${serverUrl}/content/search?title=${query}`
+    let searchUrl = `${serverUrl}/content/search?title=${query}`
 
     hashtagIdList.forEach((hashtagId, index) => {
-      url += `&id=${hashtagId}`;
+      searchUrl += `&id=${hashtagId}`;
     });
 
     axios({
       method: "get",
-      url,
+      url: searchUrl,
     })
     .then((response) => {
       setContents(response.data.data);
+    })
+    .catch((error) => {
+      alert(error.response.data.message);
+    });
+
+    axios({
+      method: "get",
+      url: `${serverUrl}/live`,
+    })
+    .then((response) => {
+      setLiveList(response.data.data);
     })
     .catch((error) => {
       alert(error.response.data.message);
@@ -125,33 +137,18 @@ export default function AllBoard() {
             contentList={contents.soundTrackList?.slice(0, 5)}
           />
         </ItemContainerWithTitle>
-        <ItemContainerWithTitle title="Shorts" link="/board/shorts" scrolled>
-          {Array(10)
-            .fill()
-            .map((v, i) => i + 1)
-            .map((value, index) => {
-              return (
-                <div key={"shorts" + index} className="flex justify-center">
-                  <div>
-                    <ShortsItem title="Title" />
-                  </div>
-                </div>
-              );
-            })}
-        </ItemContainerWithTitle>
         <ItemContainerWithTitle title="라이브" link="/board/live" scrolled>
-          {Array(10)
-            .fill()
-            .map((v, i) => i + 1)
-            .map((value, index) => {
+          {
+            liveList.map((live, index) => {
               return (
-                <div key={"live" + index} className="flex justify-center">
+                <div key={"live" + live.id} className="flex justify-center">
                   <div>
                     <LiveItem title="Title" />
                   </div>
                 </div>
               );
-            })}
+            })
+          }
         </ItemContainerWithTitle>
       </>
     );

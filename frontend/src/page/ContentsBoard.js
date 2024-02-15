@@ -104,7 +104,7 @@ export default function ContentsBoard() {
                   title={content.title} 
                   artist={creatorListFormat(content.creatorList)}
                   isFavorite={isFavorite}
-                  showFavorite={accessToken && favoriteList.findIndex((favorite) => favorite.id === content.id) !== -1}
+                  showFavorite={accessToken}
                 />
               </div>
             )

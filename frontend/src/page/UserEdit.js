@@ -5,6 +5,7 @@ import { useAuthStore } from "../store/AuthStore";
 import defaultUser from "../assets/default_user.jpeg";
 import { getHashtag } from "../api/getHashtag.js";
 import HashTagList from "./HashTagList.js";
+import produce from 'immer';
 
 // 유저 정보 수정 로직
 // 프로필 사진, 닉네임, DM 수신 여부
@@ -67,6 +68,18 @@ export default function MyPage() {
         const data = response.data.data;
         setImage(data.image ? data.image : defaultUser);
         nicknameRef.current.value = data.nickname;
+
+        console.log()
+        data.hashTagList.forEach((interest) => {
+          setHashTagIdList(
+            produce(draft => {
+              const hashtagIdItem = draft.find((hashtag) => hashtag.id == interest.id);
+              if(hashtagIdItem) {
+                hashtagIdItem.selected = true;
+              }
+            })
+          )
+        })
       })
       .catch((error) => {
         alert(error.response.data.message[0]);
@@ -110,11 +123,13 @@ export default function MyPage() {
     // 관심사로 선택된 해시태그 
     const selectedHashTags = hashTagIdList
         .filter((item) => item.selected)
-        .map((item) => { return { hashTagId: item.id }});
+        .map((item) => item.id);
+
+    console.log(selectedHashTags)
 
     formData.append("dmAgree", isActive);
     formData.append("nickname", nicknameValue);
-    formData.append("interest_list", selectedHashTags);
+    formData.append("hashTagIdList", selectedHashTags);
 
     console.log(formData);
 

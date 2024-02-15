@@ -9,12 +9,12 @@ export default function ContentsArt({
   showFavorite,
 }) {
   return (
-    <div style={{ width: `${size}px`, height: `${size}px` }} className="relative object-fill">
+    <div style={{ width: `${size}px`, height: `${size}px` }} className="relative">
       <div className="text-base-content hover:text-base-content">
-        <img style={{ width: `${size}px`, height: `${size}px` }} className="w-full rounded-md" src={albumArt} alt="" />
+        <img style={{ width: `${size}px`, height: `${size}px` }} className="w-full rounded-md object-cover" src={albumArt} alt="" />
       </div>
       {showFavorite && (
-        <div className="absolute bottom-2 right-2 hover:cursor-pointer" onClick={onClickFavorite}>
+        <div className="absolute bottom-2 right-2 hover:cursor-pointer z-100" onClick={onClickFavorite}>
           {isFavorite ? (
             <svg
               className="fill-red-600 swap-on"

@@ -155,7 +155,7 @@ export default function ContentDetail() {
               <div className="flex flex-col">
                 <div className="w-52 h-52 rounded-md">
                   <img
-                    className="w-full rounded-md"
+                    className="w-52 h-52  w-full rounded-md object-cover"
                     src={imageSrc}
                     alt="Album Art"
                   />

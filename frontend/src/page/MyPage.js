@@ -56,7 +56,7 @@ export default function MyPage() {
       console.log(data);
 
       setNickname(data.nickname);
-      setHashtagList((data.hashtagList ? data.hashtagList : []))
+      setHashtagList((data.hashTagList ? data.hashTagList : []))
       setFollowingList((data.followerList ? data.followerList : []));
       setFollowerList((data.followingList ? data.followingList : []));
 
@@ -173,7 +173,7 @@ export default function MyPage() {
               <div className="flex place-items-center">
                 <div className="w-32 h-32 rounded-md">
                   <img
-                    className="w-32 h-32 rounded-md"
+                    className="w-32 h-32 rounded-md object-cover"
                     src={`${serverUrl}/member/image/${id}`}
                     onError={onErrorImg}
                     alt="Profile"
