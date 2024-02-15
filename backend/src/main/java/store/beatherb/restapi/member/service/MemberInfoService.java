@@ -89,9 +89,9 @@ public class MemberInfoService {
 
         }
 
-        if (nickname == null) {
-            throw new MemberException(MemberErrorCode.NICKNAME_IS_NOT_EXIST);
-        }
+//        if (nickname == null) {
+//            throw new MemberException(MemberErrorCode.NICKNAME_IS_NOT_EXIST);
+//        }
 
         member.setNickname(nickname);
         member.setDmAgree(isDmAgree);
