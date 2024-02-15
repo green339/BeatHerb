@@ -96,7 +96,7 @@ export default function ContentDetail() {
 
     itemView = contentList?.map((content, index) => (
         <div key={"content" + content.id} className="flex justify-center">
-          <ContentsItem contentId={content.id} size={150} albumArt={content.image} title={content.title} artist={creatorListFormat(content.creatorList)} showFavorite={false} />
+          <ContentsItem contentId={content.id} size={150} albumArt={content.image} title={content.title} artist={content.creatorList.join(", ")} showFavorite={false} />
         </div>
       )
     );
@@ -192,7 +192,11 @@ export default function ContentDetail() {
                   <div className="flex gap-1 flex-wrap">
                     {
                       hashtagList.map((hashtag, index) => (
-                        <div key={"hashtag"+hashtag.id} className="badge badge-lg badge-primary text-primary-content">
+                        <div
+                          key={"hashtag"+hashtag.id}
+                          className="badge badge-lg badge-primary text-primary-content hover:cursor-pointer"
+                          onClick={() => navigate(`/board/all?hashtagList=${hashtag.id}`)}
+                        >
                           {hashtag.name}
                         </div>
                       ))

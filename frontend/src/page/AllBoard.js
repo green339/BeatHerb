@@ -8,7 +8,7 @@ import ContentsItem from "../components/ContentsItem";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { creatorListFormat } from "../common/creatorListFormat";
+import { creatorListFormatWithoutLink } from "../common/creatorListFormat";
 
 // 탭 리스트
 const tabs = [
@@ -104,7 +104,7 @@ export default function AllBoard() {
                   size={150}
                   albumArt={content.image}
                   title={content.title}
-                  artist={creatorListFormat(content.creatorList)}
+                  artist={creatorListFormatWithoutLink(content.creatorList)}
                   showFavorite={false}
                 />
               </div>

@@ -5,7 +5,7 @@ import ContentsItem from "../components/ContentsItem";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { useAuthStore } from "../store/AuthStore";
-import { creatorListFormat } from "../common/creatorListFormat.js";
+import { creatorListFormatWithoutLink } from "../common/creatorListFormat.js";
 
 // 탭 리스트
 const tabs = [
@@ -102,7 +102,7 @@ export default function ContentsBoard() {
                   size={150} 
                   albumArt={content.image} 
                   title={content.title} 
-                  artist={creatorListFormat(content.creatorList)}
+                  artist={creatorListFormatWithoutLink(content.creatorList)}
                   isFavorite={isFavorite}
                   showFavorite={accessToken}
                 />

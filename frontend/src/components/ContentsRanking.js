@@ -2,7 +2,7 @@
 
 import { Fragment } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { creatorListFormat } from "../common/creatorListFormat";
+import { creatorListFormatWithoutLink } from "../common/creatorListFormat";
 import defaultAlbum from "../assets/default_album.jpeg";
 
 export default function ContentsRanking({ title, link, data, contentList = [] }) {
@@ -26,7 +26,7 @@ export default function ContentsRanking({ title, link, data, contentList = [] })
               />
               <p className="text-base-content m-0">{content.title}</p>
             </div>
-            <p className="text-base-content m-0">{creatorListFormat(content.creatorList)}</p>
+            <p className="text-base-content m-0">{creatorListFormatWithoutLink(content.creatorList)}</p>
           </Link>
         </div>
       </Fragment>
