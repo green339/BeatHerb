@@ -44,16 +44,18 @@ export default function ContentsItem({
     <Link
       to={`/content/${contentId}`}
       style={{ width: `${size}px` }}
-      className="items-center`"
+      className="items-center hover:shadow-lg hover:shadow-base-content rounded-md group"
     >
-      <ContentsArt
-        size={size}
-        contentId={contentId}
-        albumArt={albumArt}
-        isFavorite={favorite}
-        onClickFavorite={handleOnClickFavorite}
-        showFavorite={showFavorite}
-      />
+      <div className="group-hover:shadow-sm group-hover:shadow-base-content rounded-md">
+        <ContentsArt
+          size={size}
+          contentId={contentId}
+          albumArt={albumArt}
+          isFavorite={favorite}
+          onClickFavorite={handleOnClickFavorite}
+          showFavorite={showFavorite}
+        />
+      </div>
       <ContentsTitleAndArtist title={title} artist={artist} />
     </Link>
   );
