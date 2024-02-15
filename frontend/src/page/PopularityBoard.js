@@ -25,6 +25,7 @@ export default function PopularityBoard() {
     })
     .then((response) => {
       const data = response.data.data;
+      console.log(response);
       setDailyMelodyList(data.dailyMelody);
       setWeklyMelodyList(data.weeklyMelody);
       setMonthlyMelodyList(data.monthlyMelody);
@@ -86,19 +87,19 @@ export default function PopularityBoard() {
       <ContentsRanking
           title="daily" 
           link="/board/contents" 
-          data={{ category: "music", sortOption: "popularity" }}
+          data={{ category: "music" }}
           contentList={dailyMusicList.slice(0, 5)}
         />
         <ContentsRanking
           title="weekly" 
           link="/board/contents" 
-          data={{ category: "music", sortOption: "popularity" }}
+          data={{ category: "music" }}
           contentList={weeklyMusicList.slice(0, 5)}
         />
         <ContentsRanking
           title="monthly" 
           link="/board/contents" 
-          data={{ category: "music", sortOption: "popularity" }}
+          data={{ category: "music" }}
           contentList={monthlyMusicList.slice(0, 5)}
         />
       </ItemContainerWithTitle>

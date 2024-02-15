@@ -53,6 +53,8 @@ export default function MyPage() {
     .then((response) => {
       const data = response.data.data;
 
+      console.log(data);
+
       setNickname(data.nickname);
       setHashtagList((data.hashtagList ? data.hashtagList : []))
       setFollowingList((data.followerList ? data.followerList : []));

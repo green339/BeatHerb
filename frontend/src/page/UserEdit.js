@@ -107,8 +107,16 @@ export default function MyPage() {
     // 현재 닉네임에 입력된 값
     const nicknameValue = nicknameRef.current.value;
 
+    // 관심사로 선택된 해시태그 
+    const selectedHashTags = hashTagIdList
+        .filter((item) => item.selected)
+        .map((item) => { return { hashTagId: item.id }});
+
     formData.append("dmAgree", isActive);
     formData.append("nickname", nicknameValue);
+    formData.append("interest_list", selectedHashTags);
+
+    console.log(formData);
 
     // 서버에서 file null 체크 필요
     // 프론트에서 file 없을 시 null로 넘어감을 확인
@@ -123,28 +131,7 @@ export default function MyPage() {
     })
     .then((response) => {
       setNickname(nicknameValue);
-      // onSubmit 안에서 관심사 설정하는 axios 요청 보내기
-      // selectedHashTags를 보내야 한다.
-      const selectedHashTags = hashTagIdList
-        .filter((item) => item.selected)
-        .map((item) => item.id);
-
-      axios({
-        method: "PUT",
-        url: `${serverUrl}/interest`,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        data: {
-          hashtagId: selectedHashTags
-        }
-      })
-      .then((resopnse) => {
-        window.location.replace(`/mypage/${userId}`);
-      })
-      .catch((error) => {
-        alert("요청에 실패했습니다.");
-      })
+      navigate(-1);
     })
     .catch((error) => {
       alert("요청에 실패했습니다.");
