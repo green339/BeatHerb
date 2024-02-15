@@ -156,7 +156,9 @@ export default function ContentDetail() {
         >
           <div className="flex w-full mt-2 space-x-3">
             <div>
-              <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
+              <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
+                <img className="h-10 w-10 rounded-full" src={comment.member.image} />
+              </div>
               <div className="text-xs text-gray-500 leading-none">{comment.member.nickname}</div>
             </div>
             <div>
