@@ -54,7 +54,7 @@
 #### 작업실 화면 (소리 쌓기 화면)
 |![work1](/uploads/eb0b428c06b054b69a7b5222e76514a1/work1.gif){width=500px height=250px}|![work2](/uploads/6016423a0dc2af6369357c7acbab6b59/work2.gif){width=500px height=250px}|
 |:---:|:---:|
-|**내 컴퓨터에서 음원 파일 가져오고 BeatHerb에서 마음에 드는 소리를 쌓은 후 업로드하는 화면**|**BeatHerb에서 마음에 드는 소리를 가져오고 가상 악기로 만든 소리를 쌓은 후 업로드하는 화면**|
+|**내 컴퓨터에서 음원 파일 가져오고 BeatHerb에서 <br />마음에 드는 소리를 쌓은 후 업로드하는 화면**|**BeatHerb에서 마음에 드는 소리를 가져오고 <br />가상 악기로 만든 소리를 쌓은 후 업로드하는 화면**|
 #### 컨텐트 상세 검색 화면
 |![detail_search](/uploads/39521cd33e4cd625e61058e9a23921d9/detail_search.gif){width=370px height=200px}|
 |:---:|
