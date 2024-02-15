@@ -60,7 +60,7 @@ export default function LiveBoard() {
     })
     .catch((error) => {
       console.log(error);
-      alert(error.message);
+      alert(error.response.data.message[0]);
     })
   }
 
