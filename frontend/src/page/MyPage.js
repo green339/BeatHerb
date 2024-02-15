@@ -188,7 +188,7 @@ export default function MyPage() {
                   {
                     hashtagList.length
                       ? hashtagList.map((hashtag) => (
-                          <div key={"hashtag" + hashtag.id} className="badge badge-lg badge-primary text-primary-content">
+                          <div key={"hashtag" + hashtag.id} className="badge badge-lg badge-primary text-primary-content hover:cursor-pointer" onClick={() => navigate(`/board/all?hashtagList=${hashtag.id}`)}>
                             {hashtag.name}
                           </div>
                         ))
