@@ -7,7 +7,6 @@ import { useAuthStore } from "../store/AuthStore";
 
 export default function LiveBoard() {
   const navigate = useNavigate();
-  const [sortOption, setSortOption] = useState("recent");
   const [liveList, setLiveList] = useState([]);
   const [liveTitle, setLiveTitle] = useState("");
   const [liveDescription, setLiveDescription] = useState("");
@@ -22,7 +21,6 @@ export default function LiveBoard() {
       url: `${serverUrl}/live`
     })
     .then((response) => {
-      console.log(response.data.data);
       setLiveList(response.data.data);
     })
     .catch((error) => {
@@ -30,11 +28,7 @@ export default function LiveBoard() {
     })
 
     return () => setLiveList([]);
-  }, [sortOption])
-
-  const handleSortOptionChange = (e) => {
-    setSortOption(e.target.value);
-  }
+  }, []);
 
   const handleLiveCreateClick = () => {
     axios({
@@ -49,7 +43,6 @@ export default function LiveBoard() {
       }
     })
     .then((response) => {
-      console.log(response);
       const id = response.data.id || 1;
       const token = response.data.data.token;
       const role = response.data.data.role;
@@ -59,7 +52,6 @@ export default function LiveBoard() {
       navigate(`/live/${id}`, {state: {token, role, title, describe}});
     })
     .catch((error) => {
-      console.log(error);
       alert(error.response.data.message[0]);
     })
   }
@@ -99,17 +91,6 @@ export default function LiveBoard() {
         <div className="w-full flex justify-start my-8 ps-12 gap-12">
           <h1 className="text-primary text-3xl font-semibold">라이브</h1>
           { accessToken && <button className="btn btn-ghost btn-sm text-base-content" onClick={openLiveCreateModal}>+ 라이브 생성</button> }
-        </div>
-
-        <div className="w-full flex justify-end mb-8 pr-8">
-          <select 
-            value={sortOption} 
-            className="select select-ghost w-full max-w-xs text-base-content justify-self-end"
-            onChange={handleSortOptionChange}
-          >
-            <option key="recent" value="recent">최신 순</option>
-            <option key="popularity" value="popularity">인기 순</option>
-          </select>
         </div>
 
         <div className="grid grid-cols-3 gap-4 items-center">

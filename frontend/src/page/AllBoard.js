@@ -35,11 +35,8 @@ export default function AllBoard() {
     let url = `${serverUrl}/content/search?title=${query}`
 
     hashtagIdList.forEach((hashtagId, index) => {
-      console.log(hashtagId);
       url += `&id=${hashtagId}`;
     });
-
-    console.log(url);
 
     axios({
       method: "get",
@@ -49,7 +46,7 @@ export default function AllBoard() {
       setContents(response.data.data);
     })
     .catch((error) => {
-      console.log(error.response.data.message);
+      alert(error.response.data.message);
     });
   }, [query, hashtagListString]);
 

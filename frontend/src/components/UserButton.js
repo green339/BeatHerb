@@ -20,7 +20,6 @@ export default function UserButton() {
   }
 
   const onErrorImg = (e) => {
-    console.log(e.target)
     e.target.src = defaultUser;
   }
 

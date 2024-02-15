@@ -50,7 +50,6 @@ export default function ContentDetail() {
       url: `${serverUrl}/content/${id}`,
     })
     .then((response) => {
-      console.log(response.data.data);
       const data = response.data.data;
 
       setImageSrc(data.image);

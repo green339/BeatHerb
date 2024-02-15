@@ -36,13 +36,13 @@ export default function PopularityBoard() {
       setMonthlyMusicList(data.monthlySoundtrack);
     })
     .catch((error) => {
-      console.log(error.response.data.message);
+      alert(error.response.data.message);
     })
   }, []);
 
   return (
     <>
-      <ItemContainerWithTitle title="멜로디" link="/board/contents" data={{ category: "melody", sortOption: "popularity" }} >
+      <ItemContainerWithTitle title="멜로디" link="/board/contents" data={{ category: "melody" }} >
         <ContentsRanking
           title="daily" 
           link="/board/contents" 
@@ -62,7 +62,7 @@ export default function PopularityBoard() {
           contentList={monthlyMelodyList.slice(0, 5)}
         />
       </ItemContainerWithTitle>
-      <ItemContainerWithTitle title="보컬" link="/board/contents" data={{ category: "vocal", sortOption: "popularity" }} >
+      <ItemContainerWithTitle title="보컬" link="/board/contents" data={{ category: "vocal" }} >
       <ContentsRanking
           title="daily" 
           link="/board/contents" 
@@ -82,7 +82,7 @@ export default function PopularityBoard() {
           contentList={monthlyVocalList.slice(0, 5)}
         />
       </ItemContainerWithTitle>
-      <ItemContainerWithTitle title="음원" link="/board/contents" data={{ category: "music", sortOption: "popularity" }} >
+      <ItemContainerWithTitle title="음원" link="/board/contents" data={{ category: "music" }} >
       <ContentsRanking
           title="daily" 
           link="/board/contents" 

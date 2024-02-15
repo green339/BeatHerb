@@ -21,16 +21,13 @@ export default function SearchBar({ initQuery = "", initHashtagListString = "" }
       url: `${serverUrl}/content/hashtag`,
     })
     .then((response) => {
-      console.log(response.data.data);
       const newHashtagList = response.data.data.map((hashtag) => {
         const isSelected = initHashtagIdList.findIndex((hashtagId) => Number(hashtagId) === hashtag.id) !== -1;
         return { ...hashtag,isSelected };
       });
       setHashtagList(newHashtagList);
-      console.log(newHashtagList);
     })
     .catch((error) => {
-      console.log(error.message);
       alert("오류가 발생했습니다.");
     });
   }, []);
@@ -47,7 +44,6 @@ export default function SearchBar({ initQuery = "", initHashtagListString = "" }
 
   // 검색
   const handleSearchClick = () => {
-    console.log("검색어는", query);
     let url = "/board/all";
     let hashtagIdString = "";
     let paramCount = 0;

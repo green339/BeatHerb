@@ -17,11 +17,9 @@ export default function Admin() {
       url: `${serverUrl}/content/hashtag`
     })
     .then((response) => {
-      console.log(response.data.data);
       setHashtagList(response.data.data);
     })
     .catch((error) => {
-      console.log(error.message);
       alert("오류가 발생했습니다.")
     })
   }, []);
@@ -39,7 +37,6 @@ export default function Admin() {
       }
     })
     .then((response) => {
-      console.log(response.data.data);
       setHashtagList(
         produce(draft => {
           draft.push(response.data.data);
@@ -48,7 +45,6 @@ export default function Admin() {
       setAddModalInput("");
     })
     .catch((error) => {
-      console.log(error.message);
       alert("오류가 발생했습니다.")
     })
   }

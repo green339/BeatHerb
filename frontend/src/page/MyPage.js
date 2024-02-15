@@ -52,7 +52,6 @@ export default function MyPage() {
     })
     .then((response) => {
       const data = response.data.data;
-      console.log(data);
 
       setNickname(data.nickname);
       setHashtagList((data.hashtagList ? data.hashtagList : []))
@@ -72,7 +71,6 @@ export default function MyPage() {
   }, [id]);
 
   const onErrorImg = (e) => {
-    console.log(e.target)
     e.target.src = defaultUser;
   };
 
@@ -93,7 +91,6 @@ export default function MyPage() {
       window.location.reload();
     })
     .catch((error) => {
-      console.log(error)
       alert(error.response.data.message);
     })
   }

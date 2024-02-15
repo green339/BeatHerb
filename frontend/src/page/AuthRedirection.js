@@ -29,14 +29,12 @@ export default function AuthRedirection() {
         }
       })
       .then((response) => {
-        console.log(response.data);
         const { accessToken, refreshToken, refreshTokenExpiresIn, name } = response.data.data;
         setAccessToken(accessToken);
         setRefreshToken(refreshToken, refreshTokenExpiresIn);
         setName(name);
       })
       .catch((error) => {
-        console.log(error.message);
         alert("로그인에 실패했습니다.")
         navigate("/");
       })
@@ -57,14 +55,12 @@ export default function AuthRedirection() {
         }
       })
       .then((response) => {
-        console.log(response.data);
         const { accessToken, refreshToken, refreshTokenExpiresIn, name } = response.data.data;
         setAccessToken(accessToken);
         setRefreshToken(refreshToken, refreshTokenExpiresIn);
         setName(name);
       })
       .catch((error) => {
-        console.log(error.message);
         alert("로그인에 실패했습니다.")
         navigate("/");
       })
@@ -80,14 +76,12 @@ export default function AuthRedirection() {
         }
       })
       .then((response) => {
-        console.log(response.data);
         const { accessToken, refreshToken, refreshTokenExpiresIn, name } = response.data.data;
         setAccessToken(accessToken);
         setRefreshToken(refreshToken, refreshTokenExpiresIn);
         setName(name);
       })
       .catch((error) => {
-        console.log(error.message);
         alert("로그인에 실패했습니다.")
         navigate("/");
       })
@@ -108,7 +102,6 @@ export default function AuthRedirection() {
         navigate("/auth_email");
       })
       .catch((error) => {
-        console.log(error);
         if(error.response.data.message[0] === "이미 가입한 이메일입니다.") {
           axios({
             method: 'post',
@@ -118,11 +111,10 @@ export default function AuthRedirection() {
             },
           })
           .then((response) => {
-            console.log(response.data);
             navigate("/auth_email");
           })
           .catch((error) => {
-            console.log(error.message);
+            alert("로그인에 실패했습니다.")
             navigate("/");
           })
         } else {
