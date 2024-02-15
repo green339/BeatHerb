@@ -218,13 +218,13 @@ public class MemberDetailResponse {
     @Getter
     private static class FollowerDTO {
         Long id;
-        String name;
+        String nickname;
         String image;
 
         @Builder
-        private FollowerDTO(Long id, String name) {
+        private FollowerDTO(Long id, String nickname) {
             this.id = id;
-            this.name = name;
+            this.nickname = nickname;
             this.image = "/api/member/image/"+id;
         }
 
@@ -234,11 +234,11 @@ public class MemberDetailResponse {
             }
 
             Long id = entity.getFollowMember().getId();
-            String name = entity.getFollowMember().getName();
+            String nickname = entity.getFollowMember().getNickname();
 
             return FollowerDTO.builder()
                     .id(id)
-                    .name(name)
+                    .nickname(nickname)
                     .build();
         }
     }
@@ -246,13 +246,13 @@ public class MemberDetailResponse {
     @Getter
     private static class FollowingDTO {
         Long id;
-        String name;
+        String nickname;
         String image;
 
         @Builder
-        private FollowingDTO(Long id, String name) {
+        private FollowingDTO(Long id, String nickname) {
             this.id = id;
-            this.name = name;
+            this.nickname = nickname;
             this.image = "/api/member/image/"+id;
         }
 
@@ -262,11 +262,11 @@ public class MemberDetailResponse {
             }
 
             Long id = entity.getMember().getId();
-            String name = entity.getMember().getName();
+            String nickname = entity.getMember().getNickname();
 
             return FollowingDTO.builder()
                     .id(id)
-                    .name(name)
+                    .nickname(nickname)
                     .build();
         }
     }
