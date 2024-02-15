@@ -27,8 +27,14 @@ export default function HashTagList({ data, setData }) {
     }
 
     // 클릭된 버튼의 색상을 변경
-    const newData = [...data];
-    newData[index].selected = !newData[index].selected;
+    const newData = data.map((value, i) => {
+      if(i === index) {
+        return {...value, selected: !value.selected};
+      } else {
+        return value;
+      }
+    });
+    
     setData(newData);
   };
 

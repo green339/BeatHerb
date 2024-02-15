@@ -32,6 +32,8 @@ export default function MyPage() {
   const [hashTagIdList, setHashTagIdList] = useState([]);
   const [showHashTag, setShowHashTag] = useState(false);
 
+  console.log(hashTagIdList);
+
   const handleAddCategory = () => {
     setShowHashTag(!showHashTag);
   };
@@ -47,7 +49,7 @@ export default function MyPage() {
           selected: false,
         }));
         setHashTagIdList(initialData); // 데이터를 상태에 저장
-        console.log(hashTagIdList);
+        console.log(initialData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -69,7 +71,6 @@ export default function MyPage() {
         setImage(data.image ? data.image : defaultUser);
         nicknameRef.current.value = data.nickname;
 
-        console.log()
         data.hashTagList.forEach((interest) => {
           setHashTagIdList(
             produce(draft => {

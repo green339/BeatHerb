@@ -48,10 +48,6 @@ export default function ContentDetail() {
   const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
 
   useEffect(() => {
-    window.onpopstate = () => {
-      setShowPlayer(false);
-    };
-
     const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
 
     axios({
@@ -103,6 +99,8 @@ export default function ContentDetail() {
   const initPlay = () => {
     setShowPlayer(true);
   };
+
+  window.onpopstate=()=>{setShowPlayer(false)}
 
   const inOrderListFormat = (inOrderList) => {
     const inOrderView = inOrderList.map((inOrder, index) => {
