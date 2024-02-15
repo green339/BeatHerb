@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
+import axios from "axios";
 import { useState, useRef, useEffect } from "react";
-import { uploadShorts } from "../api/upload.js";
+// import { uploadShorts } from "../api/upload.js";
+import { useAuthStore } from "../store/AuthStore";
 
 export default function UploadMusic({ shorts, root, getClearState, getModalState }) {
   const [image, setImage] = useState(null);
@@ -9,6 +11,10 @@ export default function UploadMusic({ shorts, root, getClearState, getModalState
   const videoRef = useRef(null);
   const btnRef = useRef(null);
   const [isProcessing, setIsProcessing] = useState(false);
+
+  const { accessToken } = useAuthStore();
+  const serverURL = process.env.REACT_APP_TEST_SERVER_BASE_URL;
+
   useEffect(() => {
     if (videoRef.current && shorts) {
       const videoUrl = URL.createObjectURL(shorts);
@@ -31,11 +37,26 @@ export default function UploadMusic({ shorts, root, getClearState, getModalState
     // formData.append("image", image);
     formData.append("shorts", shorts, titleRef.current.value + ".mp4");
     formData.append("root", root);
-    await uploadShorts(formData)
+
+    await axios({
+      method: "post",
+      url: `${serverURL}/shorts/upload`,
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data:formData,
+    })
       .then(() => {
         btnRef.current.disabled = false;
       })
-      .then(clear);
+      .then(clear)
+      .catch((error) => {
+        console.log(error.message);
+        alert("쇼츠 업로드에 실패했습니다");
+        btnRef.current.disabled = false;
+        clear()
+      });
   };
   const clear = async () => {
     setImage(null);

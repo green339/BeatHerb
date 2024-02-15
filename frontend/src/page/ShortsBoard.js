@@ -111,7 +111,7 @@ export default function ShortsBoard() {
               key={shorts.id}
               className="flex justify-center"
               onClick={() => clickShortsBtn(shorts.id)}>
-              <ShortsItem title={sortOption} />
+              <ShortsItem/>
             </div>
           );
         })}

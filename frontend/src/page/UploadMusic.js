@@ -106,9 +106,9 @@ export default function UploadMusic({ music, rootContentIdList, closeUploadModal
     }
     formData.append("music", await convertMedia(music), titleRef.current.value + ".mp3");
     formData.append("type", type);
-    console.log(formData);
+    // console.log(formData);
     // 서버로 요청을 보냄
-    axios({
+    await axios({
       method: "post",
       url: `${serverURL}/content/upload`,
       headers: {
@@ -121,7 +121,7 @@ export default function UploadMusic({ music, rootContentIdList, closeUploadModal
       .then(closeUploadModal)
       .catch((error) => {
         console.log(error.message);
-        alert("파일 업로드에 실패했습니다");
+        alert("음악 업로드에 실패했습니다");
         clear();
         closeUploadModal();
       });

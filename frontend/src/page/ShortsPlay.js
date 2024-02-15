@@ -1,31 +1,42 @@
-import React, { useRef, useState,forwardRef,useImperativeHandle } from "react";
-import { Link } from "react-router-dom"
-const ShortsPlay = forwardRef(({selected},ref) => {
+import React, { useRef, useState, forwardRef, useImperativeHandle } from "react";
+import { Link } from "react-router-dom";
+import Hls from 'hls.js';
+const ShortsPlay = forwardRef(({ selected }, ref) => {
   useImperativeHandle(ref, () => ({
     clear,
   }));
   const shorts = {
     nickname: "닉네임",
-    root:2,
+    root: 2,
     title: "제목",
     src: "쇼츠 플레이 링크",
   };
+  
   // const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
   // const src_link = `${serverUrl}/shorts/play/${shorts.id}`;
   const videoRef = useRef(null);
-  const videoFileRef = useRef(null);
-  const videoSelBtnRef = useRef(null);
-  const handleVideoChange = async () => {
-    const videoFile = videoFileRef.current.files[0];
-    if (!videoFile) return;
-    const videoUrl = URL.createObjectURL(videoFile);
-    videoRef.current.src = videoUrl;
-    videoRef.current.style.display = "inline";
-    // videoRef.current.play();
-  };
+  useEffect(() => {
+    if (Hls.isSupported()) {
+      const hls = new Hls();
+      hls.loadSource(shorts.src);
+      hls.attachMedia(videoRef.current);
+    }
+    return () => {};
+  }, [videoRef.current]);
+
+  // const videoFileRef = useRef(null);
+  // const videoSelBtnRef = useRef(null);
+  // const handleVideoChange = async () => {
+  //   const videoFile = videoFileRef.current.files[0];
+  //   if (!videoFile) return;
+  //   const videoUrl = URL.createObjectURL(videoFile);
+  //   videoRef.current.src = videoUrl;
+  //   videoRef.current.style.display = "inline";
+  //   // videoRef.current.play();
+  // };
   const clear = () => {
     videoRef.current.src = null;
-  }
+  };
 
   return (
     <div className="w-full h-full flex flex-col gap-3">
@@ -44,7 +55,8 @@ const ShortsPlay = forwardRef(({selected},ref) => {
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="w-6 h-6">
+          className="w-6 h-6"
+        >
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -60,7 +72,8 @@ const ShortsPlay = forwardRef(({selected},ref) => {
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="w-6 h-6">
+          className="w-6 h-6"
+        >
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -68,32 +81,34 @@ const ShortsPlay = forwardRef(({selected},ref) => {
           />
         </svg>
         <Link to={`/content/${shorts.root}`}>
-        {/* <p className="text-left text-l">{shorts.root}</p> */}
-        <p className="text-left text-l">{selected}</p>
-      </Link>
+          {/* <p className="text-left text-l">{shorts.root}</p> */}
+          <p className="text-left text-l">{selected}</p>
+        </Link>
       </div>
       <div className="p-3">
-        {/* <video src={src_link} controls style={{ width: "700px" }}></video>÷ */}
+        {/* <video src={shorts.src} controls style={{ width: "700px" }}></video> */}
         <video ref={videoRef} controls style={{ width: "700px" }}></video>
-        <div className="w-8/12 ps-10 text-left">
-            <input
-              type="file"
-              ref={videoFileRef}
-              accept="video/*"
-              onChange={handleVideoChange}
-              style={{ display: "none" }}
-            />
-            <button
-              className="btn btn-primary btn-xs"
-              onClick={() => {
-                videoFileRef.current.click();
-              }}
-              ref={videoSelBtnRef}>
-              동영상 선택
+        {/* 이건 파일 실행되는지 테스트용 -지우기 */}
+        {/* <div className="w-8/12 ps-10 text-left">
+          <input
+            type="file"
+            ref={videoFileRef}
+            accept="video/*"
+            onChange={handleVideoChange}
+            style={{ display: "none" }}
+          />
+          <button
+            className="btn btn-primary btn-xs"
+            onClick={() => {
+              videoFileRef.current.click();
+            }}
+            ref={videoSelBtnRef}
+          >
+            동영상 선택
           </button>
-          </div>
+        </div> */}
       </div>
     </div>
   );
-})
-export default ShortsPlay
+});
+export default ShortsPlay;
