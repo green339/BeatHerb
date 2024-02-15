@@ -4,8 +4,11 @@ WORKDIR /file
 COPY ./frontend .
 
 COPY ./exec/env/.env_frontend .env
-COPY ./exec/frontent/.eslintignore .eslintignore
+RUN echo "src" > .eslintignore \
+    && echo "srcsrc" >> .eslintignore
 
 RUN npm install
 RUN npm run build
-ENTRYPOINT ["ls","./build"]
+
+ENTRYPOINT ["tail", "-f", "/dev/null"]
+
