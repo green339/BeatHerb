@@ -9,6 +9,7 @@ import LiveItem from "../components/LiveItem.js";
 import MusicPlayer from "../components/MusicPlayer.js";
 import { creatorListFormat } from "../common/creatorListFormat.js";
 import { Link } from "react-router-dom";
+import { useAuthStore } from "../store/AuthStore.js";
 
 const tabs = [
   { value: "melody", title: "멜로디" },
@@ -28,8 +29,7 @@ export default function ContentDetail() {
   const { id } = useParams();
   const [category, setCategory] = useState("melody");
   const [comment, setComment] = useState("comment");
-  const [commentMessage, setCommentMessage] = useState("commentMessage");
-  const [contentId, setContentId] = useState("contentId");
+  const [commentMessage, setCommentMessage] = useState("");
 
   // 컨텐츠 관련 정보
   const [imageSrc, setImageSrc] = useState("");
@@ -44,7 +44,9 @@ export default function ContentDetail() {
 
   const [showPlayer, setShowPlayer] = useState(false);
 
+  const { accessToken } = useAuthStore();
   const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
+
   useEffect(() => {
     window.onpopstate = () => {
       setShowPlayer(false);
@@ -58,6 +60,7 @@ export default function ContentDetail() {
     })
     .then((response) => {
       const data = response.data.data;
+      console.log(data);
       
       setImageSrc(data.image);
       setTitle(data.title);
@@ -79,15 +82,20 @@ export default function ContentDetail() {
     axios({
       method: "post",
       url: `${serverUrl}/comment`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      data: {
+        contentId: id,
+        body: commentMessage
+      }
     })
       .then((response) => {
-        console.log(response.data);
-        const data = response.data.data;
-
-        setContentId(id);
-        setCommentMessage(data.commentMessage);
+        setCommentMessage("");
+        window.location.reload();
       })
       .catch((error) => {
+        console.log(error)
         alert("데이터를 보내는 도중 문제가 발생했습니다.");
       });
   };
@@ -144,7 +152,7 @@ export default function ContentDetail() {
       <div>
         <div
           key={"comment" + comment.id}
-          className="flex justify-center m-10  flex-grow overflow-auto"
+          className="flex justify-center mx-6 my-2 flex-grow"
         >
           <div className="flex w-full mt-2 space-x-3">
             <div>
@@ -154,9 +162,6 @@ export default function ContentDetail() {
             <div>
               <div className="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
                 <p className="text-sm">{comment.body}</p>
-              </div>
-              <div className="text-right">
-                <div className="text-xs text-gray-500 leading-none">2 min ago</div>
               </div>
             </div>
           </div>
@@ -172,6 +177,7 @@ export default function ContentDetail() {
           placeholder="Write your message!"
           className="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-12 bg-gray-200 rounded-md py-3"
           onChange={(e) => setCommentMessage(e.target.value)}
+          value={commentMessage}
         />
         <div className="absolute right-0 items-center inset-y-0 hidden sm:flex">
           <button
@@ -253,7 +259,7 @@ export default function ContentDetail() {
                     {
                       hashtagList.map((hashtag, index) => (
                         <div
-                          key={"hashtag"+hashtag.id}
+                          key={"hashtag" + hashtag.id}
                           className="badge badge-lg badge-primary text-primary-content hover:cursor-pointer"
                           onClick={() => navigate(`/board/all?hashtagList=${hashtag.id}`)}
                         >
