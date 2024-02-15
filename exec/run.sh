@@ -48,6 +48,8 @@ OPENVIDU_SECRET=$(generate_random 50)
 JWT_SALT=$(generate_random 50)
 DB_PASSSWORD=$(generate_random 50)
 MYSQL_ROOT_PASSWORD=$(generate_random 50)
+
+
 sed -i "s/MYSQL_ROOT_PASSWORD=.*/MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD/" ./env/.env_database
 sed -i "s/MYSQL_PASSWORD=.*/MYSQL_PASSWORD=$DB_PASSSWORD/" ./env/.env_database
 
@@ -58,6 +60,9 @@ sed -i "s/OPENVIDU_BASE_URL=.*/OPENVIDU_BASE_URL=https:\/\/openvidu.$DOMAIN/" ./
 sed -i "s/MAIL_HOST=.*/MAIL_HOST=$MAIL_HOST/" ./env/.env_backend
 sed -i "s/MAIL_USERNAME=.*/MAIL_USERNAME=$EMAIL/" ./env/.env_backend
 sed -i "s/MAIL_PASSWORD=.*/MAIL_PASSWORD=$MAIL_PASSWORD/" ./env/.env_backend
+
+
+sed -i "s/REACT_APP_TEST_SERVER_BASE_URL=.*/REACT_APP_TEST_SERVER_BASE_URL=https:\/\/$DOMAIN/" ./env/.env_frontend
 
 
 sed -i "s/JWT_SALT=.*/JWT_SALT=$JWT_SALT/" ./env/.env_socket

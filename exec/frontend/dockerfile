@@ -1,0 +1,11 @@
+FROM node:20.10.0
+
+WORKDIR /file
+COPY ./frontend .
+
+COPY ./exec/env/.env_frontend .env
+COPY ./exec/frontent/.eslintignore .eslintignore
+
+RUN npm install
+RUN npm run build
+ENTRYPOINT ["ls","./build"]
