@@ -43,6 +43,10 @@ export default function ContentDetail() {
   const [showPlayer, setShowPlayer] = useState(false);
 
   useEffect(() => {
+    window.onpopstate = () => {
+      setShowPlayer(false);
+    };
+
     const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
 
     axios({
@@ -66,19 +70,6 @@ export default function ContentDetail() {
       alert("데이터를 받는 도중 문제가 발생했습니다.");
       navigate(-1);
     })
-
-    return (() => {
-      setImageSrc("");
-      setTitle("");
-      setDescribe("");
-      setCreatorList([]);
-      setHashtagList([]);
-      setInOrderList([]); 
-      setOutOrder({});
-      setCommentList([]);
-      setLyrics("");
-      setShowPlayer(false);
-    })
   }, [id]);
 
   const initPlay = () => {
@@ -87,7 +78,7 @@ export default function ContentDetail() {
 
   const inOrderListFormat = (inOrderList) => {
     const inOrderView = inOrderList.map((inOrder, index) => {
-      return <Link to={`/content/${inOrder.id}`}>@{inOrder.title}</Link>;
+      return <Link to={`/content/${inOrder.id}`} onClick={() => setShowPlayer(false)}>@{inOrder.title}</Link>;
     })
     return inOrderView;
   }
