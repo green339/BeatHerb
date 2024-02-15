@@ -219,7 +219,7 @@ export default function Live() {
                 <UserVideoComponent streamManager={mainStreamManager} width={640} height={480} mainVideo />
               ) : null}
               {(mainStreamManager === undefined && subscribers.length > 0) ? (
-                <div key={"sub"+i} className="inline-block mr-4 relavive">
+                <div className="inline-block mr-4 relavive">
                   <UserVideoComponent streamManager={subscribers[0]} width={160} height={120} />
                 </div>
               ) : null}
