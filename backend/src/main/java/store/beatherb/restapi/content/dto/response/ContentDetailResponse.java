@@ -4,7 +4,6 @@ import lombok.*;
 import store.beatherb.restapi.content.domain.*;
 import store.beatherb.restapi.content.dto.*;
 import store.beatherb.restapi.member.domain.Member;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +28,16 @@ public class ContentDetailResponse {
     boolean star;
 
 
-    public static ContentDetailResponse toDto(Content entity,boolean star) {
+
+
+    public static ContentDetailResponse toDto(Content entity,boolean star,String lyrics, String describe) {
         String title = entity.getTitle();
         List<Creator> creatorList = entity.getCreatorList();
         List<ContentHashTag> contentHashTagList = entity.getContentHashTagList();
-        String lyrics = entity.getLyrics();
+
+
+
         int hit = entity.getHit();
-        String describe = entity.getDescribe();
         ContentType contentType = entity.getContentType();
         boolean processed = entity.isProcessed();
 

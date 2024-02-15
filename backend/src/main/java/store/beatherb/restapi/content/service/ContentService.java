@@ -31,8 +31,7 @@ import store.beatherb.restapi.member.dto.MemberDTO;
 import store.beatherb.restapi.member.exception.MemberErrorCode;
 import store.beatherb.restapi.member.exception.MemberException;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -61,6 +60,9 @@ public class ContentService {
     private final String CROPPED_DIRECTORY;
     private final String REFERENCE_DIRECTORY;
     private final String IMAGE_DIRECTORY;
+    private final String LYRICS_DIRECTORY;
+
+    private final String DESCRIBE_DIRECTORY;
 
 
 
@@ -79,7 +81,9 @@ public class ContentService {
                           StarRepository starRepository,
                           @Value("${resource.directory.music.cropped}") String CROPPED_DIRECTORY,
                           @Value("${resource.directory.music.reference}") String REFERENCE_DIRECTORY,
-                          @Value("${resource.directory.music.image}") String IMAGE_DIRECTORY
+                          @Value("${resource.directory.music.image}") String IMAGE_DIRECTORY,
+                          @Value("${resource.directory.music.lyrics}") String LYRICS_DIRECTORY,
+                          @Value("${resource.directory.music.describe}") String DESCRIBE_DIRECTORY
 //                          @Value("${ffmpeg.directory.ffmpeg}") String FFMPEG_LOCATION,
 //                          @Value("${ffmpeg.directory.ffprobe}") String FFPROBE_LOCATION
     ) {
@@ -94,6 +98,8 @@ public class ContentService {
         this.CROPPED_DIRECTORY = CROPPED_DIRECTORY;
         this.REFERENCE_DIRECTORY = REFERENCE_DIRECTORY;
         this.IMAGE_DIRECTORY = IMAGE_DIRECTORY;
+        this.LYRICS_DIRECTORY = LYRICS_DIRECTORY;
+        this.DESCRIBE_DIRECTORY = DESCRIBE_DIRECTORY;
 //        this.FFMPEG_LOCATION = FFMPEG_LOCATION;
 //        this.FFPROBE_LOCATION = FFPROBE_LOCATION;
     }
@@ -231,13 +237,42 @@ public class ContentService {
                 throw new BeatHerbException(BeatHerbErrorCode.INTERNAL_SERVER_ERROR);
             }
         }
+        String lyrics = request.getLyrics();
+        if(lyrics != null){
+
+            try {
+                String name = UUID.randomUUID().toString() +".txt";
+
+                BufferedWriter brw = new BufferedWriter(new FileWriter(LYRICS_DIRECTORY + File.separator +name));
+                brw.write(lyrics);
+                brw.close();
+                lyrics = name;
+            } catch (IOException e) {
+            }
+
+        }
+
+        String describe = request.getDescribe();
+        if(describe != null){
+
+            try {
+                String name = UUID.randomUUID().toString() +".txt";
+
+                BufferedWriter brw = new BufferedWriter(new FileWriter(DESCRIBE_DIRECTORY + File.separator +name));
+                brw.write(describe);
+                brw.close();
+                describe = name;
+            } catch (IOException e) {
+            }
+
+        }
 
 
         Content content = Content.builder()
                 .hit(0)
-                .describe(request.getDescribe())
+                .describe(describe)
                 .title(request.getTitle())
-                .lyrics(request.getLyrics())
+                .lyrics(lyrics)
                 .creatorList(creatorList)
                 .writer(writer)
                 .contentType(contentType)
@@ -522,8 +557,56 @@ public class ContentService {
                 );
         content.setHit(content.getHit() + 1);
         contentRepository.save(content);
+
+        String lyrics = content.getLyrics();
+        if(lyrics != null){
+
+            try {
+                // 파일 읽기
+                BufferedReader reader = new BufferedReader(new FileReader(LYRICS_DIRECTORY + File.separator + lyrics));
+                StringBuilder stringBuilder = new StringBuilder();
+                String line = reader.readLine();
+                while (line != null) {
+                    stringBuilder.append(line);
+                    stringBuilder.append(System.lineSeparator());
+                    line = reader.readLine();
+                }
+                String s = stringBuilder.toString();
+                reader.close();
+                lyrics = s;
+
+            } catch (IOException e) {
+
+            }
+
+        }
+        String describe = content.getDescribe();
+
+        if(describe != null){
+
+            try {
+                // 파일 읽기
+                BufferedReader reader = new BufferedReader(new FileReader(DESCRIBE_DIRECTORY + File.separator + describe));
+                StringBuilder stringBuilder = new StringBuilder();
+                String line = reader.readLine();
+                while (line != null) {
+                    stringBuilder.append(line);
+                    stringBuilder.append(System.lineSeparator());
+                    line = reader.readLine();
+                }
+                String s = stringBuilder.toString();
+                reader.close();
+                describe = s;
+
+            } catch (IOException e) {
+
+            }
+
+        }
+
         if(memberDTO == null){
-            return ContentDetailResponse.toDto(content,false);
+
+            return ContentDetailResponse.toDto(content,false,lyrics,describe);
         }
         Member member = memberRepository.findById(memberDTO.getId()).orElseThrow(
                 () ->{
@@ -531,7 +614,7 @@ public class ContentService {
                 }
         );
 
-        return ContentDetailResponse.toDto(content,starRepository.findByContentAndMember(content,member).isPresent());
+        return ContentDetailResponse.toDto(content,starRepository.findByContentAndMember(content,member).isPresent(),lyrics,describe);
 
     }
 
