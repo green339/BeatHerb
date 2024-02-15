@@ -142,7 +142,7 @@ export default function AllBoard() {
               return (
                 <div key={"live" + live.id} className="flex justify-center">
                   <div>
-                    <LiveItem imgSrc={live.image} title={live.title} />
+                    <LiveItem imgSrc={live.image} title={(live.title ? live.title : "No Title")} />
                   </div>
                 </div>
               );
