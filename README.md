@@ -47,12 +47,12 @@
 
 ## 3. 서비스 화면
 #### 홈 화면 & 로그인 화면
-|![home](/uploads/3ffe1ab56bea7b2e8c3343866e8a4308/home.gif){width=600px height=200px}|![login](/uploads/cf2df092ca02d3850cbe0dd1c968f9e0/login.gif){width=600px height=200px}|
+|![home](/uploads/3ffe1ab56bea7b2e8c3343866e8a4308/home.gif){width=500px height=250px}|![login](/uploads/cf2df092ca02d3850cbe0dd1c968f9e0/login.gif){width=500px height=250px}|
 |:---:|:---:|
 |**홈 화면**|**로그인 화면**|
 
 #### 작업실 화면 (소리 쌓기 화면)
-|![work1](/uploads/eb0b428c06b054b69a7b5222e76514a1/work1.gif){width=600px height=200px}|![work2](/uploads/6016423a0dc2af6369357c7acbab6b59/work2.gif){width=600px height=200px}|
+|![work1](/uploads/eb0b428c06b054b69a7b5222e76514a1/work1.gif){width=500px height=250px}|![work2](/uploads/6016423a0dc2af6369357c7acbab6b59/work2.gif){width=500px height=250px}|
 |:---:|:---:|
 |**내 컴퓨터에서 음원 파일 가져오고 BeatHerb에서 마음에 드는 소리를 쌓은 후 업로드하는 화면**|**BeatHerb에서 마음에 드는 소리를 가져오고 가상 악기로 만든 소리를 쌓은 후 업로드하는 화면**|
 #### 컨텐트 상세 검색 화면
@@ -61,7 +61,7 @@
 |**컨텐트 상세 검색 화면**|
 
 #### 게시판 화면
-|![content](/uploads/d3a75cf9a72319b12029e1591b2506d1/content.gif){width=600px height=200px}|![live](/uploads/915b35e7e3ecf7fc081ba2a2d5e5027e/live.gif){width=600px height=200px}
+|![content](/uploads/d3a75cf9a72319b12029e1591b2506d1/content.gif){width=500px height=250px}|![live](/uploads/915b35e7e3ecf7fc081ba2a2d5e5027e/live.gif){width=500px height=250px}
 |:---:|:---:|
 |**전체 컨텐트 게시판 화면**|**라이브 게시판 화면**|
 
