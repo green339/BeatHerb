@@ -3,7 +3,6 @@
 import NavBar from "../components/NavBar";
 import ContentsItem from "../components/ContentsItem";
 import { useRef, useState, useEffect } from "react";
-import ShortsItem from "../components/ShortsItem";
 import LiveItem from "../components/LiveItem";
 import Dm from "../components/Dm";
 import Follow from "../components/Follow";
@@ -17,7 +16,6 @@ const tabs = [
   { value: "melody", title: "멜로디" },
   { value: "vocal", title: "보컬" },
   { value: "music", title: "음원" },
-  { value: "shorts", title: "Shorts" },
   { value: "live", title: "라이브" },
 ];
 
@@ -33,7 +31,6 @@ export default function MyPage() {
   const [melodyList, setMelodyList] = useState([]);
   const [vocalList, setVocalList] = useState([]);
   const [musicList, setMusicList] = useState([]);
-  const [shortsList, setShortsList] = useState([]);
   const [liveList, setLiveList] = useState([]);
 
   // 유저 정보
@@ -63,7 +60,6 @@ export default function MyPage() {
       setMelodyList((data.melodyList ? data.melodyList : []));
       setVocalList((data.vocalList ? data.vocalList : []));
       setMusicList((data.soundTrackList ? data.soundTrackList : []));
-      setShortsList((data.shortsList ? data.shortsList : []));
       setLiveList((data.liveList ? data.liveList : []));
     })
     .catch((error) => {
@@ -147,12 +143,6 @@ export default function MyPage() {
         </div>
       )
     });
-  } else if (category === "shorts") {
-    itemList = shortsList.map((shorts, index) => (
-      <div key={"shorts" + shorts.id} className="flex justify-center">
-        <ShortsItem title={shorts.title} />
-      </div>
-    ));
   } else if (category === "live") {
     itemList = liveList.map((live, index) => (
       <div key={"live" + live.id} className="flex justify-center">

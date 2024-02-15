@@ -4,7 +4,6 @@ import NavBar from "../components/NavBar";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ContentsItem from "../components/ContentsItem.js";
-import ShortsItem from "../components/ShortsItem.js";
 import axios from "axios";
 import LiveItem from "../components/LiveItem.js";
 import MusicPlayer from "../components/MusicPlayer.js";
@@ -101,12 +100,6 @@ export default function ContentDetail() {
         </div>
       )
     );
-  } else if (category === "shorts") {
-    itemView = outOrder.shortsList?.map((shorts, index) => (
-      <div key={"shorts" + shorts.id} className="flex justify-center">
-        <ShortsItem title={shorts.title} />
-      </div>
-    ));
   } else if (category === "live") {
     itemView = outOrder.liveList?.map((live, index) => (
       <div key={"live" + live.id} className="flex justify-center">

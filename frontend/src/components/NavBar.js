@@ -8,7 +8,6 @@ const boardMenus = [
   { key: "all", title: "전체", href: "/board/all" },
   { key: "popularity", title: "인기", href: "/board/popularity" },
   { key: "contents", title: "컨텐츠", href: "/board/contents" },
-  { key: "shorts", title: "Shorts", href: "/board/shorts" },
   { key: "live", title: "라이브", href: "/board/live" },
 ];
 

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
 import UserButton from '../components/UserButton';
 import contentsIcon from "../assets/contents.png";
-import shortsIcon from "../assets/shorts.png";
+import liveIcon from "../assets/live.png";
 import workplaceIcon from "../assets/workplace.png";
 
 export default function Main() {
@@ -29,9 +29,9 @@ export default function Main() {
               <MainButton imgSrc={contentsIcon} text="컨텐츠" />
             </div>
           </Link>
-          <Link to="/board/shorts" className="text-primary-content hover:text-primary-content">
+          <Link to="/board/live" className="text-primary-content hover:text-primary-content">
             <div className="flex mx-1.5">
-              <MainButton imgSrc={shortsIcon} text="Shorts" />
+              <MainButton imgSrc={liveIcon} text="Live" />
             </div>
           </Link>
           <Link to="/workplace" className="text-primary-content hover:text-primary-content">

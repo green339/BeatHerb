@@ -1,7 +1,6 @@
 // 전체 게시판 페이지 항목
 
 import ItemContainerWithTitle from "../components/ItemContainerWithTitle";
-import ShortsItem from "../components/ShortsItem";
 import LiveItem from "../components/LiveItem";
 import ContentsRanking from "../components/ContentsRanking";
 import SearchBar from "../components/SearchBar";
