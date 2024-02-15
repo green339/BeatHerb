@@ -122,18 +122,23 @@ export default function ContentDetail() {
 
   if (comment === "comment") {
     commentView = commentList.map((comment, index) => (
-      <div key={"comment" + comment.id} className="flex justify-center m-10">
-        <div className="flex w-full mt-2 space-x-3">
-          <div>
-            <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
-            <div className="text-xs text-gray-500 leading-none">{comment.member.nickname}</div>
-          </div>
-          <div>
-            <div className="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
-              <p className="text-sm">{comment.body}</p>
+      <div>
+        <div
+          key={"comment" + comment.id}
+          className="flex justify-center m-10  flex-grow overflow-auto"
+        >
+          <div className="flex w-full mt-2 space-x-3">
+            <div>
+              <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
+              <div className="text-xs text-gray-500 leading-none">{comment.member.nickname}</div>
             </div>
-            <div className="text-right">
-              <div className="text-xs text-gray-500 leading-none">2 min ago</div>
+            <div>
+              <div className="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
+                <p className="text-sm">{comment.body}</p>
+              </div>
+              <div className="text-right">
+                <div className="text-xs text-gray-500 leading-none">2 min ago</div>
+              </div>
             </div>
           </div>
         </div>
@@ -162,7 +167,7 @@ export default function ContentDetail() {
                 </div>
                 <div className="flex items-center justify-center w-52 h-16 rounded-md">
                   { !showPlayer && (
-                    <button 
+                    <button
                       className="flex px-3 md:px-4 py-1 bg-base-100 text-white rounded-lg hover:bg-base-200"
                       onClick={initPlay}
                     >
