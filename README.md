@@ -1,16 +1,16 @@
 # BeatHerb
-### SSAFY 10기 공통 프로젝트 서울 5반 :musical_score: 'Bit는 알아도 Beat는 모른다' :musical_score: </br>
+### SSAFY 10기 공통 프로젝트 서울 5반 :musical_score: 'Bit는 알아도 Beat는 모른다' :musical_score: <br /> (2024.01.08 ~ 2024.02.16)
 
 ![beatherb](/uploads/5e6cf29a813b761fe830cc749e19996f/beatherb.PNG)
 
 ## :green_book: 목차 :green_book:
-:one: [프로젝트 소개](#프로젝트 소개) <br/>
-:two: [개발 환경](#개발 환경)<br/>
-:three: [서비스 화면](#서비스 화면) <br/>
-:four: [주요 기능](#주요 기능) <br/>
-:five: [프로젝트 특징 기술 소개](#프로젝트 특징 기술 소개) <br/>
-:six: [설계 문서](#설계 문서) <br/>
-:seven: [팀원 소개](#팀원 소개) <br/>
+:one: [프로젝트 소개](#1-프로젝트-소개) <br/>
+:two: [개발 환경](#2-개발-환경)<br/>
+:three: [서비스 화면](#3-서비스-화면) <br/>
+:four: [주요 기능](#4-주요-기능) <br/>
+:five: [프로젝트 특징 기술 소개](#5-프로젝트-특징-기술-소개) <br/>
+:six: [설계 문서](#6-설계-문서) <br/>
+:seven: [팀원 소개](#7-팀원-소개) <br/>
 
 ## 1. 프로젝트 소개
 ### :scroll: Overview :scroll:
