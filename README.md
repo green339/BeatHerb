@@ -56,7 +56,7 @@
 |:---:|:---:|
 |**내 컴퓨터에서 음원 파일 가져오고 BeatHerb에서 <br />마음에 드는 소리를 쌓은 후 업로드하는 화면**|**BeatHerb에서 마음에 드는 소리를 가져오고 <br />가상 악기로 만든 소리를 쌓은 후 업로드하는 화면**|
 #### 컨텐트 상세 검색 화면
-|![detail_search](/uploads/39521cd33e4cd625e61058e9a23921d9/detail_search.gif){width=370px height=200px}|
+|![detail_search](/uploads/39521cd33e4cd625e61058e9a23921d9/detail_search.gif){width=500px height=250px}|
 |:---:|
 |**컨텐트 상세 검색 화면**|
 
@@ -66,7 +66,7 @@
 |**전체 컨텐트 게시판 화면**|**라이브 게시판 화면**|
 
 #### 라이브 화면
-|![livecat](/uploads/e8bcf51e339fd01eecb172b5c9441f59/livecat.gif){width=370px height=200px}|
+|![livecat](/uploads/e8bcf51e339fd01eecb172b5c9441f59/livecat.gif){width=500px height=250px}|
 |:---:|
 |**라이브 화면**|
 
