@@ -11,24 +11,22 @@ export default function ContentsRanking({ title, link, data, contentList = [] })
   const itemList = contentList.map((content, index) => {
     return (
       <Fragment key={"Rank" + (index + 1)}>
-        <div className="hover:bg-base-content hover:text-base-100">
-          <div className="divider my-1" />
-          <Link
-            to={`/content/${content.id}`}
-            className="flex place-content-between items-center h-14"
-          >
-            <div className="flex gap-2 items-center">
-              <p className="text-base-content m-0">{index + 1}. </p>
-              <img
-                className="w-12 rounded-md"
-                src={content.image ? content.image : defaultAlbum}
-                alt=""
-              />
-              <p className="text-base-content m-0">{content.title}</p>
-            </div>
-            <p className="text-base-content m-0">{creatorListFormat(content.creatorList)}</p>
-          </Link>
-        </div>
+        <div className="divider my-1" />
+        <Link
+          to={`/content/${content.id}`}
+          className="flex place-content-between items-center h-14 hover:bg-base-100 rounded-sm"
+        >
+          <div className="flex gap-2 items-center">
+            <p className="text-base-content m-0">{index + 1}. </p>
+            <img
+              className="w-12 rounded-md"
+              src={content.image ? content.image : defaultAlbum}
+              alt=""
+            />
+            <p className="text-base-content m-0">{content.title}</p>
+          </div>
+          <p className="text-base-content m-0">{creatorListFormat(content.creatorList)}</p>
+        </Link>
       </Fragment>
     );
   });
