@@ -10,5 +10,5 @@ RUN echo "src" > .eslintignore \
 RUN npm install
 RUN npm run build
 
-ENTRYPOINT ["tail", "-f", "/dev/null"]
+CMD ["bash"]
 

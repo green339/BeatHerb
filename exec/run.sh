@@ -74,9 +74,9 @@ mkdir -p resource/{music/{convert,cropped,image,reference,lyrics,decribe},profil
 echo "Backend APP 을 시작합니다"
 docker-compose up -d
 
-docker cp exec_beatherb-frontend-build:/file/build ./openvidu/custom-nginx-vhosts/html
+docker cp exec_beatherb-frontend-build_1:/file/build ./openvidu/custom-nginx-vhosts/html
 
-docker stop exec_beatherb-frontend-build
+docker stop exec_beatherb-frontend-build_1
 
 
 git clone https://github.com/wmnnd/nginx-certbot.git ./ssl
