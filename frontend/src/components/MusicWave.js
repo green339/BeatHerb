@@ -46,6 +46,7 @@ const MusicWave = forwardRef(({}, ref) => {
       handleFileUpload(file);
     });
     setRootContentIdList((rootContentIdList) => [...rootContentIdList, ...roots]);
+    setCnt(cnt + files.length);
   };
   const handleFileUpload = (file) => {
     //파일업로드
@@ -53,7 +54,6 @@ const MusicWave = forwardRef(({}, ref) => {
     //   const url = URL.createObjectURL(file);
     //   console.log(audioData)
     eeRef.current.emit("newtrack", file);
-    setCnt(cnt + 1);
   };
   const handleRecordingUpload = (url) => {
     //악기랑 음성녹음 업로드

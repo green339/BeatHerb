@@ -67,11 +67,11 @@ export default function AllBoard() {
     let searchList;
 
     if (category === "melody") {
-      searchList = contents.melodyList ? contents.melodyList : [];
+      searchList = contents.melodyList ? [...contents.melodyList].reverse() : [];
     } else if (category === "vocal") {
-      searchList = contents.vocalList ? contents.vocalList : [];
+      searchList = contents.vocalList ? [...contents.vocalList].reverse() : [];
     } else {
-      searchList = contents.soundTrackList ? contents.soundTrackList : [];
+      searchList = contents.soundTrackList ? [...contents.soundTrackList].reverse() : [];
     }
 
     contentView = (
@@ -121,24 +121,24 @@ export default function AllBoard() {
             title="신규 멜로디"
             link="/board/contents"
             data={{ category: "melody" }}
-            contentList={contents.melodyList?.slice(0, 5)}
+            contentList={[...contents.melodyList].reverse().slice(0, 5)}
           />
           <ContentsRanking
             title="신규 보컬"
             link="/board/contents"
             data={{ category: "vocal" }}
-            contentList={contents.vocalList?.slice(0, 5)}
+            contentList={[...contents.vocalList].reverse().slice(0, 5)}
           />
           <ContentsRanking
             title="신규 음원"
             link="/board/contents"
             data={{ category: "music" }}
-            contentList={contents.soundTrackList?.slice(0, 5)}
+            contentList={[...contents.soundTrackList].reverse().slice(0, 5)}
           />
         </ItemContainerWithTitle>
         <ItemContainerWithTitle title="라이브" link="/board/live" scrolled>
           {liveList.length > 0 ? 
-            liveList.map((live, index) => {
+            [...liveList].reverse().map((live, index) => {
               return (
                 <div key={"live" + live.id} className="flex justify-center">
                   <div>

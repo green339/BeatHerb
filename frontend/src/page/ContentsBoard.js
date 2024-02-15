@@ -34,11 +34,11 @@ export default function ContentsBoard() {
       let newContentList = []
 
       if (category === "melody") {
-        newContentList = response.data.data.melodyList;
+        newContentList = [...response.data.data.melodyList].reverse();
       } else if (category === "vocal") {
-        newContentList = response.data.data.vocalList;
+        newContentList = [...response.data.data.vocalList].reverse();
       } else {
-        newContentList = response.data.data.soundTrackList;
+        newContentList = [...response.data.data.soundTrackList].reverse();
       }
 
       setContentList(newContentList);
