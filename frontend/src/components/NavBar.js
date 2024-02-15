@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 // 게시판 탭 드롭다운에 들어갈 메뉴들
 const boardMenus = [
   { key: "all", title: "전체", href: "/board/all" },
-  { key: "popularity", title: "인기", href: "/board/popularity" },
   { key: "contents", title: "컨텐츠", href: "/board/contents" },
   { key: "live", title: "라이브", href: "/board/live" },
 ];
