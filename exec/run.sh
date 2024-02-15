@@ -72,7 +72,9 @@ sed -i "s/CERTIFICATE_TYPE=.*/CERTIFICATE_TYPE=letsencrypt/" ./openvidu/.env
 
 mkdir -p resource/{music/{convert,cropped,image,reference,lyrics,decribe},profile/image}
 echo "Backend APP 을 시작합니다"
-docker-compose up -d 
+docker-compose up -d
+
+docker-compose cp beatherb-frontend-build:/file/build ./openvidu/custom-nginx-vhosts/html
 
 
 
