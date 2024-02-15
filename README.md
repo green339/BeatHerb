@@ -46,6 +46,29 @@
 ![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white)
 
 ## 3. 서비스 화면
+#### 홈 화면 & 로그인 화면
+|![home](/uploads/3ffe1ab56bea7b2e8c3343866e8a4308/home.gif){width=600px height=200px}|![login](/uploads/cf2df092ca02d3850cbe0dd1c968f9e0/login.gif){width=600px height=200px}|
+|:---:|:---:|
+|**홈 화면**|**로그인 화면**|
+
+#### 작업실 화면 (소리 쌓기 화면)
+|![work1](/uploads/eb0b428c06b054b69a7b5222e76514a1/work1.gif){width=600px height=200px}|![work2](/uploads/6016423a0dc2af6369357c7acbab6b59/work2.gif){width=600px height=200px}|
+|:---:|:---:|
+|**내 컴퓨터에서 음원 파일 가져오고 BeatHerb에서 마음에 드는 소리를 쌓은 후 업로드하는 화면**|**BeatHerb에서 마음에 드는 소리를 가져오고 가상 악기로 만든 소리를 쌓은 후 업로드하는 화면**|
+#### 컨텐트 상세 검색 화면
+|![detail_search](/uploads/39521cd33e4cd625e61058e9a23921d9/detail_search.gif){width=370px height=200px}|
+|:---:|
+|**컨텐트 상세 검색 화면**|
+
+#### 게시판 화면
+|![content](/uploads/d3a75cf9a72319b12029e1591b2506d1/content.gif){width=600px height=200px}|![live](/uploads/915b35e7e3ecf7fc081ba2a2d5e5027e/live.gif){width=600px height=200px}
+|:---:|:---:|
+|**전체 컨텐트 게시판 화면**|**라이브 게시판 화면**|
+
+#### 라이브 화면
+|![livecat](/uploads/e8bcf51e339fd01eecb172b5c9441f59/livecat.gif){width=370px height=200px}|
+|:---:|
+|**라이브 화면**|
 
 ## 4. 주요 기능
 #### 1. 소리 쌓기 서비스 :sound:
@@ -130,6 +153,6 @@
 
 ## 7. 팀원 소개
 |팀장(김도현)|팀원(김범수)|팀원(최지희)|팀원(박도연)|팀원(박세웅)|팀원(유시연)|
-|------|---|---|---|---|---|
+|:---:|:---:|:---:|:---:|:---:|:---:|
 |![dohyun](/uploads/e4a3c494f282a03cd1c26b1377b9d7b2/dohyun.png){width=500px height=200px}|![bumsoo](/uploads/ac9a84b33f9b46b8ad43337c4dc87bc0/bumsoo.png){width=500px height=200px}|![sihee](/uploads/a8903c64a59a1da77954b64864d842f9/sihee.jpg){width=500px height=200px}|![doyeon](/uploads/4174f69c0a25a1af26b790a358ae87e6/doyeon.jpg){width=500px height=200px}|![seyoog](/uploads/f6c502884106fe25f4eda0cae178922c/seyoog.jpg){width=500px height=200px}|![siyeon](/uploads/63d13eced2448b27d8528fcfd8d2a49a/siyeon.jpg){width=500px height=200px}|
-|Backend Lead/Infra|Frontend Lead|Full Stack|Full Stack|Full Stack|Full Stack|
+|**Backend Lead/Infra**|**Frontend Lead**|**Full Stack**|**Full Stack**|**Full Stack**|**Full Stack**|
