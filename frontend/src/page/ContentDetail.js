@@ -28,6 +28,8 @@ export default function ContentDetail() {
   const { id } = useParams();
   const [category, setCategory] = useState("melody");
   const [comment, setComment] = useState("comment");
+  const [commentMessage, setCommentMessage] = useState("commentMessage");
+  const [contentId, setContentId] = useState("contentId");
 
   // 컨텐츠 관련 정보
   const [imageSrc, setImageSrc] = useState("");
@@ -42,6 +44,7 @@ export default function ContentDetail() {
 
   const [showPlayer, setShowPlayer] = useState(false);
 
+  const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
   useEffect(() => {
     window.onpopstate = () => {
       setShowPlayer(false);
@@ -72,25 +75,43 @@ export default function ContentDetail() {
     })
   }, [id]);
 
+  const sendCommentMessage = () => {
+    axios({
+      method: "post",
+      url: `${serverUrl}/comment`,
+    })
+      .then((response) => {
+        console.log(response.data);
+        const data = response.data.data;
+
+        setContentId(id);
+        setCommentMessage(data.commentMessage);
+      })
+      .catch((error) => {
+        alert("데이터를 보내는 도중 문제가 발생했습니다.");
+      });
+  };
+
   const initPlay = () => {
     setShowPlayer(true);
-  }
+  };
 
   const inOrderListFormat = (inOrderList) => {
     const inOrderView = inOrderList.map((inOrder, index) => {
       return <Link to={`/content/${inOrder.id}`} onClick={() => setShowPlayer(false)}>@{inOrder.title}</Link>;
     })
     return inOrderView;
-  }
+  };
 
   let itemView = null;
   let commentView = null;
+  let inputField = null;
 
   // out order
   if (category === "melody" || category === "vocal" || category === "music") {
     let contentList;
 
-    if(category === "melody") {
+    if (category === "melody") {
       contentList = outOrder.melodyList;
     } else if (category === "vocal") {
       contentList = outOrder.vocalList;
@@ -99,11 +120,17 @@ export default function ContentDetail() {
     }
 
     itemView = contentList?.map((content, index) => (
-        <div key={"content" + content.id} className="flex justify-center">
-          <ContentsItem contentId={content.id} size={150} albumArt={content.image} title={content.title} artist={content.creatorList.join(", ")} showFavorite={false} />
-        </div>
-      )
-    );
+      <div key={"content" + content.id} className="flex justify-center">
+        <ContentsItem
+          contentId={content.id}
+          size={150}
+          albumArt={content.image}
+          title={content.title}
+          artist={creatorListFormat(content.creatorList)}
+          showFavorite={false}
+        />
+      </div>
+    ));
   } else if (category === "live") {
     itemView = outOrder.liveList?.map((live, index) => (
       <div key={"live" + live.id} className="flex justify-center">
@@ -136,6 +163,35 @@ export default function ContentDetail() {
         </div>
       </div>
     ));
+
+    inputField = (
+      <div className="relative flex flex-shrink-0 mt-auto">
+        <span className="absolute inset-y-0 flex items-center"></span>
+        <input
+          type="text"
+          placeholder="Write your message!"
+          className="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-12 bg-gray-200 rounded-md py-3"
+          onChange={(e) => setCommentMessage(e.target.value)}
+        />
+        <div className="absolute right-0 items-center inset-y-0 hidden sm:flex">
+          <button
+            type="button"
+            className="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-primary hover:bg-base-100 focus:outline-none"
+            onClick={sendCommentMessage}
+          >
+            <span className="font-bold">Send</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              className="h-6 w-6 ml-2 transform rotate-90"
+            >
+              <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    );
   } else if (comment === "lyrics") {
     commentView = <div className="flex justify-center">{lyrics}</div>;
   }
@@ -158,7 +214,7 @@ export default function ContentDetail() {
                   />
                 </div>
                 <div className="flex items-center justify-center w-52 h-16 rounded-md">
-                  { !showPlayer && (
+                  {!showPlayer && (
                     <button
                       className="flex px-3 md:px-4 py-1 bg-base-100 text-white rounded-lg hover:bg-base-200"
                       onClick={initPlay}
@@ -187,10 +243,10 @@ export default function ContentDetail() {
               </div>
               <div className="flex flex-col h-52 place-content-center place-content-evenly">
                 <div className="space-y-2">
-                  <p className="text-base-content text-left text-3xl font-semibold">{title ? title : "Title"}</p>
-                  <p className="text-base-content text-left">
-                    {creatorListFormat(creatorList)}
+                  <p className="text-base-content text-left text-3xl font-semibold">
+                    {title ? title : "Title"}
                   </p>
+                  <p className="text-base-content text-left">{creatorListFormat(creatorList)}</p>
                 </div>
                 <div className="space-y-2">
                   <div className="flex gap-1 flex-wrap">
@@ -206,7 +262,6 @@ export default function ContentDetail() {
                       ))
                     }
                   </div>
-                  <div className="text-left">진입차수 : <>{inOrderListFormat(inOrderList)}</></div>
                 </div>
               </div>
             </div>
@@ -252,7 +307,8 @@ export default function ContentDetail() {
                     key={tab2.value}
                     role="tab"
                     className={
-                      "tab w-1/2 translate-x-1/2 text-primary-content" + (comment === tab2.value ? " tab-active" : "")
+                      "tab w-1/2 translate-x-1/2 text-primary-content" +
+                      (comment === tab2.value ? " tab-active" : "")
                     }
                     style={comment === tab2.value ? { borderBottom: "2px solid #070707" } : {}}
                     onClick={() => setComment(tab2.value)}
@@ -261,12 +317,17 @@ export default function ContentDetail() {
                   </button>
                 ))}
               </div>
-              <div className="bg-base-200 rounded-md m-4 h-[33rem] overflow-auto">{commentView}</div>
+              <div className="bg-base-200 rounded-md m-4 h-[33rem] overflow-auto relative">
+                {commentView}
+                <div className="absolute bottom-0 w-full">{inputField}</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      { showPlayer && <MusicPlayer music={{id, title, creator: creatorListFormat(creatorList), imageSrc}} /> }
+      {showPlayer && (
+        <MusicPlayer music={{ id, title, creator: creatorListFormat(creatorList), imageSrc }} />
+      )}
     </>
   );
 }
