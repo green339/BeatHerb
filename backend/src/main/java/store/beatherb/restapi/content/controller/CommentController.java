@@ -5,15 +5,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import store.beatherb.restapi.content.domain.Comment;
-import store.beatherb.restapi.content.domain.Content;
 import store.beatherb.restapi.content.dto.request.RegistCommentRequest;
 import store.beatherb.restapi.content.service.CommentService;
 import store.beatherb.restapi.global.auth.domain.LoginUser;
 import store.beatherb.restapi.global.response.ApiResponse;
 import store.beatherb.restapi.member.dto.MemberDTO;
 
-import java.util.List;
 
 @Slf4j
 @RestController

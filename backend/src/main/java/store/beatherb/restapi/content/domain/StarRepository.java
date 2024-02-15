@@ -9,7 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface StarRepository extends JpaRepository<Star, Long> {
-    Optional<Star> findByContentIdAndMemberId(Long contentId, Long memberId);
     Optional<Star> findByContentAndMember(Content content, Member member);
 
     List<Star> findByMemberAndContentIdIn(Member member,List<Long> idList);

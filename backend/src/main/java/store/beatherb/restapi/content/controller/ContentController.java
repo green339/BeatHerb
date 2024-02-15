@@ -1,6 +1,5 @@
 package store.beatherb.restapi.content.controller;
 
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -9,9 +8,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import store.beatherb.restapi.content.domain.Content;
-import store.beatherb.restapi.content.domain.HashTag;
 import store.beatherb.restapi.content.domain.embed.ContentTypeEnum;
-import store.beatherb.restapi.content.dto.HashTagDTO;
 import store.beatherb.restapi.content.dto.request.CreatorAgreeRequest;
 import store.beatherb.restapi.content.dto.request.ContentUploadRequest;
 import store.beatherb.restapi.content.dto.response.ContentPopularityResponse;
@@ -23,7 +20,6 @@ import store.beatherb.restapi.global.auth.domain.LoginUser;
 import store.beatherb.restapi.global.response.ApiResponse;
 import store.beatherb.restapi.member.dto.MemberDTO;
 
-import java.io.InputStream;
 import java.util.List;
 
 @RestController

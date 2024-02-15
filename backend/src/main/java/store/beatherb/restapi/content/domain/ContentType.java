@@ -5,7 +5,6 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import store.beatherb.restapi.content.domain.embed.ContentTypeEnum;
 
-@Slf4j
 @Entity
 @Table(name="content_type")
 @Getter

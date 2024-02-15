@@ -10,7 +10,6 @@ import store.beatherb.restapi.member.domain.Member;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Slf4j
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter

@@ -5,7 +5,6 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import store.beatherb.restapi.content.domain.Content;
 
-@Slf4j
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter

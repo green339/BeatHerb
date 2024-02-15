@@ -8,7 +8,6 @@ import store.beatherb.restapi.member.domain.Member;
 import java.util.Optional;
 import java.util.UUID;
 
-@Slf4j
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "verify")

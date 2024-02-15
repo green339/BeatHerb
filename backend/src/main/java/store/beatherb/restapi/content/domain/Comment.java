@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import store.beatherb.restapi.member.domain.Member;
 import java.time.LocalDateTime;
 
-@Slf4j
 @Entity
 @Table(name="comment")
 @Getter

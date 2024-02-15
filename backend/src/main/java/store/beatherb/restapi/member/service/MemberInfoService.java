@@ -1,7 +1,6 @@
 package store.beatherb.restapi.member.service;
 
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -9,17 +8,13 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import store.beatherb.restapi.content.domain.HashTag;
 import store.beatherb.restapi.content.domain.HashTagRepository;
-import store.beatherb.restapi.content.exception.ContentErrorCode;
-import store.beatherb.restapi.content.exception.ContentException;
 import store.beatherb.restapi.content.exception.HashTagErrorCode;
 import store.beatherb.restapi.content.exception.HashTagException;
 import store.beatherb.restapi.global.exception.BeatHerbErrorCode;
 import store.beatherb.restapi.global.exception.BeatHerbException;
-import store.beatherb.restapi.global.validate.MusicValid;
 import store.beatherb.restapi.global.validate.PictureValid;
 import store.beatherb.restapi.interest.domain.Interest;
 import store.beatherb.restapi.interest.domain.InterestRepository;
-import store.beatherb.restapi.interest.dto.request.PutInterestRequest;
 import store.beatherb.restapi.interest.exception.InterestErrorCode;
 import store.beatherb.restapi.interest.exception.InterestException;
 import store.beatherb.restapi.member.domain.Member;
@@ -28,15 +23,9 @@ import store.beatherb.restapi.member.dto.MemberDTO;
 import store.beatherb.restapi.member.dto.request.EditRequest;
 import store.beatherb.restapi.member.exception.MemberErrorCode;
 import store.beatherb.restapi.member.exception.MemberException;
-import store.beatherb.restapi.oauth.dto.Provider;
-import store.beatherb.restapi.oauth.dto.request.OAuthRequest;
-import store.beatherb.restapi.oauth.service.OAuthService;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -46,19 +35,16 @@ public class MemberInfoService {
     private final MemberRepository memberRepository;
     private final InterestRepository interestRepository;
     private final HashTagRepository hashTagRepository;
-    private final OAuthService oauthService;
     private final String IMG_DIRECTORY;
 
 
     public MemberInfoService(MemberRepository memberRepository,
                              InterestRepository interestRepository,
                              HashTagRepository hashTagRepository,
-                             OAuthService oauthService,
                              @Value("${resource.directory.profile.image}") String IMG_DIRECTORY) {
         this.memberRepository = memberRepository;
         this.interestRepository = interestRepository;
         this.hashTagRepository = hashTagRepository;
-        this.oauthService = oauthService;
         this.IMG_DIRECTORY = IMG_DIRECTORY;
     }
 
@@ -127,36 +113,6 @@ public class MemberInfoService {
     }
 
     //회원 정보 수정 - 소셜 로그인 연동
-    public void linkage(OAuthRequest oauthRequest, Provider provider, MemberDTO memberDTO) {
-        Long id;//헤더에서 access token을 받아와서 id값 가져오기. 토큰값 확인
-        log.info("사용자 정보" + memberDTO.getId());
-        Member member = memberRepository.findById(memberDTO.getId())
-                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_FIND_ERROR));
-        String sub = oauthService.sub(oauthRequest, provider);
-        switch (provider) {
-            case KAKAO -> {
-                memberRepository.findByKakao(sub)
-                        .ifPresent(i -> {
-                            throw new MemberException(MemberErrorCode.SOCIAL_EXIST);
-                        });
-                member.setKakao(sub);
-            }
-            case NAVER -> {
-                memberRepository.findByNaver(sub)
-                        .ifPresent(i -> {
-                            throw new MemberException(MemberErrorCode.SOCIAL_EXIST);
-                        });
-                member.setNaver(sub);
-            }
-            case GOOGLE -> {
-                memberRepository.findByGoogle(sub)
-                        .ifPresent(i -> {
-                            throw new MemberException(MemberErrorCode.SOCIAL_EXIST);
-                        });
-                member.setGoogle(sub);
-            }
-        }
-        memberRepository.save(member);
-    }
+
 
 }

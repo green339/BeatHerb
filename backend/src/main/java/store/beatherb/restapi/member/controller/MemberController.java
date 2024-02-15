@@ -19,9 +19,6 @@ import store.beatherb.restapi.member.dto.response.MemberDetailResponse;
 import store.beatherb.restapi.member.dto.response.MemberSearchResponse;
 import store.beatherb.restapi.member.service.MemberInfoService;
 import store.beatherb.restapi.member.service.MemberService;
-import store.beatherb.restapi.oauth.dto.Provider;
-import store.beatherb.restapi.oauth.dto.request.OAuthRequest;
-
 import java.util.List;
 
 @RestController
@@ -72,21 +69,6 @@ public class MemberController {
         return ApiResponse.successWithData( memberService.verify(token));
     }
 
-    @PostMapping("/signin/kakao")
-    public ApiResponse<VerifyTokenResponse> KakaoSignIn(@RequestBody OAuthRequest oauthRequest){
-        return ApiResponse.successWithData(memberService.socialSignIn(oauthRequest, Provider.KAKAO));
-
-    }
-
-    @PostMapping("/signin/naver")
-    public ApiResponse<VerifyTokenResponse> NaverSignIn(@RequestBody OAuthRequest oauthRequest){
-        return ApiResponse.successWithData(memberService.socialSignIn(oauthRequest, Provider.NAVER));
-    }
-
-    @PostMapping("/signin/google")
-    public ApiResponse<VerifyTokenResponse> GoogleSignIn(@RequestBody OAuthRequest oauthRequest){
-        return ApiResponse.successWithData(memberService.socialSignIn(oauthRequest, Provider.GOOGLE));
-    }
     @GetMapping("/image/{id}")
     public ResponseEntity<?> getImage(@PathVariable Long id){
 

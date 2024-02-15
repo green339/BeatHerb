@@ -1,15 +1,11 @@
 package store.beatherb.restapi.member.service;
 
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import store.beatherb.restapi.content.domain.Content;
-import store.beatherb.restapi.content.exception.ContentErrorCode;
-import store.beatherb.restapi.content.exception.ContentException;
 import store.beatherb.restapi.follow.domain.FollowRepository;
 import store.beatherb.restapi.global.auth.exception.AuthErrorCode;
 import store.beatherb.restapi.global.auth.exception.AuthException;
@@ -30,9 +26,6 @@ import store.beatherb.restapi.member.dto.response.MemberDetailResponse;
 import store.beatherb.restapi.member.dto.response.MemberSearchResponse;
 import store.beatherb.restapi.member.exception.MemberErrorCode;
 import store.beatherb.restapi.member.exception.MemberException;
-import store.beatherb.restapi.oauth.dto.Provider;
-import store.beatherb.restapi.oauth.dto.request.OAuthRequest;
-import store.beatherb.restapi.oauth.service.OAuthService;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -44,7 +37,6 @@ import java.util.Random;
 @Slf4j
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final OAuthService oauthService;
     private final MailService mailService;
     private final AuthService authService;
     private final VerifyRepository verifyRepository;
@@ -54,14 +46,12 @@ public class MemberService {
     private final FollowRepository followRepository;
 
     public MemberService(MemberRepository memberRepository,
-                         OAuthService oauthService,
                          MailService mailService,
                          AuthService authService,
                          VerifyRepository verifyRepository,
                          @Value("${resource.directory.profile.image}") String IMAGE_DIRECTORY,
                          FollowRepository followRepository) {
         this.memberRepository = memberRepository;
-        this.oauthService = oauthService;
         this.mailService = mailService;
         this.authService = authService;
         this.verifyRepository = verifyRepository;
@@ -166,23 +156,6 @@ public class MemberService {
                 .uuid(verify.getUuid())
                 .build();
         mailService.authMailSend(mailVo);
-    }
-
-    public VerifyTokenResponse socialSignIn(OAuthRequest oauthRequest, Provider provider) {
-        String sub = oauthService.sub(oauthRequest, provider);
-        Member member = null;
-        switch (provider) {
-            case KAKAO ->
-                    member = memberRepository.findByKakao(sub).orElseThrow(() -> new MemberException(MemberErrorCode.SOCIAL_IS_NOT_EXIST));
-            case NAVER ->
-                    member = memberRepository.findByNaver(sub).orElseThrow(() -> new MemberException(MemberErrorCode.SOCIAL_IS_NOT_EXIST));
-            case GOOGLE ->
-                    member = memberRepository.findByGoogle(sub).orElseThrow(() -> new MemberException(MemberErrorCode.SOCIAL_IS_NOT_EXIST));
-        }
-
-        //토큰 생성 결과값 보내기
-        assert member != null;
-        return authService.generateVerifyTokenResponse(member.getId());
     }
 
 
