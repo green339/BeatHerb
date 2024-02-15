@@ -233,18 +233,10 @@ export default function Live() {
                   <p className="text-white text-semibold text-left">@{content.title}</p>
                 </Link>
               })) : (
-                <p>사용중인 컨텐츠가 없습니다.</p>
+                <p className="text-white text-semibold text-left">사용중인 컨텐츠가 없습니다.</p>
               )
             }
             <p className="text-white text-left">{describe}</p>
-          </div>
-        </div>
-        <div className="col-span-3 flex justify-center items-center">
-          <div style={{ width: '400px', height: '680px', backgroundColor: 'white', position: 'relative'}} className="items-start">
-            <div style={{ width: '250px', height: '80px', position: 'absolute', right: '120px', bottom: '30px'}} className="bg-gray-200"/>
-            <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48" style={{ position: 'absolute', right: '40px', bottom: '50px'}}>
-              <path d="M240-400h320v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/>
-            </svg>
           </div>
         </div>
       </div>
