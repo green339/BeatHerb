@@ -1,12 +1,14 @@
 import axios from "axios";
+// import { useAuthStore } from "../store/AuthStore";
+
+// const [accessToken] = useAuthStore();
 
 const apiClient = axios.create({
   baseURL: process.env.REACT_APP_TEST_SERVER_BASE_URL,
   mode: "cors",
   headers: {
     "Content-Type": "multipart/form-data",
-    Authorization:
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MX0.miJGqRO1oHnRY5NQq_Oo3uTU9mzZ9-aedSstOQkMF1U",
+    // Authorization: 
   },
 });
 

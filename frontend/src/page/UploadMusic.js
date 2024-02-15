@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
+import axios from "axios";
 import { useState, useRef, useEffect } from "react";
 import { uploadMusic } from "../api/upload.js";
 import { getHashtag } from "../api/getHashtag.js";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import HashTagList from "../page/HashTagList.js";
-
+import { useAuthStore } from "../store/AuthStore";
 // 음원 업로드 모달
 // 기존 코드에서 수정 사항
 // 1. 창작자 id리스트는 부모로부터 넘어오므로 prop으로 넘겨줌
@@ -26,7 +27,9 @@ export default function UploadMusic({ music, rootContentIdList, closeUploadModal
   const describeRef = useRef(null);
   const [type, setType] = useState(null);
   const types = ["VOCAL", "MELODY", "SOUNDTRACK"];
-  console.log(music);
+
+  const { accessToken } = useAuthStore();
+  const serverURL = process.env.REACT_APP_TEST_SERVER_BASE_URL;
 
   useEffect(() => {
     // 서버에서 데이터를 가져오는 비동기 함수를 호출
@@ -43,7 +46,6 @@ export default function UploadMusic({ music, rootContentIdList, closeUploadModal
         console.error("Error fetching data:", error);
       }
     };
-
     // 컴포넌트가 마운트되었을 때 한 번만 데이터를 가져오도록 설정
     fetchData();
   }, [music]);
@@ -85,7 +87,7 @@ export default function UploadMusic({ music, rootContentIdList, closeUploadModal
       hashTagIdList.filter((item) => item.selected).length === 0
     ) {
       alert("제목, 타입, 해시태그는 필수 입력 사항입니다.");
-      setIsProcessing(false)
+      setIsProcessing(false);
       return;
     }
     setIsProcessing(true);
@@ -105,7 +107,24 @@ export default function UploadMusic({ music, rootContentIdList, closeUploadModal
     formData.append("music", await convertMedia(music), titleRef.current.value + ".mp3");
     formData.append("type", type);
     console.log(formData);
-    await uploadMusic(formData).then(clear).then(closeUploadModal());
+    // 서버로 요청을 보냄
+    axios({
+      method: "post",
+      url: `${serverURL}/content/upload`,
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data:formData,
+    })
+      .then(clear)
+      .then(closeUploadModal)
+      .catch((error) => {
+        console.log(error.message);
+        alert("파일 업로드에 실패했습니다");
+        clear();
+        closeUploadModal();
+      });
   };
   const clear = async () => {
     setImage(null);
@@ -165,7 +184,8 @@ export default function UploadMusic({ music, rootContentIdList, closeUploadModal
               className="btn btn-primary btn-xs"
               onClick={() => {
                 selectImgFile.current.click();
-              }}>
+              }}
+            >
               첨부하기
             </div>
           </div>
@@ -183,7 +203,8 @@ export default function UploadMusic({ music, rootContentIdList, closeUploadModal
               className="btn btn-primary btn-xs"
               onClick={() => {
                 selectLyricsFile.current.click();
-              }}>
+              }}
+            >
               첨부하기
             </div>
           </div>
@@ -220,7 +241,8 @@ export default function UploadMusic({ music, rootContentIdList, closeUploadModal
                   } mr-2 py-0`}
                   onClick={() => {
                     setType(item);
-                  }}>
+                  }}
+                >
                   {item}
                 </button>
               ))}
@@ -233,7 +255,8 @@ export default function UploadMusic({ music, rootContentIdList, closeUploadModal
               className="textarea textarea-bordered w-full"
               rows={8}
               placeholder="내용을 입력해주세요."
-              ref={describeRef}></textarea>
+              ref={describeRef}
+            ></textarea>
           </div>
 
           <div className="flex justify-center">
