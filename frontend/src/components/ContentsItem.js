@@ -44,7 +44,7 @@ export default function ContentsItem({
     <Link
       to={`/content/${contentId}`}
       style={{ width: `${size}px`, height: `${size}px` }}
-      className="items-center`"
+      className="items-center hover:shadow-lg shadow-base-200"
     >
       <ContentsArt
         size={size}
