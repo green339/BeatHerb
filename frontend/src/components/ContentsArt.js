@@ -11,7 +11,7 @@ export default function ContentsArt({
   return (
     <div style={{ width: `${size}px`, height: `${size}px` }} className="relative object-fill">
       <div className="text-base-content hover:text-base-content">
-        <img className="w-full rounded-md" src={albumArt} alt="" />
+        <img style={{ width: `${size}px`, height: `${size}px` }} className="w-full rounded-md" src={albumArt} alt="" />
       </div>
       {showFavorite && (
         <div className="absolute bottom-2 right-2 hover:cursor-pointer" onClick={onClickFavorite}>

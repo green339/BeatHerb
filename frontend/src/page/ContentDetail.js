@@ -9,6 +9,7 @@ import axios from "axios";
 import LiveItem from "../components/LiveItem.js";
 import MusicPlayer from "../components/MusicPlayer.js";
 import { creatorListFormat } from "../common/creatorListFormat.js";
+import { Link } from "react-router-dom";
 
 const tabs = [
   { value: "melody", title: "멜로디" },
@@ -51,7 +52,7 @@ export default function ContentDetail() {
     })
     .then((response) => {
       const data = response.data.data;
-
+      
       setImageSrc(data.image);
       setTitle(data.title);
       setDescribe(data.describe);
@@ -73,15 +74,10 @@ export default function ContentDetail() {
   }
 
   const inOrderListFormat = (inOrderList) => {
-    let inOrderText = "";
-    inOrderList.forEach((inOrder, index) => {
-      if (inOrderText !== "") {
-        inOrderText += " ";
-      }
-      inOrderText += "@" + inOrder.title;
+    const inOrderView = inOrderList.map((inOrder, index) => {
+      return <Link to={`/content/${inOrder.id}`}>@{inOrder.title}</Link>;
     })
-
-    return (inOrderText !== "" ? inOrderText : "없음");
+    return inOrderView;
   }
 
   let itemView = null;
@@ -209,7 +205,7 @@ export default function ContentDetail() {
                       ))
                     }
                   </div>
-                  <div className="text-left">진입차수 : {inOrderListFormat(inOrderList)}</div>
+                  <div className="text-left">진입차수 : <>{inOrderListFormat(inOrderList)}</></div>
                 </div>
               </div>
             </div>

@@ -178,12 +178,9 @@ export default function MyPage() {
                   />
                 </div>
               </div>
-              <div className="flex flex-col justify-center space-y-2">
+              <div className="flex flex-col justify-center space-y-4">
                 <p className="text-base-content text-left text-3xl font-semibold">
                   {(nickname ? nickname : "No Name")}
-                </p>
-                <p className="text-base-content text-left">
-                  총 좋아요 수: 123456789
                 </p>
                 <div className="flex gap-1 flex-wrap">
                   {

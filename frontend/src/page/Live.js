@@ -5,6 +5,7 @@ import { OpenVidu } from "openvidu-browser";
 import { useStateCallback } from "../hook/useStateCallback";
 import axios from "axios";
 import { useAuthStore } from "../store/AuthStore";
+import { Link } from "react-router-dom";
 
 function OpenViduVideoComponent({ streamManager, width, height }) {
   const videoRef = useRef();
@@ -58,6 +59,8 @@ export default function Live() {
   const role = location.state?.role || undefined;
   const title = location.state?.title || "No title";
   const describe = location.state?.describe || "";
+  const contentList = location.state?.contentList || [];
+  const guestList = location.state?.contentList || [];
 
   const navigate = useNavigate();
 
@@ -241,7 +244,11 @@ export default function Live() {
           ) : null}
           <div style={{ paddingLeft: '180px' }}>
             <p className="text-white font-bold text-2xl text-left">{title}</p>
-            <p className="text-white text-semibold text-left">@구글 자작곡, @구글 자작 곡곡, @애국가</p>
+            {contentList.map((content) => {
+              <Link to={`/content/${content.id}`}>
+                <p className="text-white text-semibold text-left">@{content.title}</p>
+              </Link>
+            })}
             <p className="text-white text-left">{describe}</p>
           </div>
         </div>

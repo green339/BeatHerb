@@ -43,7 +43,7 @@ export default function ContentsBoard() {
 
       setContentList(newContentList);
 
-      if (accessToken) {
+      if (accessToken && newContentList.length > 0) {
         // 새롭게 띄울 컨텐트들의 아이디만 모아놓은 리스트
         const contentIdList = newContentList.map((content, index) => content.id);
         let url = `${serverUrl}/content/star`;
