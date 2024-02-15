@@ -61,6 +61,13 @@ export default function MyPage() {
       setVocalList((data.vocalList ? data.vocalList : []));
       setMusicList((data.soundTrackList ? data.soundTrackList : []));
       setLiveList((data.liveList ? data.liveList : []));
+
+      const userLiveList = []
+      if (data.live) {
+        userLiveList.push(data.live);
+      }
+      userLiveList.push(...data.guestList);
+      setLiveList(userLiveList);
     })
     .catch((error) => {
       alert(error.response.data.message);
