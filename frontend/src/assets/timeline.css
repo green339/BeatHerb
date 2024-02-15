@@ -48,6 +48,7 @@ button{
 }
 .waveform .selection{
   background-color: green;
+  opacity : 0.5;
 }
 .playlist-tracks{
   overflow: scroll;

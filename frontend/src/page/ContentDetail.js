@@ -66,6 +66,19 @@ export default function ContentDetail() {
       alert("데이터를 받는 도중 문제가 발생했습니다.");
       navigate(-1);
     })
+
+    return (() => {
+      setImageSrc("");
+      setTitle("");
+      setDescribe("");
+      setCreatorList([]);
+      setHashtagList([]);
+      setInOrderList([]); 
+      setOutOrder({});
+      setCommentList([]);
+      setLyrics("");
+      setShowPlayer(false);
+    })
   }, [id]);
 
   const initPlay = () => {
