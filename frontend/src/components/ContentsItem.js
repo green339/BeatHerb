@@ -1,6 +1,6 @@
 // 컨텐츠(멜로디/보컬.음반) 항목
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ContentsArt from "./ContentsArt.js";
 import ContentsTitleAndArtist from "./ContentsTitleAndArtist.js";
 import axios from "axios";
@@ -16,10 +16,16 @@ export default function ContentsItem({
   showFavorite = true,
   isFavorite = false,
 }) {
-  const [favorite, setFavorite] = useState(isFavorite);
+  const [favorite, setFavorite] = useState(false);
   const { accessToken } = useAuthStore();
 
-  const handleOnClickFavorite = () => {
+  useEffect(() => {
+    setFavorite(isFavorite);
+  }, [isFavorite])
+
+  const handleOnClickFavorite = (e) => {
+    e.preventDefault();
+
     const serverUrl = process.env.REACT_APP_TEST_SERVER_BASE_URL;
 
     axios({

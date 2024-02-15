@@ -153,7 +153,7 @@ export default function MyPage() {
   } else if (category === "live") {
     itemList = liveList.map((live, index) => (
       <div key={"live" + live.id} className="flex justify-center">
-        <LiveItem title={live.title} />
+        <LiveItem imgSrc={live.image} title={live.title} />
       </div>
     ));
   }

@@ -1,7 +1,4 @@
 // 라이브 항목
-
-import ContentsTitleAndArtist from "./ContentsTitleAndArtist";
-
 export default function LiveItem({ imgSrc, title = "Title" }) {
   return (
     <div className="w-[300px] relative">

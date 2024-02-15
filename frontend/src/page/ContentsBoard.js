@@ -48,6 +48,7 @@ export default function ContentsBoard() {
         const contentIdList = newContentList.map((content, index) => content.id);
         let url = `${serverUrl}/content/star`;
         contentIdList.forEach((id, index) => { url += (index ? "&" : "?") + `contentId=${id}` })
+        console.log(url);
         
         axios({
           method: "get",
@@ -94,7 +95,8 @@ export default function ContentsBoard() {
       <div className="grid grid-cols-4 gap-4 items-center">
         {
           contentList.map((content, index) => {
-            const isFavorite = favoriteList.find((favorite) => favorite.id === content.id);
+            const isFavorite = favoriteList.findIndex((favorite) => favorite.id === content.id) !== -1;
+            console.log(favoriteList);
             return (
               <div key={"content" + content.id} className="flex justify-center">
                 <ContentsItem 
@@ -104,7 +106,7 @@ export default function ContentsBoard() {
                   title={content.title} 
                   artist={creatorListFormatWithoutLink(content.creatorList)}
                   isFavorite={isFavorite}
-                  showFavorite={accessToken}
+                  showFavorite={accessToken !== null}
                 />
               </div>
             )
