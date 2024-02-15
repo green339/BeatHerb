@@ -133,9 +133,8 @@ export default function WorkPlace() {
       <div className="fixed top-0 w-full z-20">
         <NavBar />
       </div>
-      <p className="text-primary text-3xl font-semibold">작업실 화면이에요~~~~~~~~</p>
       <div className="h-full">
-        <div className="flex w-full h-4/6 pt-10">
+        <div className="flex w-full h-4/6 pt-20">
           <MusicWave ref={(el) => (childMusicWaveRef.current = el)}></MusicWave>
         </div>
         <div className="flex w-full h-2/6 my-7">
@@ -151,7 +150,7 @@ export default function WorkPlace() {
                     alignItems: "center",
                     justifyContent: "center",
                     padding: "10px",
-                    backgroundColor: instrument === tab.value ? "red" : "black",
+                    backgroundColor: instrument === tab.value ? "#070707" : "#202020",
                   }}
                 >
                   {tab.img}
@@ -160,7 +159,7 @@ export default function WorkPlace() {
               ))}
             </div>
           </div>
-          <div className="rounded-md bg-base-300 w-10/12 mx-5 ">{content}</div>
+          <div className="rounded-md bg-base-300 w-10/12 mx-5">{content}</div>
         </div>
       </div>
     </div>

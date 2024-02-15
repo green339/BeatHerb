@@ -13,7 +13,7 @@
   gap: 10px; /* 요소들 사이의 간격을 조절합니다 */
   border: 1px solid #ccc;
   position: relative;
-  background-color: black;
+  background-color: #101010;
 
 }
 .controls .track-header{
@@ -47,7 +47,7 @@ button{
   background-color: pink;
 }
 .waveform .selection{
-  background-color: blue;
+  background-color: green;
 }
 .playlist-tracks{
   overflow: scroll;

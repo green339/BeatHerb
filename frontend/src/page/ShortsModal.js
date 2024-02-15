@@ -3,7 +3,6 @@ import UploadShorts from "../page/UploadShorts.js";
 import Shorts from "../components/Shorts.js";
 
 export default function ShortsModal({ initState,getModalCloseState }) {
-  console.log(initState)
   const [modalState, setModalState] = useState(initState);
   const [downloadData, setDownloadData] = useState(null);
   const [musicRoot, setMusicRoot] = useState("");
@@ -15,6 +14,9 @@ export default function ShortsModal({ initState,getModalCloseState }) {
   const getClearState = () => {
     clear()
   };
+  const getModalState = () => {
+    setModalState(true)
+  }
   const clear = () => {
     setModalState(true);
     setDownloadData(null);
@@ -29,8 +31,7 @@ export default function ShortsModal({ initState,getModalCloseState }) {
         <Shorts getChildShorts={getChildShorts} getClearState={getClearState}></Shorts>
       ) : (
         <div>
-          <button className="text-right btn-s btn" onClick={() => setModalState(true)}>다시 만들기</button>
-          <UploadShorts shorts={downloadData} getClearState={getClearState} />
+            <UploadShorts shorts={downloadData} root={ musicRoot} getClearState={getClearState} getModalState={getModalState}/>
         </div>
       )}
     </div>

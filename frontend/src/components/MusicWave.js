@@ -172,7 +172,11 @@ const MusicWave = forwardRef(({}, ref) => {
       //   navigator.getUserMedia(constraints, gotStream, logError);
       // }
     });
-    return () => {};
+    return () => {
+      if (eeRef.current) {
+        eeRef.current.emit("clear");
+      }
+    };
   }, []);
   if (eeRef.current) {
     eeRef.current.on("mute", function (track) {
@@ -227,9 +231,12 @@ const MusicWave = forwardRef(({}, ref) => {
     await eeRef.current.on("audiorenderingfinished", audiorenderingfinished);
     await uploadMusicModalRef.current.showModal();
   };
+  const closeUploadModal = async () => {
+    await uploadMusicModalRef.current.close();
+  }
 
   return (
-    <div className="flex w-full">
+    <div className="flex w-full h-full">
       <div className="w-2/12 bg-base-200 border-gray-300 p-5">
         <dialog ref={loadMusicModalRef} className="modal">
           <div className="modal-box w-11/12 max-w-5xl">
@@ -421,14 +428,14 @@ const MusicWave = forwardRef(({}, ref) => {
           </button>
           <dialog ref={uploadMusicModalRef} className="modal">
             <div className="modal-box w-11/12 max-w-5xl">
-              <UploadMusic music={downloadData} rootContentIdList={rootContentIdList} />
+              <UploadMusic music={downloadData} rootContentIdList={rootContentIdList} closeUploadModal={closeUploadModal} />
             </div>
           </dialog>
         </div>
       </div>
       <div
         className="rounded-md bg-base-300 w-10/12 mx-5"
-        style={{ overflow: "scroll", overflowX: "hidden" }}
+        style={{ overflow: "scroll", overflowX: "hidden", maxHeight: "500px"}}
       >
         <div className="p-5" id="playlist" ref={playlistRef}></div>
         <div>

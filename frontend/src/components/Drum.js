@@ -10,32 +10,40 @@ const Drum = ({ getRecordResult }) => {
   const [playHiHat, setPlayHiHat] = useState(null);
   const [result, setResult] = useState(null);
   const [audio, setAudio] = useState(null);
+  const [showInstrument,setShowInstrument]=useState(false)
 
   useEffect(() => {
     Tone.loaded().then(() => {
       console.log("Audio is loaded");
+      
       const newRecorder = new Tone.Recorder();
       setRecorder(newRecorder);
-      const kick = new Tone.MembraneSynth().toDestination().connect(newRecorder);;
-      const snare = new Tone.NoiseSynth().toDestination().connect(newRecorder);;
-      const hiHat = new Tone.MetalSynth().toDestination().connect(newRecorder);;
+      const kick = new Tone.MembraneSynth().toDestination().connect(newRecorder);
+      const snare = new Tone.NoiseSynth().toDestination().connect(newRecorder);
+      const hiHat = new Tone.MetalSynth().toDestination().connect(newRecorder);
       setPlayKick(kick);
       setPlaySnare(snare);
-      setPlayHiHat(hiHat)
-    });
+      setPlayHiHat(hiHat);
+    }).then(setShowInstrument(true));
   }, []);
 
   const playNote = (event) => {
     switch (event) {
-      case "kick": playKick.triggerAttackRelease("C2", "8n"); break;
-      case "snare": playSnare.triggerAttackRelease("16n");break;
-      case "hiHat": playHiHat.triggerAttackRelease("32n");break;
+      case "kick":
+        playKick.triggerAttackRelease("C2", "8n");
+        break;
+      case "snare":
+        playSnare.triggerAttackRelease("16n");
+        break;
+      case "hiHat":
+        playHiHat.triggerAttackRelease("32n");
+        break;
     }
   };
 
   const startRecording = async () => {
-    await recorder.start();
     setIsRecording(true);
+    await recorder.start();
     setAudio(null);
   };
 
@@ -43,6 +51,7 @@ const Drum = ({ getRecordResult }) => {
     if (isRecording) {
       setIsRecording(false);
       const recording = await recorder.stop();
+      if (recording.size === 0) return;
       setResult(recording);
       setAudio(new Audio(URL.createObjectURL(recording)));
       // const url = URL.createObjectURL(recording);//blob객체
@@ -62,59 +71,63 @@ const Drum = ({ getRecordResult }) => {
   };
 
   const uploadRecording = () => {
+    stopPlaying()
     const url = URL.createObjectURL(result); //blob객체
     getRecordResult(url);
     setAudio(null);
     console.log("upload");
   };
 
-  const whiteKey = {
-    border: "1px solid #000000",
-    width: "50px",
-    height: "100px",
-    backgroundColor: "#FFFFFF",
-  };
-  const blackKey = {
-    border: "1px solid #000000",
-    width: "60px",
-    height: "50px",
-    marginLeft: "-30px",
-    marginRight: "-30px",
-    backgroundColor: "#000000",
-  };
-
   return (
-    <div>
+    showInstrument?
+    <div className="pb-5">
       <div className="flex p-5 gap-10" style={{ justifyContent: "center", alignItems: "center" }}>
-        <div onClick={() => playNote("kick")} className="text-xl border p-20 rounded-xl" >Kick</div>
-        <div onClick={() => playNote("snare")} className="text-xl border p-20 rounded-xl">Snare</div>
-        <div onClick={() => playNote("hiHat")} className="text-xl border p-20 rounded-xl"> HiHat</div>
-        
+        <div onClick={() => playNote("kick")} className="text-xl border p-20 rounded-xl">
+          Kick
+        </div>
+        <div onClick={() => playNote("snare")} className="text-xl border p-20 rounded-xl">
+          Snare
+        </div>
+        <div onClick={() => playNote("hiHat")} className="text-xl border p-20 rounded-xl">
+          {" "}
+          HiHat
+        </div>
       </div>
       <div className="flex" style={{ justifyContent: "center", alignItems: "center" }}>
-
-      {isRecording ? (
-          <button className="btn btn-primary" onClick={stopRecording}>녹음멈추기</button>
-      ) : (
-        <button className="btn btn-primary" onClick={startRecording}>녹음하기</button>
-      )}
-      {audio ? (
-        isPlaying ? (
-          <div>
-            <button className="btn btn-primary" onClick={uploadRecording}>작업실로 올리기</button>
-            <button className="btn btn-primary" onClick={stopPlaying}>플레이 멈추기</button>
-          </div>
+        {isRecording ? (
+          <button className="mx-3 btn btn-primary" onClick={stopRecording}>
+            Stop
+          </button>
         ) : (
-          <div>
-            <button className="btn btn-primary" onClick={uploadRecording}>작업실로 올리기</button>
-            <button className="btn btn-primary" onClick={playRecording}>플레이하기</button>
-          </div>
-        )
-      ) : (
-        <div></div>
-      )}
+          <button className="mx-3 btn btn-primary" onClick={startRecording}>
+            Record
+          </button>
+        )}
+        {audio ? (
+          isPlaying ? (
+            <div>
+              <button className="mx-3 btn btn-primary" onClick={stopPlaying}>
+                Pause
+              </button>
+              <button className="mx-3 btn btn-primary" onClick={uploadRecording}>
+                작업실로 올리기
+              </button>
+            </div>
+          ) : (
+            <div>
+              <button className="mx-3 btn btn-primary" onClick={playRecording}>
+                Play
+              </button>
+              <button className="mx-3 btn btn-primary" onClick={uploadRecording}>
+                작업실로 올리기
+              </button>
+            </div>
+          )
+        ) : (
+          <div></div>
+        )}
       </div>
-    </div>
+    </div>:<div></div>
   );
 };
 

@@ -1,6 +1,7 @@
 // 쇼츠 항목
 
 import ContentsTitleAndArtist from "./ContentsTitleAndArtist";
+import { Link } from "react-router-dom"
 
 export default function ShortsItem({ title = "Title", artist = "artist" }) {
   return (
