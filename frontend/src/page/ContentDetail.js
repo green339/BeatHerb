@@ -160,8 +160,8 @@ export default function ContentDetail() {
               <div className="text-xs text-gray-500 leading-none">{comment.member.nickname}</div>
             </div>
             <div>
-              <div className="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
-                <p className="text-sm">{comment.body}</p>
+              <div className="bg-primary p-3 rounded-r-lg rounded-bl-lg">
+                <p className="text-sm text-primary-content">{comment.body}</p>
               </div>
             </div>
           </div>
