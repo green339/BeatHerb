@@ -213,42 +213,29 @@ export default function Live() {
     <>
       <div className="pt-4 grid grid-cols-10">
         <div className="col-span-7">
-          {(role === "OWNER" || role === "GUEST") ? (
-            <>
-              <div className="mt-6 mb-4 flex justify-center items-center">
-                {mainStreamManager !== undefined ? (
-                  <UserVideoComponent streamManager={mainStreamManager} width={640} height={480} mainVideo />
-                ) : null}
-              </div>
-              {subscribers.map((subscriber, i) => {
-                return (
-                  <div key={"sub"+i} className="inline-block mr-4 relavive">
-                    <UserVideoComponent streamManager={subscriber} width={160} height={120} />
-                  </div>
-                )
-              })}
-            </>
-          ) : null}
-          {role === "SUBSCRIBER" ? (
-            <>
-              <div className="grid grid-cols-4 gap-4 mt-6 mb-4 justify-center items-center">
-                {subscribers.map((subscriber, i) => {
-                  return (
-                    <div key={"sub"+i} className="inline-block mr-4 relavive">
-                      <UserVideoComponent streamManager={subscriber} width={320} height={240} />
-                    </div>
-                  )
-                })}
-              </div>
-            </>
-          ) : null}
+          <>
+            <div className="mt-6 mb-4 flex justify-center items-center">
+              {mainStreamManager !== undefined ? (
+                <UserVideoComponent streamManager={mainStreamManager} width={640} height={480} mainVideo />
+              ) : null}
+              {(mainStreamManager === undefined && subscribers.length > 0) ? (
+                <div key={"sub"+i} className="inline-block mr-4 relavive">
+                  <UserVideoComponent streamManager={subscribers[0]} width={160} height={120} />
+                </div>
+              ) : null}
+            </div>
+          </>
           <div style={{ paddingLeft: '180px' }}>
             <p className="text-white font-bold text-2xl text-left">{title}</p>
-            {contentList.map((content) => {
-              <Link to={`/content/${content.id}`}>
-                <p className="text-white text-semibold text-left">@{content.title}</p>
-              </Link>
-            })}
+            {contentList.length > 0 ? (
+              contentList.map((content) => {
+                <Link to={`/content/${content.id}`}>
+                  <p className="text-white text-semibold text-left">@{content.title}</p>
+                </Link>
+              })) : (
+                <p>사용중인 컨텐츠가 없습니다.</p>
+              )
+            }
             <p className="text-white text-left">{describe}</p>
           </div>
         </div>
