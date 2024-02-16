@@ -32,10 +32,10 @@
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![ffmpeg](https://img.shields.io/badge/ffmpeg-007808?style=for-the-badge&logo=ffmpeg)
-![Tone.js](https://img.shields.io/badge/Tone.js-red?style=for-the-badge&logo=Tone.js)
-![Wavesuffer.js](https://img.shields.io/badge/Wavesuffer.js-orange?style=for-the-badge&logo=Wavesuffer.js)
+![Tone.js](https://img.shields.io/badge/Tone.js-red?style=for-the-badge&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAYFBMVEX6Jdn9INn/FNrFW9P2KNn7I9nhPdZwocoA2MHzJdn/HNqagM4hzcMA4b8A28DBXtNBv8UA3cBupMkA3MAA37+YhM4S0sLlONd4ncqlec/LVNRJucZ8msscz8JFvMWffc8w6ozjAAAAm0lEQVR4AdXOxxEDMQxDUYWNyjTknPrv0mIBGF9tXvnmD8w/nv3ydn4y/Ga3rNs+03fYY8qFAmtryyIEaP2ADhAw6sdTFjBgQ21dAAK0XjrAwNiudQ50O8CADUY6wMDszhcDUBDMNWUOrLvdu4CBOZwfJQMMhP36zAIGrPMvfRMwtq+lAwyE/a11Dm5aBwMoq2idA3QBAeR+AXwA1o8n4DQ388IAAAAASUVORK5CYII=)
+![Wavesurfer.js](https://img.shields.io/badge/Wavesurfer.js-orange?style=for-the-badge&logo=data:image/png;base64,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)
+![ffmpeg.wasm](https://img.shields.io/badge/ffmpeg.wasm-007808?style=for-the-badge&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAilBMVEUAAABVVf9gQP9gQN8AAP9VVf9lTfBlTvBlTu9lTvBlTfBdRuhjTu9lTvBVKtRkTvBlTvBjTu5jTvNlTe9lTvFgSO9lTe5jS/NkTfBlTfBlTvBkTfFkTPBkTfBlTvBlTvBjR/FkTe5kTfBlTe9mTe5kTe9jTOxkTe9kTfFlTfFkTe9kTe9mS/NjS+4OknaJAAAALnRSTlMABggIAQN38Pb1uQs+3wbv/0s+8bggTFXJ8f6RVGbxyBKFhX5noDaSkjWRylVLpIxVKAAAAOBJREFUeAG900UWgwAMRdHgDr/u7rb/7bXBT6jbm97ggf6VonKaTpyhJimFm5bNOa5HRH5gJ1lm5mGEtBpRvYGsKKQkvYkkq1V2uDqlee1OF0Cvzo7+YDgaA5hMKU+f9Quf69PJi06LB65YV1xfrtbZgGoDI+nzPgKjNDAUzndlq6WBTcXFAKouB6TLAeG9rRiQXh+WBoxAPN/FaVQaoN1qKZ2f2lKo6Ir3F1UXX+1FH4+G+4s3Esfh2PYy111k8fEtS65cGJWdTmJps7XnAp83tOmItU9+HM4gTtfkj/PbzofFKTJo5uJ5AAAAAElFTkSuQmCC)
 ![waveform_playlist](https://img.shields.io/badge/waveform_playlist-green?style=for-the-badge&logo=waveform_playlist)
-![ffmpeg.wasm](https://img.shields.io/badge/ffmpeg.wasm-007808?style=for-the-badge&logo=ffmpeg.wasm)
 #### DB
 ![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
 ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
@@ -44,6 +44,7 @@
 ![Jira](https://img.shields.io/badge/jira-%230A0FFF.svg?style=for-the-badge&logo=jira&logoColor=white)
 ![GitLab](https://img.shields.io/badge/gitlab-orange.svg?style=for-the-badge&logo=gitlab&logoColor=white)
 ![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white)
+![Mattermost](https://img.shields.io/badge/Mattermost-blue?style=for-the-badge&logo=Mattermost)
 
 ## 3. 서비스 화면
 #### 홈 화면 & 로그인 화면
@@ -87,6 +88,7 @@
 #### 1. kafka 도입을 활용한 멀티 프로세싱 음악 처리 후 사용자는 업로드가 되었다는 신호를 보다 빠르게 제공 받을 수 있습니다.<br/> :arrow_forward: (약 10초 이상 -> 약 3초)
 #### 2. hls 기술을 이용한 실시간 음악 스트리밍
 #### 3. Openvidu 를 활용한 라이브
+#### 4. 가상 악기를 이용하여 음악 생성 후 업로드 가능
 
 ## 6. 설계 문서
 #### API
