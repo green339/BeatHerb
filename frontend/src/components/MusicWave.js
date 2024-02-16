@@ -12,7 +12,7 @@ const MusicWave = forwardRef(({}, ref) => {
   // var $audioStart = $container.find('.audio-start');
   // var $audioEnd = $container.find('.audio-end');
   // var $time = $container.find('.audio-pos');
-  const [ isSelected, setIsSelected ] = useState(false);
+  const [isSelected, setIsSelected] = useState(false);
   const { accessToken } = useAuthStore();
   const [cnt, setCnt] = useState(0);
   const loadMusicModalRef = useRef();
@@ -211,16 +211,16 @@ const MusicWave = forwardRef(({}, ref) => {
 
   const trimBtn = () => {
     if (!isSelected) {
-      alert("자르실 영역과 음악을 선택해 주세요")
-      return
+      alert("자르실 영역과 음악을 선택해 주세요");
+      return;
     }
     eeRef.current.emit("trim");
-    setIsSelected(false)
+    setIsSelected(false);
   };
   const selectBtn = () => {
     eeRef.current.emit("statechange", "select");
     eeRef.current.on("select", updateSelect);
-    setIsSelected(true)
+    setIsSelected(true);
     // eeRef.current.on("timeupdate",updateTime)
   };
   const cursorBtn = () => {
@@ -267,16 +267,19 @@ const MusicWave = forwardRef(({}, ref) => {
               justifyContent: "center",
               padding: "5px",
             }}
-            onClick={openLoadMusicModal}>
+            onClick={openLoadMusicModal}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6">
+              className="w-6 h-6"
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
+            </svg>{" "}
+            음악추가
           </button>
           <button
             style={{
@@ -285,20 +288,23 @@ const MusicWave = forwardRef(({}, ref) => {
               justifyContent: "center",
               padding: "5px",
             }}
-            onClick={playBtn}>
+            onClick={playBtn}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6">
+              className="w-6 h-6"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z"
               />
-            </svg>
+            </svg>{" "}
+            재생
           </button>
           <button
             style={{
@@ -307,20 +313,23 @@ const MusicWave = forwardRef(({}, ref) => {
               justifyContent: "center",
               padding: "5px",
             }}
-            onClick={pauseBtn}>
+            onClick={pauseBtn}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6">
+              className="w-6 h-6"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 d="M15.75 5.25v13.5m-7.5-13.5v13.5"
               />
-            </svg>
+            </svg>{" "}
+            일시정지
           </button>
           <button
             style={{
@@ -329,20 +338,23 @@ const MusicWave = forwardRef(({}, ref) => {
               justifyContent: "center",
               padding: "5px",
             }}
-            onClick={stopBtn}>
+            onClick={stopBtn}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6">
+              className="w-6 h-6"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 d="M5.25 7.5A2.25 2.25 0 0 1 7.5 5.25h9a2.25 2.25 0 0 1 2.25 2.25v9a2.25 2.25 0 0 1-2.25 2.25h-9a2.25 2.25 0 0 1-2.25-2.25v-9Z"
               />
-            </svg>
+            </svg>{" "}
+            정지
           </button>
 
           <button
@@ -352,20 +364,23 @@ const MusicWave = forwardRef(({}, ref) => {
               justifyContent: "center",
               padding: "5px",
             }}
-            onClick={cursorBtn}>
+            onClick={cursorBtn}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6">
+              className="w-6 h-6"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59"
               />
-            </svg>
+            </svg>{" "}
+            커서이동
           </button>
           <button
             style={{
@@ -374,20 +389,23 @@ const MusicWave = forwardRef(({}, ref) => {
               justifyContent: "center",
               padding: "5px",
             }}
-            onClick={shiftAudioBtn}>
+            onClick={shiftAudioBtn}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6">
+              className="w-6 h-6"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"
               />
-            </svg>
+            </svg>{" "}
+            음악이동
           </button>
           <button
             style={{
@@ -396,20 +414,23 @@ const MusicWave = forwardRef(({}, ref) => {
               justifyContent: "center",
               padding: "5px",
             }}
-            onClick={selectBtn}>
+            onClick={selectBtn}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6">
+              className="w-6 h-6"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125Z"
               />
-            </svg>
+            </svg>{" "}
+            영역선택
           </button>
           <button
             style={{
@@ -418,20 +439,23 @@ const MusicWave = forwardRef(({}, ref) => {
               justifyContent: "center",
               padding: "5px",
             }}
-            onClick={trimBtn}>
+            onClick={trimBtn}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6">
+              className="w-6 h-6"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 d="m7.848 8.25 1.536.887M7.848 8.25a3 3 0 1 1-5.196-3 3 3 0 0 1 5.196 3Zm1.536.887a2.165 2.165 0 0 1 1.083 1.839c.005.351.054.695.14 1.024M9.384 9.137l2.077 1.199M7.848 15.75l1.536-.887m-1.536.887a3 3 0 1 1-5.196 3 3 3 0 0 1 5.196-3Zm1.536-.887a2.165 2.165 0 0 0 1.083-1.838c.005-.352.054-.695.14-1.025m-1.223 2.863 2.077-1.199m0-3.328a4.323 4.323 0 0 1 2.068-1.379l5.325-1.628a4.5 4.5 0 0 1 2.48-.044l.803.215-7.794 4.5m-2.882-1.664A4.33 4.33 0 0 0 10.607 12m3.736 0 7.794 4.5-.802.215a4.5 4.5 0 0 1-2.48-.043l-5.326-1.629a4.324 4.324 0 0 1-2.068-1.379M14.343 12l-2.882 1.664"
               />
-            </svg>
+            </svg>{" "}
+            자르기
           </button>
           <button
             style={{
@@ -440,20 +464,23 @@ const MusicWave = forwardRef(({}, ref) => {
               justifyContent: "center",
               padding: "5px",
             }}
-            onClick={openUploadMusicModal}>
+            onClick={openUploadMusicModal}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6">
+              className="w-6 h-6"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"
               />
-            </svg>
+            </svg>{" "}
+            업로드
           </button>
           <dialog ref={uploadMusicModalRef} className="modal">
             <div className="modal-box w-11/12 max-w-5xl">
@@ -468,7 +495,8 @@ const MusicWave = forwardRef(({}, ref) => {
       </div>
       <div
         className="rounded-md bg-base-300 w-10/12 mx-5"
-        style={{ overflow: "scroll", overflowX: "hidden", maxHeight: "500px" }}>
+        style={{ overflow: "scroll", overflowX: "hidden", maxHeight: "500px" }}
+      >
         <div className="p-5" id="playlist" ref={playlistRef}></div>
         <div>
           <button onClick={openLoadMusicModal}>
@@ -478,7 +506,8 @@ const MusicWave = forwardRef(({}, ref) => {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6">
+              className="w-6 h-6"
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
           </button>
