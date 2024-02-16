@@ -1,12 +1,5 @@
 version: "3"
 services:
-    beatherb-frontend-build:
-        build:
-            context: ../
-            dockerfile: ./exec/frontend/dockerfile
-        volumes:
-            - ./frontend/build:/file/build
-
 
     beatherb-socket:
         build:

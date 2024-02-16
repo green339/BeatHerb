@@ -71,12 +71,23 @@ sed -i "s/LETSENCRYPT_EMAIL=.*/LETSENCRYPT_EMAIL=$EMAIL/" ./openvidu/.env
 sed -i "s/CERTIFICATE_TYPE=.*/CERTIFICATE_TYPE=letsencrypt/" ./openvidu/.env
 
 mkdir -p resource/{music/{convert,cropped,image,reference,lyrics,decribe},profile/image}
+
+sudo apt install jq -y
+docker build -t front_build -f frontend/dockerfile ../
+
+FRONT_BUILD_DIR=$(docker  image inspect front_build | jq '.[0].GraphDriver.Data.UpperDir')
+
+FRONT_BUILD_DIR=${FRONT_BUILD_DIR:1:-1}/file/build
+
+sudo cp -r "$FRONT_BUILD_DIR" ./openvidu/custom-nginx-vhosts/html
+
+
 echo "Backend APP 을 시작합니다"
 docker-compose up -d
 
-docker cp exec_beatherb-frontend-build_1:/file/build ./openvidu/custom-nginx-vhosts/html
+#docker cp exec_beatherb-frontend-build_1:/file/build ./openvidu/custom-nginx-vhosts/html
 
-docker stop exec_beatherb-frontend-build_1
+#docker stop exec_beatherb-frontend-build_1
 
 
 git clone https://github.com/wmnnd/nginx-certbot.git ./ssl
