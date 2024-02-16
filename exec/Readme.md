@@ -7,8 +7,12 @@
 
 ```shell
 chmod 777 run.sh
-./run.sh
+sudo ./run.sh
 ```
+
+# 주의사항
+
+필수 패키지를 설치하기 때문에 반드시 `sudo` 권한이 필요합니다.
 
 기본적으로 `ubuntu`와 `bash` 에 맞춰져있는 shell script 임으로 다른환경에서 작동을 보장하기 어렵습니다.
 
