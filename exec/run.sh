@@ -81,6 +81,7 @@ FRONT_BUILD_DIR=${FRONT_BUILD_DIR:1:-1}/file/build
 
 sudo cp -r "$FRONT_BUILD_DIR" ./openvidu/custom-nginx-vhosts/html
 
+docker rmi front_build
 
 echo "Backend APP 을 시작합니다"
 docker-compose up -d
