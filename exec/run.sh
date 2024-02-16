@@ -62,7 +62,7 @@ sed -i "s/MAIL_USERNAME=.*/MAIL_USERNAME=$EMAIL/" ./env/.env_backend
 sed -i "s/MAIL_PASSWORD=.*/MAIL_PASSWORD=$MAIL_PASSWORD/" ./env/.env_backend
 
 
-sed -i "s/REACT_APP_TEST_SERVER_BASE_URL=.*/REACT_APP_TEST_SERVER_BASE_URL=https:\/\/$DOMAIN/" ./env/.env_frontend
+sed -i "s/REACT_APP_TEST_SERVER_BASE_URL=.*/REACT_APP_TEST_SERVER_BASE_URL=https:\/\/$DOMAIN\/api/" ./env/.env_frontend
 
 
 sed -i "s/JWT_SALT=.*/JWT_SALT=$JWT_SALT/" ./env/.env_socket
@@ -202,6 +202,5 @@ server {
     return 301 https://\$host\$request_uri;
 }
 " > ./openvidu/custom-nginx-vhosts/custom-nginx.conf
-sudo cp -r html/ openvidu/custom-nginx-vhosts/
-cd openvidu 
+cd openvidu
 ./openvidu start
