@@ -151,7 +151,7 @@
 ![BeatHerb_erd](/uploads/21ec4252bfff6dd37f71c99fedc1b652/BeatHerb_erd.png)
 
 #### Architecture Structure
-![architecture](/uploads/140990d90cf62bb416ec31325464ac33/architecture.png)
+![architecture](/uploads/6f872805ac621c38eaf72d66f7b0b5ec/image.png)
 
 ## 7. 팀원 소개
 |팀장(김도현)|팀원(김범수)|팀원(최지희)|팀원(박도연)|팀원(박세웅)|팀원(유시연)|
