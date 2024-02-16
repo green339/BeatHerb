@@ -9,7 +9,6 @@ import AuthEmail from './page/AuthEmail.js';
 import AuthSuccess from './page/AuthSuccess.js'
 import AuthRedirection from './page/AuthRedirection.js';
 import Board from './page/Board.js';
-import Test from './page/Test.js';
 import MyPage from './page/MyPage.js';
 import WorkPlace from './page/WorkPlaceV2.js';
 import ContentDetail from './page/ContentDetail.js';
@@ -38,7 +37,6 @@ export default function App() {
           <Route path="/content/:id" element={<ContentDetail />} />
           <Route path="/workplace" element={<WorkPlace />} />
           <Route path="/live/:id" element={<Live />} />
-          <Route path="/test" element={<Test />} />
           <Route path="/*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
